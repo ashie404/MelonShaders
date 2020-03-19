@@ -6,6 +6,7 @@ uniform mat4 shadowModelView;
 uniform sampler2D colortex0;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowcolor0;
+uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 uniform sampler2D noisetex;
 uniform sampler2D colortex7;
@@ -60,28 +61,32 @@ mat2 getRotationMatrix(in vec2 coord) {
     );
 }
 
-
-
 vec3 getShadows(in vec2 coord)
 {
     vec3 shadowCoord = getShadowSpacePosition(coord); // shadow space position
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     vec3 shadowCol = vec3(0.0); // shadows var
-
-    float visibility = 0;
-    for (int y = 0; y < 2; y++) {
-        for (int x = 0; x < 2; x++) {
-            vec2 offset = vec2(x, y) / shadowMapResolution;
-            offset = rotationMatrix * offset;
-            float shadowMapSample = texture2D(shadowtex0, shadowCoord.st + offset).r; // sampling shadow map
-            visibility += step(shadowCoord.z - shadowMapSample, 0.001);
-            vec3 dayCol = vec3(1.0);
-            vec3 colorSample = texture2D(shadowcolor0, shadowCoord.st + offset).rgb; // sample shadow color
-            shadowCol += mix (colorSample, dayCol, visibility) * 1.2;
+    if (texture2D(depthtex0, coord).r < 1) // if not sky, calculate shadows
+    {
+        float visibility = 0;
+        for (int y = 0; y < 2; y++) {
+            for (int x = 0; x < 2; x++) {
+                vec2 offset = vec2(x, y) / shadowMapResolution;
+                offset = rotationMatrix * offset;
+                float shadowMapSample = texture2D(shadowtex0, shadowCoord.st + offset).r; // sampling shadow map
+                visibility += step(shadowCoord.z - shadowMapSample, 0.001);
+                vec3 dayCol = vec3(1.0);
+                vec3 colorSample = texture2D(shadowcolor0, shadowCoord.st + offset).rgb; // sample shadow color
+                shadowCol += mix (colorSample, dayCol, visibility) * 1.2;
+            }
         }
-    }
 
-    return vec3(shadowCol) / 32;
+        return vec3(shadowCol) / 32;
+    }
+    else
+    {
+        return vec3(0.35,0.15,0.15);
+    }
 }
 
 vec3 calculateLighting(in vec3 color) {

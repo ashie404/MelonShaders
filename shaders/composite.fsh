@@ -6,6 +6,8 @@ const int noiseTextureResolution = 256;
 
 varying vec4 texcoord;
 
+uniform float worldTime;
+
 #include "lib/settings.glsl"
 #include "lib/shadows.glsl"
 

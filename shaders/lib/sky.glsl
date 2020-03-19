@@ -110,8 +110,6 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 }
 
 vec3 GetSkyColor(vec3 worldPos, vec3 sunPos){
-
-
      vec3 color = atmosphere(
         normalize(worldPos),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
@@ -127,7 +125,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos){
     );
 
     // Apply exposure.
-    color = 1.0 - exp(-1.0 * color);
+    color = 1.0 - exp(-2.0 * color);
 
     return color;
 }
