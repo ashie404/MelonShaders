@@ -109,13 +109,13 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
     return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
 }
 
-vec3 GetSkyColor(vec3 viewPos, vec3 sunPos){
+vec3 GetSkyColor(vec3 worldPos, vec3 sunPos){
 
 
      vec3 color = atmosphere(
-        normalize(viewPos),           // normalized ray direction
+        normalize(worldPos),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
-        normalize(sunPos),                        // position of the sun
+        sunPos,                        // position of the sun
         22.0,                           // intensity of the sun
         6371e3,                         // radius of the planet in meters
         6471e3,                         // radius of the atmosphere in meters
