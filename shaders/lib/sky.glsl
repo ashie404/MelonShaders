@@ -125,7 +125,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos){
     );
 
     // Apply exposure.
-    color = 1.0 - exp(-2.0 * color);
+    color = 1.0 - exp(-2.5 * color);
 
     return color;
 }
