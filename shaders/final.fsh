@@ -1,6 +1,7 @@
 #version 120
 
 #include "lib/settings.glsl"
+#include "lib/tonemap.glsl"
 
 varying vec4 texcoord;
 
@@ -72,8 +73,9 @@ void main() {
     // crude hdr
     color = convertToHdr(color);
 
-    // convert from gamma space back to linear space
-    color = pow(color, vec3(1/2.2));
+    // reinhard tonemap
+    color = getExposure(color);
+    color = Reinhard(color);
 
     // apply lut
     color = lookup(color, colortex7);
