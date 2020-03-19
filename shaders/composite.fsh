@@ -1,62 +1,66 @@
 #version 120
 
-const bool lut = true;
-const float shadowMapBias = 0.85;
-const int noiseTextureResolution = 256;
-
 varying vec4 texcoord;
 
-uniform float worldTime;
+varying vec3 lightVector;
+varying vec3 lightColor;
+varying vec3 skyColor;
 
 #include "lib/settings.glsl"
-#include "lib/shadows.glsl"
+#include "lib/framebuffer.glsl"
 
-vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
-    #ifndef LUT
-    return textureColor;
-    #endif
-    
-    textureColor = clamp(textureColor, 0.0, 1.0);
-    float blueColor = textureColor.b * 63.0;
+/* DRAWBUFFERS:012 */
 
-    vec2 quad1;
-    quad1.y = floor(floor(blueColor) / 8.0);
-    quad1.x = floor(blueColor) - (quad1.y * 8.0);
+struct Fragment {
+    vec3 albedo;
+    vec3 normal;
+    float emission;
+};
 
-    vec2 quad2;
-    quad2.y = floor(ceil(blueColor) / 8.0);
-    quad2.x = ceil(blueColor) - (quad2.y * 8.0);
+struct Lightmap {
+    float blockLightStrength;
+    float skyLightStrength;
+};
 
-    vec2 texPos1;
-    texPos1.x = (quad1.x * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.r);
-    texPos1.y = (quad1.y * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.g);
-    
-    #ifdef INVERT_Y_LUT
-    texPos1.y = -texPos1.y;
-    #endif
+Fragment getFragment(in vec2 coord) {
+    Fragment fragment;
 
-    vec2 texPos2;
-    texPos2.x = (quad2.x * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.r);
-    texPos2.y = (quad2.y * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.g);
-    
-    #ifdef INVERT_Y_LUT
-    texPos2.y = -texPos2.y;
-    #endif
+    fragment.albedo = getAlbedo(coord);
+    fragment.normal = getNormal(coord);
+    fragment.emission = getEmission(coord);
 
-    vec4 newColor1 = texture2D(lookupTable, texPos1);
-    vec4 newColor2 = texture2D(lookupTable, texPos2);
+    return fragment;
+}
 
-    vec4 newColor = mix(newColor1, newColor2, fract(blueColor));
-    return vec3(newColor.rgb);
+Lightmap getLightmapSample(in vec2 coord) {
+    Lightmap lightmap;
+
+    lightmap.blockLightStrength = getBlockLightStrength(coord);
+    lightmap.skyLightStrength = getSkyLightStrength(coord);
+
+    return lightmap;
+}
+
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap) {
+    float directLightStrength = dot(frag.normal, lightVector);
+    directLightStrength = max(0.0, directLightStrength);
+    vec3 directLight = directLightStrength * lightColor;
+
+    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.1;
+    vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
+
+    vec3 skyLight = skyColor * lightmap.skyLightStrength;
+
+    vec3 color = frag.albedo * (directLight + skyLight + blockLight);
+    return mix(color, frag.albedo, frag.emission);
 }
 
 void main() {
-    depth = texture2D(depthtex1, texcoord.st).r;
-    vec3 color = texture2D(colortex0, texcoord.st).rgb;
-    color = calculateLighting(color);
+    // get current fragment and calculate lighting
+    Fragment frag = getFragment(texcoord.st);
+    Lightmap lightmap = getLightmapSample(texcoord.st);
+    vec3 finalColor = calculateLighting(frag, lightmap);
 
-    color = lookup(color, colortex7);
-
-    gl_FragData[0] = vec4(color, 1.0);
-    gl_FragData[1] = vec4(depth);
+    // output
+    GCOLOR_OUT = vec4(finalColor, 1.0);
 }

@@ -4,8 +4,6 @@
 
 uniform sampler2D texture;
 
-uniform float worldTime;
-
 varying vec3 tintColor;
 varying vec3 normal;
 
@@ -13,10 +11,10 @@ varying vec4 texcoord;
 varying vec4 lmcoord;
 
 void main() {
-    vec4 blockColor = texture2D(texture, texcoord.st);
-    blockColor.rgb *= tintColor;
+    vec4 handColor = texture2D(texture, texcoord.st);
+    handColor.rgb *= tintColor;
 
-    GCOLOR_OUT = blockColor;
-    GDEPTH_OUT = vec4(lmcoord.st / 16,0,0);
+    GCOLOR_OUT = handColor;
+    GDEPTH_OUT = vec4(lmcoord.st / 16, 0, 1);
     GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
 }

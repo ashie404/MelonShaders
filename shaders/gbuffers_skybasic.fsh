@@ -1,17 +1,16 @@
 #version 120
 
 #include "lib/settings.glsl"
-
-varying vec3 upVec;
+#include "lib/framebuffer.glsl"
+#include "lib/sky.glsl"
 
 uniform vec3 sunPosition;
 
 uniform float viewWidth;
 uniform float viewHeight;
+
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferModelViewInverse;
-
-#include "lib/sky.glsl"
 
 void main() {
 
@@ -21,5 +20,6 @@ void main() {
     
 	vec3 color = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition);
     
-    gl_FragData[0] = vec4(color, 1.0);
+    GCOLOR_OUT = vec4(color, 1.0);
+    GDEPTH_OUT = vec4(0.0, 0.0, 0.0, 1.0);
 }
