@@ -7,7 +7,6 @@ const int noiseTextureResolution = 256;
 varying vec4 texcoord;
 
 #include "lib/settings.glsl"
-#include "lib/generic.glsl"
 #include "lib/shadows.glsl"
 
 vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {

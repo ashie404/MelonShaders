@@ -3,6 +3,7 @@
 #define jSteps 8
 
 
+// atmospheric scattering shader by wwwtyro https://github.com/wwwtyro/glsl-atmosphere 
 
 vec2 rsi(vec3 r0, vec3 rd, float sr) {
     // ray-sphere intersection that assumes
