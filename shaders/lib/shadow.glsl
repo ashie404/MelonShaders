@@ -75,9 +75,8 @@ vec3 getShadows(in vec2 coord)
                 offset = rotationMatrix * offset;
                 float shadowMapSample = texture2D(shadowtex0, shadowCoord.st + offset).r; // sampling shadow map
                 visibility += step(shadowCoord.z - shadowMapSample, 0.001);
-                vec3 dayCol = vec3(1.0);
                 vec3 colorSample = texture2D(shadowcolor0, shadowCoord.st + offset).rgb; // sample shadow color
-                shadowCol += mix (colorSample, dayCol, visibility) * 1.2;
+                shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
             }
         }
 
