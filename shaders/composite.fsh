@@ -1,5 +1,7 @@
 #version 120
 
+// composite pass 0: lighting calculation
+
 varying vec4 texcoord;
 
 varying vec3 lightVector;
@@ -40,55 +42,13 @@ varying vec3 normal;
 #include "lib/framebuffer.glsl"
 #include "lib/common.glsl"
 #include "lib/shadow.glsl"
-#include "lib/dither.glsl"
-#include "lib/raytrace.glsl"
-#include "lib/noise.glsl"
 
-/* DRAWBUFFERS:012 */
-
+/* DRAWBUFFERS: 012 */
 void main() {
-
-    vec4 finalColor = texture2D(colortex0, texcoord.st);
+    // get current fragment and calculate lighting
     Fragment frag = getFragment(texcoord.st);
-    // calculate screen space reflections
-    #ifdef SCREENSPACE_REFLECTIONS
-    float z = texture2D(depthtex0, texcoord.st).r;
-    float dither = bayer64(gl_FragCoord.xy);
-    //NDC Coordinate
-	vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
-	fragpos /= fragpos.w;
+    Lightmap lightmap = getLightmapSample(texcoord.st);
+    vec3 finalColor = calculateLighting(frag, lightmap);
 
-    // water reflections
-    if (frag.emission == 0.5) {
-        vec4 reflection = raytrace(fragpos.xyz,normal,dither);
-
-        // set alpha
-        if (reflection.a > 0)
-        {
-            reflection.a = 0.85;
-        }
-		reflection.rgb *= finalColor.rgb / 1.5;
-
-		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
-    }
-    // ice reflections
-    #ifdef ICE_REFLECTIONS
-    if (frag.emission == 0.4) {
-        vec4 reflection = raytrace(fragpos.xyz,normal,dither);
-
-        // set alpha
-        if (reflection.a > 0)
-        {
-            reflection.a = 0.65;
-        }
-		
-		reflection.rgb *= finalColor.rgb / 1.5;
-		
-		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
-    }
-    #endif
-    #endif
-
-    // output
-    GCOLOR_OUT = finalColor;
+    GCOLOR_OUT = vec4(finalColor, 1);
 }
