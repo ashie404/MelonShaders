@@ -1,9 +1,11 @@
 const int RGBA = 0;
 const int RGBA16 = 1;
+const int RGB10_A2 = 1;
 
 const int gcolorFormat = RGBA16;
 const int gdepthFormat = RGBA;
 const int gnormalFormat = RGBA16;
+const int gaux2Format = RGB10_A2; //reflection image
 
 uniform sampler2D gcolor;
 uniform sampler2D gnormal;
