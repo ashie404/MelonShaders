@@ -56,6 +56,7 @@ void main() {
 	vec4 fragpos = gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0);
 	fragpos /= fragpos.w;
 
+    // water reflections
     if (frag.emission == 0.5) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);
 		
@@ -63,6 +64,21 @@ void main() {
 		
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
+    // ice reflections
+    #ifdef ICE_REFLECTIONS
+    if (frag.emission == 0.4) {
+        vec4 reflection = raytrace(fragpos.xyz,normal,dither);
+		
+		reflection.rgb *= finalColor.rgb / 1.5;
+        // set alpha
+        if (reflection.a > 0)
+        {
+            reflection.a = 0.65;
+        }
+		
+		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
+    }
+    #endif
     #endif
     // output
     GCOLOR_OUT = vec4(finalColor, 1.0);

@@ -15,6 +15,7 @@ varying vec4 lmcoord;
 varying vec4 position;
 
 varying float isWater;
+varying float isIce;
 
 void main()
 {
@@ -24,12 +25,18 @@ void main()
     tintColor = gl_Color.rgb;
     normal = normalize(gl_NormalMatrix * gl_Normal);
     if (mc_Entity.x == 8 || mc_Entity.x == 9) {
+        isIce = 0;
         isWater = 1;
         position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
         //position.xyz += WavingWater(position.xyz);
         gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
     }
+    else if (mc_Entity.x == 79.0) {
+        isIce = 1;
+        isWater = 0;
+    }
     else {
+        isIce = 0;
         isWater = 0;
     }
 }

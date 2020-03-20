@@ -5,6 +5,7 @@
 #define HDR
 #define VIGNETTE
 #define SCREENSPACE_REFLECTIONS
+#define ICE_REFLECTIONS
 
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
