@@ -1,8 +1,4 @@
-// raytracing code based on BSL shaders
-
-uniform sampler2D noisetex;
-
-uniform mat4 gbufferModelView;
+// raytraced SSR code based on BSL shaders
 
 const int maxf = 4;				//number of refinements
 const float stp = 1.2;			//size of one step for raytracing algorithm

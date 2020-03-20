@@ -5,7 +5,7 @@
 
 varying vec4 texcoord;
 
-uniform sampler2D colortex7;
+uniform sampler2D colortex6;
 uniform sampler2D gcolor;
 
 void vignette(inout vec3 color) {
@@ -84,7 +84,7 @@ void main() {
     }
     
     // apply lut
-    color = lookup(color, colortex7);
+    color = lookup(color, colortex6);
 
     // crude hdr
     #ifdef HDR

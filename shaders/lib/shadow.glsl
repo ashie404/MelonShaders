@@ -1,21 +1,3 @@
-
-uniform sampler2D gdepthtex;
-uniform sampler2D shadow;
-uniform sampler2D noisetex;
-uniform sampler2D depthtex0;
-uniform sampler2D shadowtex0;
-uniform sampler2D shadowcolor0;
-
-uniform vec3 cameraPosition;
-
-uniform mat4 shadowModelView;
-uniform mat4 shadowProjection;
-uniform mat4 gbufferModelViewInverse;
-uniform mat4 gbufferProjectionInverse;
-
-uniform float viewWidth;
-uniform float viewHeight;
-
 float getDepth(in vec2 coord) {
     return texture2D(gdepthtex, coord).r;
 }
