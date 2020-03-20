@@ -1,7 +1,7 @@
 #define SHADOWMAP_BIAS 0.9
 #define LUT
 #define INVERT_Y_LUT
-#define TONEMAP_OPERATOR 1 //[1 2]
+#define TONEMAP_ACES
 #define HDR
 #define VIGNETTE
 #define SCREENSPACE_REFLECTIONS

@@ -71,17 +71,10 @@ void main() {
     vec3 color = texture2D(gcolor, texcoord.st).rgb;
 
     // tonemapping
-    if (TONEMAP_OPERATOR == 1)
-    {
-        // basic reinhard tonemap
-        color = getExposure(color);
-        color = Reinhard(color);
-    }
-    else if (TONEMAP_OPERATOR == 2)
-    {
+    #ifdef TONEMAP_ACES
         // rough ACES approximation
         color = tonemapACES(color);
-    }
+    #endif
     
     // apply lut
     color = lookup(color, colortex6);

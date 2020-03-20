@@ -18,7 +18,7 @@ void main() {
     if (worldTime < 12700 || worldTime > 23250) {
         lightVector = normalize(sunPosition);
         lightColor = vec3(1.0);
-        skyColor = vec3(0.03);
+        skyColor = vec3(0.012, 0.015, 0.03);
     } 
     else {
         lightVector = normalize(moonPosition);

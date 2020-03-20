@@ -1,3 +1,5 @@
+#include "util.glsl"
+
 float getDepth(in vec2 coord) {
     return texture2D(gdepthtex, coord).r;
 }
@@ -61,7 +63,7 @@ vec3 distortShadowSpace(vec3 shadowSpace) {
 
 vec3 getShadows(in vec2 coord)
 {
-    vec3 nonDistortedShadowCoord = getShadowSpacePosition(coord); // shadow space position
+    vec3 shadowCoord = getShadowSpacePosition(coord); // shadow space position
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     vec3 shadowCol = vec3(0.0); // shadows var
     if (texture2D(depthtex0, coord).r < 1) // if not sky, calculate shadows
@@ -71,7 +73,7 @@ vec3 getShadows(in vec2 coord)
             for (int x = 0; x < 2; x++) {
                 vec2 offset = vec2(x, y) / shadowMapResolution;
                 offset = rotationMatrix * offset;
-                vec3 shadowCoord = distortShadowSpace(nonDistortedShadowCoord + vec3(offset, 0));
+                //vec3 shadowCoord = distortShadowSpace(nonDistortedShadowCoord + vec3(offset, 0));
                 float shadowMapSample = texture2D(shadowtex0, shadowCoord.st + offset).r; // sampling shadow map
                 visibility += step(shadowCoord.z - shadowMapSample, 0.001);
                 vec3 colorSample = texture2D(shadowcolor0, shadowCoord.st + offset).rgb; // sample shadow color
