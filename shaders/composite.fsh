@@ -49,6 +49,7 @@ void main() {
     vec3 finalColor = calculateLighting(frag, lightmap);
 
     // calculate screen space reflections
+    #ifdef SCREENSPACE_REFLECTIONS
     float z = texture2D(depthtex0, texcoord.st).r;
     float dither = bayer64(gl_FragCoord.xy);
     //NDC Coordinate
@@ -58,12 +59,11 @@ void main() {
     if (frag.emission == 0.5) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);
 		
-		reflection.rgb *= finalColor.rgb*2.0;
-		vec3 spec = texture2D(colortex7,texcoord.xy).rgb;
-		spec = 4.0*spec/(1.0-spec);
+		reflection.rgb *= finalColor.rgb / 1.5;
 		
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
+    #endif
     // output
     GCOLOR_OUT = vec4(finalColor, 1.0);
 }
