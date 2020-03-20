@@ -80,7 +80,7 @@ vec4 raytraceRough(vec3 fragpos, vec3 normal, float dither, float r, vec2 noisec
 		mat3 tbnMatrix = mat3(tangent, cross(normal, tangent), normal);
 
 		vec3 rnormal = normalize(tbnMatrix * noise);
-		
+
 		color += raytrace(fragpos,rnormal,dither);
 	}
 	color /= steps;

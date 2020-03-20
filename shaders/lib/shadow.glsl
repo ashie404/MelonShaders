@@ -91,7 +91,7 @@ vec3 getShadows(in vec2 coord)
 
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap) {
     vec3 sunLight = getShadows(frag.coord);
-    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.05;
+    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     vec3 skyLight = skyColor * lightmap.skyLightStrength;

@@ -23,7 +23,6 @@ void main() {
     viewPos /= viewPos.w;
     
 	vec3 color = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition, isNight);
-    
     GCOLOR_OUT = vec4(color, 1.0);
     GDEPTH_OUT = vec4(0.0, 0.0, 0.0, 1.0);
 }

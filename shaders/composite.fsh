@@ -42,15 +42,14 @@ varying vec3 normal;
 #include "lib/shadow.glsl"
 #include "lib/dither.glsl"
 #include "lib/raytrace.glsl"
+#include "lib/noise.glsl"
 
 /* DRAWBUFFERS:012 */
 
 void main() {
-    // get current fragment and calculate lighting
-    Fragment frag = getFragment(texcoord.st);
-    Lightmap lightmap = getLightmapSample(texcoord.st);
-    vec3 finalColor = calculateLighting(frag, lightmap);
 
+    vec4 finalColor = texture2D(colortex0, texcoord.st);
+    Fragment frag = getFragment(texcoord.st);
     // calculate screen space reflections
     #ifdef SCREENSPACE_REFLECTIONS
     float z = texture2D(depthtex0, texcoord.st).r;
@@ -68,9 +67,8 @@ void main() {
         {
             reflection.a = 0.85;
         }
-
 		reflection.rgb *= finalColor.rgb / 1.5;
-		
+
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
     // ice reflections
@@ -90,6 +88,7 @@ void main() {
     }
     #endif
     #endif
+
     // output
-    GCOLOR_OUT = vec4(finalColor, 1.0);
+    GCOLOR_OUT = finalColor;
 }
