@@ -29,3 +29,4 @@ Lightmap getLightmapSample(in vec2 coord) {
 
     return lightmap;
 }
+

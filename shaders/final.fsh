@@ -73,13 +73,13 @@ void main() {
     // tonemapping
     if (TONEMAP_OPERATOR == 1)
     {
-        // basic reinhard-jodie
+        // basic reinhard tonemap
         color = getExposure(color);
         color = Reinhard(color);
     }
     else if (TONEMAP_OPERATOR == 2)
     {
-        // filmic ACES
+        // rough ACES approximation
         color = tonemapACES(color);
     }
     
