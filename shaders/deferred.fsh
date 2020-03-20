@@ -47,5 +47,5 @@ void main() {
     Lightmap lightmap = getLightmapSample(texcoord.st);
     vec3 finalColor = calculateLighting(frag, lightmap);
 
-    GCOLOR_OUT = vec4(finalColor, 1);
+    gl_FragData[0] = vec4(finalColor, 1);
 }

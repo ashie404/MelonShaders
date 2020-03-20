@@ -1,11 +1,10 @@
 #version 120
 
-varying vec4 texcoord;
+// composite pass 1: reflections
 
-varying vec3 lightVector;
-varying vec3 lightColor;
-varying vec3 skyColor;
-varying float isNight;
+varying vec4 texcoord;
+varying vec3 normal;
+
 uniform int worldTime;
 
 uniform sampler2D noisetex;
@@ -34,31 +33,18 @@ uniform mat4 gbufferProjectionInverse;
 uniform float viewWidth;
 uniform float viewHeight;
 
-varying float isTransparent;
-varying vec3 normal;
 
 #include "lib/settings.glsl"
 #include "lib/framebuffer.glsl"
 #include "lib/common.glsl"
-#include "lib/shadow.glsl"
 #include "lib/dither.glsl"
 #include "lib/raytrace.glsl"
-#include "lib/noise.glsl"
-
-/* DRAWBUFFERS:012 */
 
 void main() {
+    
+    vec4 finalColor = texture2D(colortex0, texcoord.st);
 
-    vec3 finalColor = texture2D(colortex0, texcoord.st).rgb;
     Fragment frag = getFragment(texcoord.st);
-    Lightmap lightmap = getLightmapSample(texcoord.st);
-
-    // calculate lighting for translucents
-    if (frag.emission == 0.3 || frag.emission == 0.4 || frag.emission == 0.5 ) {
-        finalColor = calculateBasicLighting(frag, lightmap);
-    }
-
-
     // calculate screen space reflections
     #ifdef SCREENSPACE_REFLECTIONS
     float z = texture2D(depthtex0, texcoord.st).r;
@@ -66,16 +52,17 @@ void main() {
     //NDC Coordinate
 	vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
 	fragpos /= fragpos.w;
+
     // water reflections
     if (frag.emission == 0.5) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);
-
+        
         // set alpha
         if (reflection.a > 0)
         {
             reflection.a = 0.85;
         }
-		reflection.rgb *= finalColor.rgb;
+		reflection.rgb *= finalColor.rgb / 1.5;
 
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
@@ -90,13 +77,12 @@ void main() {
             reflection.a = 0.65;
         }
 		
-		reflection.rgb *= finalColor.rgb;
+		reflection.rgb *= finalColor.rgb / 1.5;
 		
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
     #endif
     #endif
-
-    // output
-    gl_FragData[0] = vec4(finalColor, 1);
+    finalColor.a = 1;
+    gl_FragData[0] = finalColor;
 }

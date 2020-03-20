@@ -50,32 +50,32 @@ void main() {
             vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
             vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
             vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
-            GCOLOR_OUT = vec4(skyReflection, 0.85);
+            gl_FragData[0] = vec4(skyReflection, 0.85);
         }
         else {
             // sun reflection
-            GCOLOR_OUT = vec4(0.95,0.95,0.9,0.9);
+            gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
         }
         // return 0.5 on depth so composite knows to calculate water reflections
-        GDEPTH_OUT = vec4(lmcoord.st / 16,0,0.5);
-        GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
+        gl_FragData[1] = vec4(lmcoord.st / 16,0,0.5);
+        gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
     }
     else if (isIce == 1) {
-        GCOLOR_OUT = blockColor;
+        gl_FragData[0] = blockColor;
         // return 0.4 on depth alpha so composite knows to calculate ice reflections 
-        GDEPTH_OUT = vec4(lmcoord.st / 16,0,0.4);
-        GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
+        gl_FragData[1] = vec4(lmcoord.st / 16,0,0.4);
+        gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
     }
     else if (isTransparent == 1) {
-        GCOLOR_OUT = blockColor;
+        gl_FragData[0] = blockColor;
         // return 0.3 on depth alpha so composite knows to calculate lighting
-        GDEPTH_OUT = vec4(lmcoord.st / 16,0,0.3);
-        GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
+        gl_FragData[1] = vec4(lmcoord.st / 16,0,0.3);
+        gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
     }
     else {
-        GCOLOR_OUT = blockColor;
-        GDEPTH_OUT = vec4(lmcoord.st / 16,0,0);
-        GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
+        gl_FragData[0] = blockColor;
+        gl_FragData[1] = vec4(lmcoord.st / 16,0,0);
+        gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
     }
     
 }

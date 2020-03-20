@@ -14,7 +14,7 @@ void main() {
     vec4 handColor = texture2D(texture, texcoord.st);
     handColor.rgb *= tintColor;
 
-    GCOLOR_OUT = handColor;
-    GDEPTH_OUT = vec4(lmcoord.st / 16, 0, 1);
-    GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
+    gl_FragData[0] = handColor;
+    gl_FragData[1] = vec4(lmcoord.st / 16, 0, 1);
+    gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
 }
