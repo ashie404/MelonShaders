@@ -28,6 +28,7 @@ varying vec4 lmcoord;
 varying vec4 position;
 varying float isWater;
 varying float isIce;
+varying float isTransparent;
 
 void main() {
     vec4 blockColor = texture2D(texture, texcoord.st);
@@ -63,6 +64,12 @@ void main() {
         GCOLOR_OUT = blockColor;
         // return 0.4 on depth alpha so composite knows to calculate ice reflections 
         GDEPTH_OUT = vec4(lmcoord.st / 16,0,0.4);
+        GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
+    }
+    else if (isTransparent == 1) {
+        GCOLOR_OUT = blockColor;
+        // return 0.3 on depth alpha so composite knows to calculate lighting
+        GDEPTH_OUT = vec4(lmcoord.st / 16,0,0.3);
         GNORMAL_OUT = vec4(normal * 0.5 + 0.5, 1.0);
     }
     else {

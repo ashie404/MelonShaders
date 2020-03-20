@@ -34,6 +34,7 @@ uniform mat4 gbufferProjectionInverse;
 uniform float viewWidth;
 uniform float viewHeight;
 
+varying float isTransparent;
 varying vec3 normal;
 
 #include "lib/settings.glsl"
@@ -48,8 +49,16 @@ varying vec3 normal;
 
 void main() {
 
-    vec4 finalColor = texture2D(colortex0, texcoord.st);
+    vec3 finalColor = texture2D(colortex0, texcoord.st).rgb;
     Fragment frag = getFragment(texcoord.st);
+    Lightmap lightmap = getLightmapSample(texcoord.st);
+
+    // calculate lighting for translucents
+    if (frag.emission == 0.3 || frag.emission == 0.4 || frag.emission == 0.5 ) {
+        finalColor = calculateBasicLighting(frag, lightmap);
+    }
+
+
     // calculate screen space reflections
     #ifdef SCREENSPACE_REFLECTIONS
     float z = texture2D(depthtex0, texcoord.st).r;
@@ -57,7 +66,6 @@ void main() {
     //NDC Coordinate
 	vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
 	fragpos /= fragpos.w;
-
     // water reflections
     if (frag.emission == 0.5) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);
@@ -90,5 +98,5 @@ void main() {
     #endif
 
     // output
-    GCOLOR_OUT = finalColor;
+    GCOLOR_OUT = vec4(finalColor, 1);
 }
