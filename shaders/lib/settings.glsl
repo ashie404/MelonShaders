@@ -1,6 +1,9 @@
 #define SHADOWMAP_BIAS 0.85
 #define LUT
 #define INVERT_Y_LUT
+#define TONEMAP_OPERATOR 1 //[1 2]
+#define HDR
+#define VIGNETTE
 
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]

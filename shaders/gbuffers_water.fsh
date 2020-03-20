@@ -32,9 +32,11 @@ void main() {
         vec3 reflection = reflect(normalize(position.xyz), normalize(normalWorld));
         float closenessOfSunToWater = dot(normalize(reflection), normalize(sunPosWorld));
         if (closenessOfSunToWater < 0.998) {
+            // water
             GCOLOR_OUT = vec4(0.6,0.8,0.88,0.65);
         }
         else {
+            // sun reflection
             GCOLOR_OUT = vec4(0.95,0.95,0.9,0.85);
         }
         GDEPTH_OUT = vec4(lmcoord.st / 16,0,0);

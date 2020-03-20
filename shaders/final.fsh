@@ -70,17 +70,30 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
 void main() {
     vec3 color = texture2D(gcolor, texcoord.st).rgb;
 
-    // reinhard tonemap
-    color = getExposure(color);
-    color = Reinhard(color);
-
+    // tonemapping
+    if (TONEMAP_OPERATOR == 1)
+    {
+        // basic reinhard-jodie
+        color = getExposure(color);
+        color = Reinhard(color);
+    }
+    else if (TONEMAP_OPERATOR == 2)
+    {
+        // filmic ACES
+        color = tonemapACES(color);
+    }
+    
     // apply lut
     color = lookup(color, colortex7);
 
     // crude hdr
+    #ifdef HDR
     color = convertToHdr(color);
+    #endif
 
+    #ifdef VIGNETTE
     vignette(color);
+    #endif
 
     gl_FragColor = vec4(color, 1.0);
 }

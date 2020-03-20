@@ -26,7 +26,7 @@ void main()
     if (mc_Entity.x == 8 || mc_Entity.x == 9) {
         isWater = 1;
         position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
-        position.xyz += WavingWater(position.xyz);
+        //position.xyz += WavingWater(position.xyz);
         gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
     }
     else {
