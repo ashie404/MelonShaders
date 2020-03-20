@@ -9,7 +9,7 @@ vec3 getExposure(in vec3 color) {
 vec3 tonemapACES( vec3 x )
 {
     float a = 2.51;
-    float b = 0.07;
+    float b = 0.13;
     float c = 2.43;
     float d = 0.59;
     float e = 0.14;

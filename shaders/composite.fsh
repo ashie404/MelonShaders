@@ -75,7 +75,7 @@ void main() {
         {
             reflection.a = 0.85;
         }
-		reflection.rgb *= finalColor.rgb / 1.5;
+		reflection.rgb *= finalColor.rgb;
 
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
@@ -90,7 +90,7 @@ void main() {
             reflection.a = 0.65;
         }
 		
-		reflection.rgb *= finalColor.rgb / 1.5;
+		reflection.rgb *= finalColor.rgb;
 		
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
