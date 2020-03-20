@@ -16,6 +16,7 @@ varying vec4 position;
 
 varying float isWater;
 varying float isIce;
+varying float isNight;
 
 void main()
 {
@@ -38,5 +39,11 @@ void main()
     else {
         isIce = 0;
         isWater = 0;
+    }
+    if (worldTime < 12700 || worldTime > 23250) {
+        isNight = 1;
+    } 
+    else {
+        isNight = 0;
     }
 }

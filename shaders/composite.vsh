@@ -9,7 +9,7 @@ varying vec4 texcoord;
 varying vec3 lightVector;
 varying vec3 lightColor;
 varying vec3 skyColor;
-varying float isWater;
+varying float isNight;
 varying vec3 normal;
 
 attribute vec4 mc_Entity;
@@ -19,14 +19,13 @@ void main() {
         lightVector = normalize(sunPosition);
         lightColor = vec3(1.0);
         skyColor = vec3(0.012, 0.015, 0.03);
+        isNight = 0;
     } 
     else {
         lightVector = normalize(moonPosition);
         lightColor = vec3(0.1);
-        skyColor = vec3(0.003);
-    }
-     if (mc_Entity.x == 8 || mc_Entity.x == 9) {
-        isWater = 1;
+        skyColor = vec3(0.0012, 0.0015, 0.003);
+        isNight = 1;
     }
 
     normal = normalize(gl_NormalMatrix * gl_Normal);

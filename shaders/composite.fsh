@@ -5,7 +5,8 @@ varying vec4 texcoord;
 varying vec3 lightVector;
 varying vec3 lightColor;
 varying vec3 skyColor;
-varying float isWater;
+varying float isNight;
+uniform int worldTime;
 
 uniform sampler2D noisetex;
 
@@ -22,6 +23,8 @@ uniform sampler2D shadowtex0;
 uniform sampler2D shadowcolor0;
 
 uniform vec3 cameraPosition;
+
+uniform vec3 upPosition;
 
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
@@ -53,13 +56,19 @@ void main() {
     float z = texture2D(depthtex0, texcoord.st).r;
     float dither = bayer64(gl_FragCoord.xy);
     //NDC Coordinate
-	vec4 fragpos = gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0);
+	vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
 	fragpos /= fragpos.w;
 
     // water reflections
     if (frag.emission == 0.5) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);
-		
+
+        // set alpha
+        if (reflection.a > 0)
+        {
+            reflection.a = 0.85;
+        }
+
 		reflection.rgb *= finalColor.rgb / 1.5;
 		
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
@@ -68,13 +77,14 @@ void main() {
     #ifdef ICE_REFLECTIONS
     if (frag.emission == 0.4) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);
-		
-		reflection.rgb *= finalColor.rgb / 1.5;
+
         // set alpha
         if (reflection.a > 0)
         {
             reflection.a = 0.65;
         }
+		
+		reflection.rgb *= finalColor.rgb / 1.5;
 		
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }

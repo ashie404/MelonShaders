@@ -14,9 +14,10 @@ uniform sampler2D texture;
 
 uniform vec3 sunPosition;
 
-uniform float worldTime;
+uniform int worldTime;
 uniform float viewWidth;
 uniform float viewHeight;
+varying float isNight;
 
 varying vec3 tintColor;
 varying vec3 normal;
@@ -47,12 +48,12 @@ void main() {
             // basic sky reflection
             vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
             vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
-            vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld));
-            GCOLOR_OUT = vec4(skyReflection, 1);
+            vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
+            GCOLOR_OUT = vec4(skyReflection, 0.85);
         }
         else {
             // sun reflection
-            GCOLOR_OUT = vec4(0.95,0.95,0.9,1);
+            GCOLOR_OUT = vec4(0.95,0.95,0.9,0.9);
         }
         // return 0.5 on depth so composite knows to calculate water reflections
         GDEPTH_OUT = vec4(lmcoord.st / 16,0,0.5);
