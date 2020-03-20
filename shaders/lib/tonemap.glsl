@@ -9,7 +9,7 @@ vec3 getExposure(in vec3 color) {
 vec3 Reinhard(in vec3 color) {
     color = color/(1 + color);
 
-    // return in linear space
+    // convert linear space back to gamma
     return pow(color, vec3(1 / 2.2));
 }
 
@@ -22,6 +22,6 @@ vec3 tonemapACES( vec3 x )
     float e = 0.14;
     vec3 color = (x*(a*x+b))/(x*(c*x+d)+e);
 
-    // return in linear space
+    // convert linear space back to gamma
     return pow(color, vec3(1 / 2.2));
 }

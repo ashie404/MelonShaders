@@ -1,4 +1,4 @@
-#define SHADOWMAP_BIAS 0.85
+#define SHADOWMAP_BIAS 0.9
 #define LUT
 #define INVERT_Y_LUT
 #define TONEMAP_OPERATOR 1 //[1 2]
@@ -6,6 +6,7 @@
 #define VIGNETTE
 #define SCREENSPACE_REFLECTIONS
 #define ICE_REFLECTIONS
+#define SHADOW_Z_STRETCH 2.5
 
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]

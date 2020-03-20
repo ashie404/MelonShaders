@@ -14,6 +14,7 @@ uniform sampler2D gdepth;
 #define GNORMAL_OUT gl_FragData[2]
 
 vec3 getAlbedo(in vec2 coord) {
+    // return albedo in linear space
     return pow(texture2D(gcolor, coord).rgb, vec3(2.2));
 }
 

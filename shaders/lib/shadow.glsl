@@ -43,9 +43,25 @@ mat2 getRotationMatrix(in vec2 coord) {
     );
 }
 
+// shadow map distortion code stuffs
+float distortionFactor(vec2 shadowSpace) {
+    float dist = length(abs(shadowSpace * 1.165));
+    float distortion = ((1.0 - shadowMapBias) + dist * shadowMapBias) * 0.97;
+    
+    return distortion;
+}
+
+vec3 distortShadowSpace(vec3 shadowSpace) {
+    shadowSpace = shadowSpace * 2.0 - 1.0;
+    shadowSpace = shadowSpace / vec3(vec2(distortionFactor(shadowSpace.xy)), SHADOW_Z_STRETCH);
+    shadowSpace = shadowSpace * 0.5 + 0.5;
+
+    return shadowSpace;
+}
+
 vec3 getShadows(in vec2 coord)
 {
-    vec3 shadowCoord = getShadowSpacePosition(coord); // shadow space position
+    vec3 nonDistortedShadowCoord = getShadowSpacePosition(coord); // shadow space position
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     vec3 shadowCol = vec3(0.0); // shadows var
     if (texture2D(depthtex0, coord).r < 1) // if not sky, calculate shadows
@@ -55,6 +71,7 @@ vec3 getShadows(in vec2 coord)
             for (int x = 0; x < 2; x++) {
                 vec2 offset = vec2(x, y) / shadowMapResolution;
                 offset = rotationMatrix * offset;
+                vec3 shadowCoord = distortShadowSpace(nonDistortedShadowCoord + vec3(offset, 0));
                 float shadowMapSample = texture2D(shadowtex0, shadowCoord.st + offset).r; // sampling shadow map
                 visibility += step(shadowCoord.z - shadowMapSample, 0.001);
                 vec3 colorSample = texture2D(shadowcolor0, shadowCoord.st + offset).rgb; // sample shadow color
