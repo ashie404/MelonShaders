@@ -89,16 +89,13 @@ vec3 getShadows(in vec2 coord)
 }
 
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap) {
-    float directLightStrength = dot(frag.normal, lightVector);
-    directLightStrength = max(0.0, directLightStrength);
-    vec3 directLight = directLightStrength * lightColor;
-
+    vec3 sunLight = getShadows(frag.coord);
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.1;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
-    vec3 color = frag.albedo * (getShadows(frag.coord) + skyLight + blockLight);
+    vec3 color = frag.albedo * (sunLight + skyLight + blockLight);
     //color *= getSunVisibility(frag.coord);
     return mix(color, frag.albedo, frag.emission);
 }
