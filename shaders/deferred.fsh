@@ -53,16 +53,7 @@ void main() {
     pos = gbufferModelViewInverse * pos;
     pos = shadowModelView * pos;
     pos = shadowProjection * pos;
-    vec3 shadowPos = distort(vec3(pos)) * 0.5 + 0.5;
-    /*vec3 viewPosition = vec3(texcoord.xy, texture2D(depthtex0, texcoord.xy));
-    vec4 position = gbufferProjectionInverse * vec4(viewPosition.x * 2 - 1, viewPosition.y * 2 - 1, 2 * viewPosition.z - 1, 1);
-    position /= position.w;
-    vec4 worldPosition = gbufferModelViewInverse * position;
-
-    vec4 shadowPosition = shadowModelView * worldPosition;
-    shadowPosition = shadowProjection * shadowPosition;
-
-    vec3 shadowDistortion = distort(shadowPosition.xyz) * 0.5 + 0.5;*/
+    vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
     vec3 finalColor = calculateLighting(frag, lightmap, shadowPos);
 

@@ -3,7 +3,7 @@
 attribute vec4 mc_Entity;
 
 varying vec2 texcoord;
-varying vec4 glcolor;
+varying vec4 color;
 varying float isTransparent;
 
 
@@ -28,8 +28,10 @@ float getIsTransparent(in float materialId) {
 
 void main() {
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-	glcolor = gl_Color;
+	color = gl_Color;
+
 	isTransparent = getIsTransparent(mc_Entity.x);
+
 	gl_Position = ftransform();
 	gl_Position.xyz = distort(gl_Position.xyz);
 

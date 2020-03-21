@@ -45,22 +45,6 @@ mat2 getRotationMatrix(in vec2 coord) {
     );
 }
 
-// shadow map distortion code stuffs
-float distortionFactor(vec2 shadowSpace) {
-    float dist = length(abs(shadowSpace * 1.165));
-    float distortion = ((1.0 - shadowMapBias) + dist * shadowMapBias) * 0.97;
-    
-    return distortion;
-}
-
-vec3 distortShadowSpace(vec3 shadowSpace) {
-    shadowSpace = shadowSpace * 2.0 - 1.0;
-    shadowSpace = shadowSpace / vec3(vec2(distortionFactor(shadowSpace.xy)), SHADOW_Z_STRETCH);
-    shadowSpace = shadowSpace * 0.5 + 0.5;
-
-    return shadowSpace;
-}
-
 vec3 getShadows(in vec2 coord, in vec3 shadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
