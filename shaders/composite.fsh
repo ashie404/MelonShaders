@@ -55,7 +55,7 @@ void main() {
 
     // calculate lighting for translucents
     if (frag.emission == 0.3 || frag.emission == 0.4 || frag.emission == 0.5 ) {
-        finalColor = calculateBasicLighting(frag, lightmap);
+        finalColor = calculateLighting(frag, lightmap);
     }
 
 

@@ -97,7 +97,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap) {
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
     vec3 color = frag.albedo * (sunLight + skyLight + blockLight);
-    
+
     if (frag.emission == 1) {
         return frag.albedo;
     }
@@ -106,7 +106,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap) {
     }
 }
 
-// basic lighting (no shadowmap) used for translucents in composite
+// basic lighting (no shadowmap)
 vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap) {
     float directLightStrength = dot(frag.normal, lightVector);
     directLightStrength = max(0.0, directLightStrength);
