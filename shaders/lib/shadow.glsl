@@ -87,13 +87,28 @@ vec3 calcBasicShadows(in vec4 shadowPos) {
 }
 
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos) {
+    float directLightStrength = dot(frag.normal, lightVector);
+
+    directLightStrength = max(0, directLightStrength);
+
+    vec3 directLight = directLightStrength * lightColor;
     vec3 sunLight = getShadows(frag.coord, shadowPos.xyz);
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
-    vec3 color = frag.albedo * (sunLight + skyLight + blockLight);
+    vec3 color = vec3(0);
+    // if direct light is high, calculate lighting with shadows, if direct light is low, calculate lighting with no shadows
+    // mainly for fixing backface peter panning, which is ugly
+    if (directLightStrength > 0.7)
+    {
+        color = frag.albedo * (sunLight + skyLight + blockLight);
+    }
+    else {
+
+        color = frag.albedo * (directLight + skyLight + blockLight);
+    }
 
     if (frag.emission == 1) {
         return frag.albedo;
@@ -106,7 +121,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 // basic lighting (no shadowmap)
 vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap) {
     float directLightStrength = dot(frag.normal, lightVector);
-    directLightStrength = max(0.5, directLightStrength);
+    directLightStrength = max(0, directLightStrength);
     vec3 directLight = directLightStrength * lightColor;
     
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
