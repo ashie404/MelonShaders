@@ -97,8 +97,13 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap) {
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
     vec3 color = frag.albedo * (sunLight + skyLight + blockLight);
-    //color *= getSunVisibility(frag.coord);
-    return mix(color, frag.albedo, frag.emission);
+    
+    if (frag.emission == 1) {
+        return frag.albedo;
+    }
+    else {
+        return color;
+    }
 }
 
 // basic lighting (no shadowmap) used for translucents in composite
@@ -113,6 +118,11 @@ vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap) {
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
     vec3 color = frag.albedo * (directLight + skyLight + blockLight);
-    //color *= getSunVisibility(frag.coord);
-    return mix(color, frag.albedo, frag.emission);
+
+    if (frag.emission == 1) {
+        return frag.albedo;
+    }
+    else {
+        return color;
+    }
 }

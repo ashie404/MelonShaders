@@ -2,6 +2,7 @@ struct Fragment {
     vec3 albedo;
     vec3 normal;
     float emission;
+    float data;
     vec2 coord;
 };
 
