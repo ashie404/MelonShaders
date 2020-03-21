@@ -53,9 +53,14 @@ void main() {
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
 
-    // calculate lighting for translucents
-    if (frag.emission == 0.3 || frag.emission == 0.4 || frag.emission == 0.5 ) {
+    // calculate shadowmapped lighting for translucents (except for water)
+    // 0.3 and 0.4 emission values mark stained glass & ice
+    if (frag.emission == 0.3 || frag.emission == 0.4) {
         finalColor = calculateLighting(frag, lightmap);
+    }
+    // 0.5 emission marks water
+    else if (frag.emission == 0.5) {
+        finalColor = calculateBasicLighting(frag, lightmap);
     }
 
 
@@ -64,8 +69,9 @@ void main() {
     float z = texture2D(depthtex0, texcoord.st).r;
     float dither = bayer64(gl_FragCoord.xy);
     //NDC Coordinate
-	vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
-	fragpos /= fragpos.w;
+	//vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
+    vec3 fragpos = toNDC(vec3(gl_FragCoord.xy/vec2(viewWidth,viewHeight),gl_FragCoord.z));
+	//fragpos /= fragpos.w;
     // water reflections
     if (frag.emission == 0.5) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);
