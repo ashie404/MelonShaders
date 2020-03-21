@@ -101,7 +101,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     vec3 color = vec3(0);
     // if direct light is high, calculate lighting with shadows, if direct light is low, calculate lighting with no shadows
     // mainly for fixing backface peter panning, which is ugly
-    if (directLightStrength > 0.7)
+    if (directLightStrength > 0.3)
     {
         color = frag.albedo * (sunLight + skyLight + blockLight);
     }
