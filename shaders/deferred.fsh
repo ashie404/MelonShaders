@@ -35,6 +35,7 @@ uniform float viewWidth;
 uniform float viewHeight;
 
 varying vec3 normal;
+varying vec4 shadowPos;
 
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
@@ -45,7 +46,7 @@ void main() {
     // get current fragment and calculate lighting
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
-    //vec3 finalColor = calculateBasicLighting(frag, lightmap);
+    vec3 finalColor = calculateLighting(frag, lightmap, shadowPos);
 
     gl_FragData[0] = vec4(frag.albedo, 1);
 }
