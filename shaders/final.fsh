@@ -3,10 +3,16 @@
 #include "/lib/settings.glsl"
 #include "/lib/tonemap.glsl"
 
+#define DEBUG finalColor //Debug output [finalColor compColor shadow0 shadow1 shadowColor]
+
 varying vec4 texcoord;
 
 uniform sampler2D colortex6;
 uniform sampler2D gcolor;
+
+uniform sampler2D shadowtex0;
+uniform sampler2D shadowtex1;
+uniform sampler2D shadowcolor0;
 
 void vignette(inout vec3 color) {
     float dist = distance(texcoord.st, vec2(0.5));
@@ -65,7 +71,7 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
 
     vec4 newColor = mix(newColor1, newColor2, fract(blueColor));
     return vec3(newColor.rgb);
-}
+}vec4 shadow1 = texture2D(shadowtex1, texcoord.st);
 
 void main() {
     vec3 color = texture2D(gcolor, texcoord.st).rgb;
@@ -88,5 +94,12 @@ void main() {
     vignette(color);
     #endif
 
-    gl_FragColor = vec4(color, 1.0);
+    vec4 finalColor = vec4(color, 1);
+
+    vec4 shadow0 = texture2D(shadowtex0, texcoord.st);
+    vec4 shadow1 = texture2D(shadowtex1, texcoord.st);
+    vec4 shadowColor = texture2D(shadowcolor0, texcoord.st);
+    vec4 compColor = texture2D(gcolor, texcoord.st);
+
+    gl_FragColor = DEBUG;
 }

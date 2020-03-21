@@ -54,8 +54,10 @@ void main() {
     pos = gbufferModelViewInverse * pos;
     pos = shadowModelView * pos;
     pos = shadowProjection * pos;
-    float lightDot = dot(normalize(shadowLightPosition), normal);
+    pos /= pos.w;
     vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
+
+    float lightDot = dot(normalize(shadowLightPosition), normal);
     vec4 fShadowPos = vec4(shadowPos, 0);
     if (lightDot > 0.0) {
         fShadowPos = vec4(shadowPos, 1.0);
