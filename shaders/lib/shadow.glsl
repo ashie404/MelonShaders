@@ -106,7 +106,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 // basic lighting (no shadowmap)
 vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap) {
     float directLightStrength = dot(frag.normal, lightVector);
-    directLightStrength = max(0.0, directLightStrength);
+    directLightStrength = max(0.5, directLightStrength);
     vec3 directLight = directLightStrength * lightColor;
     
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;

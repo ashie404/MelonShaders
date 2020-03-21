@@ -55,14 +55,15 @@ void main() {
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
 
+
     // calculate shadowmapped lighting for translucents (except for water)
     // 0.3 and 0.4 emission values mark stained glass & ice
     if (frag.emission == 0.3 || frag.emission == 0.4) {
-        //finalColor = calculateBasicLighting(frag, lightmap);
+        finalColor = calculateBasicLighting(frag, lightmap);
     }
     // 0.5 emission marks water, calculate basic lighting so shadows aren't cast on water
     else if (frag.emission == 0.5) {
-        //finalColor = calculateBasicLighting(frag, lightmap);
+        finalColor = calculateBasicLighting(frag, lightmap);
     }
 
     // calculate screen space reflections
