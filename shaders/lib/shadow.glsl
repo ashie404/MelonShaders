@@ -61,18 +61,21 @@ vec3 distortShadowSpace(vec3 shadowSpace) {
     return shadowSpace;
 }
 
-vec3 getShadows(in vec2 coord, in vec4 shadowPos)
+vec3 getShadows(in vec2 coord, in vec3 shadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
+    mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     if (texture2D(depthtex0, coord).r < 1) // if not sky, calculate shadows
     {
         float visibility = 0;
         for (int y = 0; y < 2; y++) {
             for (int x = 0; x < 2; x++) {
+                vec2 offset = vec2(x, y) / shadowMapResolution;
+                offset = rotationMatrix * offset;
                 // sample shadow map and shadow color
-                float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
+                float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r; // sampling shadow map
                 visibility += step(shadowPos.z - shadowMapSample, 0.001);
-                vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy).rgb; // sample shadow color
+                vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
                 shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
             }
         }
@@ -84,7 +87,7 @@ vec3 getShadows(in vec2 coord, in vec4 shadowPos)
     }
 }
 
-vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos) {
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec3 shadowPos) {
     vec3 sunLight = getShadows(frag.coord, shadowPos);
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;

@@ -35,18 +35,36 @@ uniform float viewWidth;
 uniform float viewHeight;
 
 varying vec3 normal;
-varying vec4 shadowPos;
 
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
 #include "/lib/shadow.glsl"
+#include "/lib/distort.glsl"
 
 void main() {
     // get current fragment and calculate lighting
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
+
+    // calculate distorted shadow coordinate
+    vec4 pos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
+    pos = gbufferProjectionInverse * pos;
+    pos = gbufferModelViewInverse * pos;
+    pos = shadowModelView * pos;
+    pos = shadowProjection * pos;
+    vec3 shadowPos = distort(vec3(pos)) * 0.5 + 0.5;
+    /*vec3 viewPosition = vec3(texcoord.xy, texture2D(depthtex0, texcoord.xy));
+    vec4 position = gbufferProjectionInverse * vec4(viewPosition.x * 2 - 1, viewPosition.y * 2 - 1, 2 * viewPosition.z - 1, 1);
+    position /= position.w;
+    vec4 worldPosition = gbufferModelViewInverse * position;
+
+    vec4 shadowPosition = shadowModelView * worldPosition;
+    shadowPosition = shadowProjection * shadowPosition;
+
+    vec3 shadowDistortion = distort(shadowPosition.xyz) * 0.5 + 0.5;*/
+
     vec3 finalColor = calculateLighting(frag, lightmap, shadowPos);
 
-    gl_FragData[0] = vec4(frag.albedo, 1);
+    gl_FragData[0] = vec4(finalColor, 1);
 }

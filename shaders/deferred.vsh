@@ -17,8 +17,6 @@ varying vec3 skyColor;
 varying float isNight;
 varying vec3 normal;
 
-varying vec4 shadowPos;
-
 attribute vec4 mc_Entity;
 
 #include "/lib/settings.glsl"
@@ -38,16 +36,7 @@ void main() {
         isNight = 1;
     }
 
-    float lightDot = dot(normalize(shadowLightPosition), normalize(gl_NormalMatrix * gl_Normal));
-
-	vec4 pos = gbufferModelViewInverse * (gl_ModelViewMatrix * gl_Vertex);
-	shadowPos = shadowProjection * (shadowModelView * pos); //apply shadow projection
-	float distortFactor = getDistortFactor(shadowPos.xy);
-	shadowPos.xyz = distort(shadowPos.xyz, distortFactor); //apply shadow distortion
-	shadowPos.xyz = shadowPos.xyz * 0.5 + 0.5; //convert from -1 ~ +1 to 0 ~ 1
-	shadowPos.z -= SHADOW_BIAS * (distortFactor * distortFactor) / abs(lightDot); //apply shadow bias
-	shadowPos.w = 1.0; //mark that this vertex should check the shadow map
-	gl_Position = gl_ProjectionMatrix * (gbufferModelView * pos);
+	gl_Position = ftransform();
 
     normal = normalize(gl_NormalMatrix * gl_Normal);
 
