@@ -75,7 +75,12 @@ void main() {
         {
             reflection.a = 0.85;
         }
-		reflection.rgb *= finalColor.rgb;
+        if (isNight == 1) {
+            reflection.rgb += finalColor.rgb;
+        }
+        else {
+		    reflection.rgb *= finalColor.rgb;
+        }
 
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
@@ -88,6 +93,12 @@ void main() {
         if (reflection.a > 0)
         {
             reflection.a = 0.65;
+        }
+        if (isNight == 1) {
+            reflection.rgb += finalColor.rgb;
+        }
+        else {
+		    reflection.rgb *= finalColor.rgb;
         }
 		
 		reflection.rgb *= finalColor.rgb;
