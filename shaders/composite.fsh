@@ -1,12 +1,14 @@
 #version 120
 
+// composite pass 0: translucent lighting
+
 varying vec4 texcoord;
 
 varying vec3 lightVector;
 varying vec3 lightColor;
 varying vec3 skyColor;
 varying float isNight;
-uniform int worldTime;
+uniform float worldTime;
 
 uniform sampler2D noisetex;
 
@@ -37,13 +39,13 @@ uniform float viewHeight;
 varying float isTransparent;
 varying vec3 normal;
 
-#include "lib/settings.glsl"
-#include "lib/framebuffer.glsl"
-#include "lib/common.glsl"
-#include "lib/shadow.glsl"
-#include "lib/dither.glsl"
-#include "lib/raytrace.glsl"
-#include "lib/noise.glsl"
+#include "/lib/settings.glsl"
+#include "/lib/framebuffer.glsl"
+#include "/lib/common.glsl"
+#include "/lib/shadow.glsl"
+#include "/lib/dither.glsl"
+#include "/lib/raytrace.glsl"
+#include "/lib/noise.glsl"
 
 /* DRAWBUFFERS:012 */
 
@@ -56,22 +58,21 @@ void main() {
     // calculate shadowmapped lighting for translucents (except for water)
     // 0.3 and 0.4 emission values mark stained glass & ice
     if (frag.emission == 0.3 || frag.emission == 0.4) {
-        finalColor = calculateLighting(frag, lightmap);
+        //finalColor = calculateBasicLighting(frag, lightmap);
     }
-    // 0.5 emission marks water
+    // 0.5 emission marks water, calculate basic lighting so shadows aren't cast on water
     else if (frag.emission == 0.5) {
-        finalColor = calculateBasicLighting(frag, lightmap);
+        //finalColor = calculateBasicLighting(frag, lightmap);
     }
-
 
     // calculate screen space reflections
     #ifdef SCREENSPACE_REFLECTIONS
     float z = texture2D(depthtex0, texcoord.st).r;
     float dither = bayer64(gl_FragCoord.xy);
     //NDC Coordinate
-	//vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
-    vec3 fragpos = toNDC(vec3(gl_FragCoord.xy/vec2(viewWidth,viewHeight),gl_FragCoord.z));
-	//fragpos /= fragpos.w;
+	vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
+    //vec3 fragpos = toNDC(vec3(gl_FragCoord.xy/vec2(viewWidth,viewHeight),gl_FragCoord.z));
+	fragpos /= fragpos.w;
     // water reflections
     if (frag.emission == 0.5) {
         vec4 reflection = raytrace(fragpos.xyz,normal,dither);

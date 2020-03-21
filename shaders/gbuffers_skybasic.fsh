@@ -12,9 +12,9 @@ uniform float viewHeight;
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferModelViewInverse;
 
-#include "lib/settings.glsl"
-#include "lib/framebuffer.glsl"
-#include "lib/sky.glsl"
+#include "/lib/settings.glsl"
+#include "/lib/framebuffer.glsl"
+#include "/lib/sky.glsl"
 
 void main() {
 

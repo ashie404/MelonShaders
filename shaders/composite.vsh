@@ -1,6 +1,6 @@
 #version 120
 
-uniform int worldTime;
+uniform float worldTime;
 uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 

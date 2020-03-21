@@ -7,14 +7,14 @@ uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferProjection;
 uniform mat4 gbufferProjectionInverse;
 
-#include "lib/framebuffer.glsl"
-#include "lib/sky.glsl"
+#include "/lib/framebuffer.glsl"
+#include "/lib/sky.glsl"
 
 uniform sampler2D texture;
 
 uniform vec3 sunPosition;
 
-uniform int worldTime;
+uniform float worldTime;
 uniform float viewWidth;
 uniform float viewHeight;
 varying float isNight;

@@ -1,6 +1,6 @@
 #version 120
 
-#include "lib/waving.glsl"
+#include "/lib/waving.glsl"
 
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;

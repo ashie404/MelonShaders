@@ -1,10 +1,10 @@
 #version 120
 
-#include "lib/framebuffer.glsl"
+#include "/lib/framebuffer.glsl"
 
 uniform sampler2D texture;
 
-uniform int worldTime;
+uniform float worldTime;
 
 varying vec3 tintColor;
 varying vec3 normal;

@@ -1,7 +1,7 @@
 #version 120
 
-#include "lib/settings.glsl"
-#include "lib/tonemap.glsl"
+#include "/lib/settings.glsl"
+#include "/lib/tonemap.glsl"
 
 varying vec4 texcoord;
 

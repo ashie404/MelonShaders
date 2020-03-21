@@ -6,7 +6,7 @@ varying vec3 lightVector;
 varying vec3 lightColor;
 varying vec3 skyColor;
 varying float isNight;
-uniform int worldTime;
+uniform float worldTime;
 
 uniform sampler2D noisetex;
 
@@ -36,16 +36,16 @@ uniform float viewHeight;
 
 varying vec3 normal;
 
-#include "lib/settings.glsl"
-#include "lib/framebuffer.glsl"
-#include "lib/common.glsl"
-#include "lib/shadow.glsl"
+#include "/lib/settings.glsl"
+#include "/lib/framebuffer.glsl"
+#include "/lib/common.glsl"
+#include "/lib/shadow.glsl"
 
 void main() {
     // get current fragment and calculate lighting
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
-    vec3 finalColor = calculateLighting(frag, lightmap);
+    //vec3 finalColor = calculateBasicLighting(frag, lightmap);
 
-    gl_FragData[0] = vec4(finalColor, 1);
+    gl_FragData[0] = vec4(frag.albedo, 1);
 }

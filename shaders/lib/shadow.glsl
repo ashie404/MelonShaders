@@ -1,4 +1,4 @@
-#include "util.glsl"
+#include "/lib/util.glsl"
 
 float getDepth(in vec2 coord) {
     return texture2D(gdepthtex, coord).r;

@@ -1,6 +1,6 @@
 #version 120
 
-#include "lib/framebuffer.glsl"
+#include "/lib/framebuffer.glsl"
 
 uniform sampler2D texture;
 
