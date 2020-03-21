@@ -6,7 +6,7 @@ varying vec3 lightVector;
 varying vec3 lightColor;
 varying vec3 skyColor;
 varying float isNight;
-uniform float worldTime;
+uniform int worldTime;
 
 uniform sampler2D noisetex;
 
@@ -30,6 +30,7 @@ uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferProjectionInverse;
+uniform vec3 shadowLightPosition;
 
 uniform float viewWidth;
 uniform float viewHeight;
@@ -53,9 +54,16 @@ void main() {
     pos = gbufferModelViewInverse * pos;
     pos = shadowModelView * pos;
     pos = shadowProjection * pos;
+    float lightDot = dot(normalize(shadowLightPosition), normal);
     vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
-
-    vec3 finalColor = calculateLighting(frag, lightmap, shadowPos);
+    vec4 fShadowPos = vec4(shadowPos, 0);
+    if (lightDot > 0.0) {
+        fShadowPos = vec4(shadowPos, 1.0);
+    }
+    else {
+        fShadowPos = vec4(shadowPos, 0);
+    }
+    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos);
 
     gl_FragData[0] = vec4(finalColor, 1);
 }

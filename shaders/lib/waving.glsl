@@ -1,5 +1,5 @@
 
-uniform float worldTime;
+uniform int worldTime;
 uniform vec3 cameraPosition;
 uniform sampler2D noisetex;
 

@@ -17,7 +17,7 @@ varying vec3 lightColor;
 varying vec3 skyColor;
 varying float isNight;
 
-uniform float worldTime;
+uniform int worldTime;
 
 #include "/lib/distort.glsl"
 #include "/lib/settings.glsl"

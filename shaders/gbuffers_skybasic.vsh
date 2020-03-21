@@ -2,7 +2,7 @@
 
 varying float isNight;
 
-uniform float worldTime;
+uniform int worldTime;
 varying vec4 texcoord;
 
 void main(){

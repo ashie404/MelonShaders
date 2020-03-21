@@ -8,7 +8,7 @@ varying vec3 lightVector;
 varying vec3 lightColor;
 varying vec3 skyColor;
 varying float isNight;
-uniform float worldTime;
+uniform int worldTime;
 
 uniform sampler2D noisetex;
 

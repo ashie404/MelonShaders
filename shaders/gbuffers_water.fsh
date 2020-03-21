@@ -14,7 +14,7 @@ uniform sampler2D texture;
 
 uniform vec3 sunPosition;
 
-uniform float worldTime;
+uniform int worldTime;
 uniform float viewWidth;
 uniform float viewHeight;
 varying float isNight;

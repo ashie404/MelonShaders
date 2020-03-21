@@ -4,7 +4,7 @@
 
 uniform sampler2D texture;
 
-uniform float worldTime;
+uniform int worldTime;
 
 varying vec3 tintColor;
 varying vec3 normal;

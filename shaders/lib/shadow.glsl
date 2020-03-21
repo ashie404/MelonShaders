@@ -1,5 +1,7 @@
 #include "/lib/util.glsl"
 
+uniform sampler2D shadowtex1;
+
 float getDepth(in vec2 coord) {
     return texture2D(gdepthtex, coord).r;
 }
@@ -71,8 +73,21 @@ vec3 getShadows(in vec2 coord, in vec3 shadowPos)
     }
 }
 
-vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec3 shadowPos) {
-    vec3 sunLight = getShadows(frag.coord, shadowPos);
+vec3 calcBasicShadows(in vec4 shadowPos) {
+    vec3 shadowCol = vec3(0.0);
+	if (texture2D(shadowtex1, shadowPos.xy).r < shadowPos.z) {
+			//surface is in shadows. reduce light level.
+			shadowCol = vec3(0.2);
+		}
+		else {
+			//surface is in direct sunlight. increase light level.
+			shadowCol = vec3(1);
+		}
+    return shadowCol;
+}
+
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos) {
+    vec3 sunLight = getShadows(frag.coord, shadowPos.xyz);
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
