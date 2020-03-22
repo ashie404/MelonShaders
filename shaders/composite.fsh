@@ -25,6 +25,7 @@ uniform sampler2D shadowtex0;
 uniform sampler2D shadowcolor0;
 
 uniform vec3 cameraPosition;
+uniform vec3 sunPosition;
 
 uniform vec3 upPosition;
 
@@ -45,6 +46,7 @@ varying vec3 normal;
 #include "/lib/shadow.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
+#include "/lib/sky.glsl"
 
 /* DRAWBUFFERS:012 */
 
@@ -54,14 +56,32 @@ void main() {
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
 
-    // calculate shadowmapped lighting for translucents (except for water)
-    // 0.1 emission marks translucent
-    if (frag.emission == 0.1) {
-        finalColor = calculateBasicLighting(frag, lightmap);
+    // if sky
+    if (texture2D(depthtex0, texcoord.st).r == 1) {
+        // render sky
+        vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
+	    vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
+        viewPos /= viewPos.w;
+        finalColor = vec3(0);
+
+        // get accurate atmospheric scattering
+	    finalColor = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition);
+        // if night time, draw stars
+        if (isNight == 1) {
+            vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
+            finalColor += DrawStars(normalize(worldPos));
+        }
     }
-    // 0.5 emission marks water, calculate basic lighting so shadows aren't cast on water
-    else if (frag.emission == 0.5) {
-        finalColor = calculateBasicLighting(frag, lightmap);
+    else {
+        // calculate shadowmapped lighting for translucents (except for water)
+        // 0.1 emission marks translucent
+        if (frag.emission == 0.1) {
+            finalColor = calculateBasicLighting(frag, lightmap);
+        }
+        // 0.5 emission marks water, calculate basic lighting so shadows aren't cast on water
+        else if (frag.emission == 0.5) {
+            finalColor = calculateBasicLighting(frag, lightmap);
+        }
     }
 
     // output
