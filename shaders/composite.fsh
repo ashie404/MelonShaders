@@ -73,13 +73,10 @@ void main() {
         // get accurate atmospheric scattering
 	    finalColor = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition);
         // if night time, draw stars
-        if (isNight == 1) {
-            vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
-            finalColor += DrawStars(normalize(worldPos));
-        }
+        vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
+        finalColor += DrawStars(normalize(worldPos));
     }
     
-
     // output
     gl_FragData[0] = vec4(finalColor, 1);
     gl_FragData[1] = texture2D(gdepth, texcoord.st);

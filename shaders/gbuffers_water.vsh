@@ -1,7 +1,5 @@
 #version 120
 
-#include "/lib/waving.glsl"
-
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
 
@@ -17,6 +15,7 @@ varying vec4 position;
 varying float isWater;
 varying float isIce;
 varying float isTransparent;
+
 
 float getIsTransparent(in float materialId) {
     if (materialId == 160.0) { // stained glass pane
@@ -40,11 +39,12 @@ void main()
     texcoord = gl_MultiTexCoord0;
     lmcoord = gl_MultiTexCoord1;
     tintColor = gl_Color.rgb;
+    position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
     normal = normalize(gl_NormalMatrix * gl_Normal);
+
     if (mc_Entity.x == 8 || mc_Entity.x == 9) {
         isIce = 0;
         isWater = 1;
-        position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
         //position.xyz += WavingWater(position.xyz);
         gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
     }
