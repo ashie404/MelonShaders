@@ -119,8 +119,9 @@ void main() {
                 gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, reflection.a), 0.85);
             } else {
                 // sun reflection
-                if (reflection.a < 0.1)
+                if (reflection.a < 0.1) {
                     gl_FragData[0] = vec4(0.95,0.95,0.9, 0.9);
+                }
             }
         }
         // if ssr is non-applicable

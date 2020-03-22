@@ -73,8 +73,10 @@ void main() {
         // get accurate atmospheric scattering
 	    finalColor = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition);
         // if night time, draw stars
-        vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
-        finalColor += DrawStars(normalize(worldPos));
+        if (isNight == 1) {
+            vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
+            finalColor += DrawStars(normalize(worldPos));
+        }
     }
     
     // output
