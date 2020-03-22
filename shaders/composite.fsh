@@ -52,6 +52,7 @@ uniform int isEyeInWater;
 #include "/lib/shadow.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
+#include "/lib/util.glsl"
 #include "/lib/sky.glsl"
 
 /* DRAWBUFFERS:012 */
@@ -71,7 +72,7 @@ void main() {
         finalColor = vec3(0);
 
         // get accurate atmospheric scattering
-	    finalColor = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition);
+	    finalColor = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition, isNight);
         // if night time, draw stars
         if (isNight == 1) {
             vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;

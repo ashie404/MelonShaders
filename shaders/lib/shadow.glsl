@@ -1,5 +1,3 @@
-#include "/lib/util.glsl"
-
 uniform sampler2D shadowtex1;
 
 float getDepth(in vec2 coord) {

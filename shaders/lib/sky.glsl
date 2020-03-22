@@ -129,6 +129,8 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector) {
     const vec3 halfa = a * 0.5;
     const vec3 normalizationConst = vec3(0.896, 0.873, 0.844);
 
+    float sunAngularRadius = CELESTIAL_RADIUS / 10;
+
     float x = clamp(1.0 - ((sunAngularRadius * 0.6) - acos(cosTheta)) / (sunAngularRadius * 0.6), 0.0, 1.0);
     vec3 sunDisk = sunTint * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;// * lightColors[0];
 
@@ -136,7 +138,7 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector) {
     return vec4(sunDisk, float(cosTheta > cos(sunAngularRadius)));
 }
 
-vec3 GetSkyColor(vec3 worldPos, vec3 sunPos){
+vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
      vec3 color = atmosphere(
         normalize(worldPos),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
@@ -154,10 +156,10 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos){
     color = 1.0 - exp(-2.5 * color);
 
     vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
-	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
-    viewPos /= viewPos.w;
+	vec3 viewPos = toNDC(screenPos.xyz);
 
-    vec4 sunSpot = calculateSunSpot(normalize(viewPos.xyz), sunPos);
+
+    vec4 sunSpot = calculateSunSpot(viewPos, normalize(sunPos));
     //color = sunSpot.rgb;
 
     return color;

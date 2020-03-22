@@ -52,6 +52,7 @@ uniform int isEyeInWater;
 #include "/lib/shadow.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
+#include "/lib/util.glsl"
 #include "/lib/sky.glsl"
 
 /* DRAWBUFFERS:012 */
@@ -89,7 +90,7 @@ void main() {
         // calculate sky reflection
         vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
         vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
-        vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld));
+        vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
         if (isNight == 1) {
             skyReflection += DrawStars(normalize(reflectionPosWS));
         }
