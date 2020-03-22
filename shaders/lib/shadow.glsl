@@ -54,8 +54,8 @@ vec3 getShadows(in vec2 coord, in vec3 shadowPos)
     if (texture2D(depthtex0, coord).r < 1) // if not sky, calculate shadows
     {
         float visibility = 0;
-        for (int y = 0; y < 2; y++) {
-            for (int x = 0; x < 2; x++) {
+        for (int y = -2; y < 2; y++) {
+            for (int x = -2; x < 2; x++) {
                 vec2 offset = vec2(x, y) / shadowMapResolution;
                 offset = rotationMatrix * offset;
                 // sample shadow map and shadow color
@@ -65,7 +65,7 @@ vec3 getShadows(in vec2 coord, in vec3 shadowPos)
                 shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
             }
         }
-        return vec3(shadowCol) / 32;
+        return vec3(shadowCol) / 256;
     }
     else
     {
@@ -88,7 +88,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     vec3 color = vec3(0);
     // if direct light is high, calculate lighting with shadows, if direct light is low, calculate lighting with no shadows
     // mainly for fixing surfaces that aren't facing the sun, which have peter panning, which is ugly
-    if (directLightStrength > 0.3)
+    if (directLightStrength > 0.15)
     {
         color = frag.albedo * (sunLight + skyLight + blockLight);
     }
