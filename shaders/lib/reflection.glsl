@@ -14,6 +14,6 @@ vec4 reflection(vec3 viewPos, vec3 normal, float dither){
 		
 		color.a *= border;
 	}
-	
+    
     return color;
 }

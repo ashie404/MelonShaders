@@ -80,15 +80,8 @@ void main() {
             vec3 rayDir = refract(normalize(viewPos), normal, n1.r/n2.r); // calculate snell's window
             if (rayDir == vec3(0))
             {
-                // calculate reflections (snells window, so dont use sky reflection)
-                if (reflection.a > 0) {
-                    // mix generic underwater color and ssr
-                    gl_FragData[0] = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, 0.7), 1);
-                }
-                else {
-                    // generic underwater color
-                    gl_FragData[0] = vec4(vec3(0.01, 0.02, 0.05), 1);
-                }
+                // mix generic underwater color and ssr
+                gl_FragData[0] = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, 0.7), 1);
             }  
             else {
                 // use sky as water color, but make it more transparent
