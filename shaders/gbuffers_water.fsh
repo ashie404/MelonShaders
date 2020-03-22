@@ -74,23 +74,20 @@ void main() {
         // snells window stuff
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
         vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);
-        vec3 rayDir = refract(normalize(viewPos), normal, n1.r/n2.r); // calculate snell's window
+
+        // eye is in water, calculate snell's window and use generic underwater color for reflections
         if (isEyeInWater == 1) {
+            vec3 rayDir = refract(normalize(viewPos), normal, n1.r/n2.r); // calculate snell's window
             if (rayDir == vec3(0))
             {
-                // calculate reflections
+                // calculate reflections (snells window, so dont use sky reflection)
                 if (reflection.a > 0) {
-                    // mix sky reflection and ssr
-                    gl_FragData[0] = vec4(mix(vec3(0.03, 0.04, 0.07), reflection.rgb, 0.7), 1);
+                    // mix generic underwater color and ssr
+                    gl_FragData[0] = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, 0.7), 1);
                 }
                 else {
-                    if (closenessOfSunToWater < 0.998) {
-                        // sky reflection
-                        gl_FragData[0] = vec4(vec3(0.03, 0.04, 0.07), 1);
-                    } else {
-                        // sun reflection
-                        gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
-                    }
+                    // generic underwater color
+                    gl_FragData[0] = vec4(vec3(0.01, 0.02, 0.05), 1);
                 }
             }  
             else {
@@ -98,6 +95,7 @@ void main() {
                 gl_FragData[0] = vec4(skyReflection, 0.5);
             }
         }
+        // eye isn't in water, use sky for reflections and no snell's window
         else {
             // calculate reflections
                 if (reflection.a > 0) {
