@@ -55,7 +55,6 @@ void main() {
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
 
-
     // calculate shadowmapped lighting for translucents (except for water)
     // 0.1 emission marks translucent
     if (frag.emission == 0.1) {
@@ -65,62 +64,6 @@ void main() {
     else if (frag.emission == 0.5) {
         finalColor = calculateBasicLighting(frag, lightmap);
     }
-
-    // calculate screen space reflections
-    /*
-    #ifdef SCREENSPACE_REFLECTIONS
-    float z = texture2D(depthtex0, texcoord.st).r;
-    float dither = bayer64(gl_FragCoord.xy);
-    //NDC Coordinate
-	//vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
-    vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
-    vec3 viewPos = toNDC(screenPos);
-
-    //vec3 fragpos = toNDC(vec3(gl_FragCoord.xy/vec2(viewWidth,viewHeight),gl_FragCoord.z));
-	//fragpos /= fragpos.w;
-    // water reflections
-    if (frag.emission == 0.5) {
-        vec4 reflection = reflection(normalize(viewPos),toNDC(normal),dither);
-        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-
-        // set alpha
-        if (reflection.a > 0)
-        {
-            reflection.a = 0.85;
-        }
-        if (isNight == 1) {
-            reflection.rgb += finalColor.rgb;
-        }
-        else {
-		    reflection.rgb *= finalColor.rgb;
-        }
-
-		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
-    }
-    // ice reflections
-    #ifdef ICE_REFLECTIONS
-    if (frag.emission == 0.4) {
-        vec4 reflection = reflection(normalize(viewPos),normal,dither);
-        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-
-        // set alpha
-        if (reflection.a > 0)
-        {
-            reflection.a = 0.65;
-        }
-        if (isNight == 1) {
-            reflection.rgb += finalColor.rgb;
-        }
-        else {
-		    reflection.rgb *= finalColor.rgb;
-        }
-		
-		reflection.rgb *= finalColor.rgb;
-		
-		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
-    }
-    #endif
-    #endif*/
 
     // output
     gl_FragData[0] = vec4(finalColor, 1);
