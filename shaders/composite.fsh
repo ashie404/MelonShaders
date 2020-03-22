@@ -1,7 +1,5 @@
 #version 120
 
-// composite pass 0: translucent lighting
-
 varying vec4 texcoord;
 
 varying vec3 lightVector;
@@ -21,6 +19,7 @@ uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 
 uniform sampler2D gdepthtex;
+uniform sampler2D gaux2;
 uniform sampler2D shadow;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowcolor0;
@@ -58,8 +57,8 @@ void main() {
 
 
     // calculate shadowmapped lighting for translucents (except for water)
-    // 0.3 and 0.4 emission values mark stained glass & ice
-    if (frag.emission == 0.3 || frag.emission == 0.4) {
+    // 0.1 emission marks translucent
+    if (frag.emission == 0.1) {
         finalColor = calculateBasicLighting(frag, lightmap);
     }
     // 0.5 emission marks water, calculate basic lighting so shadows aren't cast on water
@@ -68,16 +67,21 @@ void main() {
     }
 
     // calculate screen space reflections
+    /*
     #ifdef SCREENSPACE_REFLECTIONS
     float z = texture2D(depthtex0, texcoord.st).r;
     float dither = bayer64(gl_FragCoord.xy);
     //NDC Coordinate
-	vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
+	//vec4 fragpos = normalize(gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, z, 1.0) * 2.0 - 1.0));
+    vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
+    vec3 viewPos = toNDC(screenPos);
+
     //vec3 fragpos = toNDC(vec3(gl_FragCoord.xy/vec2(viewWidth,viewHeight),gl_FragCoord.z));
-	fragpos /= fragpos.w;
+	//fragpos /= fragpos.w;
     // water reflections
     if (frag.emission == 0.5) {
-        vec4 reflection = reflection(fragpos.xyz,normal,dither);
+        vec4 reflection = reflection(normalize(viewPos),toNDC(normal),dither);
+        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
 
         // set alpha
         if (reflection.a > 0)
@@ -96,7 +100,8 @@ void main() {
     // ice reflections
     #ifdef ICE_REFLECTIONS
     if (frag.emission == 0.4) {
-        vec4 reflection = reflection(fragpos.xyz,normal,dither);
+        vec4 reflection = reflection(normalize(viewPos),normal,dither);
+        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
 
         // set alpha
         if (reflection.a > 0)
@@ -115,7 +120,7 @@ void main() {
 		finalColor.rgb = mix(finalColor.rgb, reflection.rgb, reflection.a);
     }
     #endif
-    #endif
+    #endif*/
 
     // output
     gl_FragData[0] = vec4(finalColor, 1);

@@ -44,6 +44,7 @@ varying vec3 normal;
 #include "/lib/distort.glsl"
 
 void main() {
+    float z = texture2D(depthtex0, texcoord.st).r;
     // get current fragment and calculate lighting
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
@@ -67,5 +68,11 @@ void main() {
     }
     vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos);
 
+    /*DRAWBUFFERS:0*/
     gl_FragData[0] = vec4(finalColor, 1);
+
+    #ifdef SCREENSPACE_REFLECTIONS
+    /*DRAWBUFFERS:05*/
+	gl_FragData[1] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0));
+    #endif
 }
