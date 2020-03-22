@@ -59,17 +59,19 @@ void main() {
         float closenessOfSunToWater = dot(normalize(sunReflection), normalize(sunPosWorld));
 
         #ifdef SCREENSPACE_REFLECTIONS
+        // generate dither and depth variables
         float z = texture2D(depthtex0, texcoord.st).r;
         float dither = bayer64(gl_FragCoord.xy);
         
+        // calculate ssr color
         vec4 reflection = reflection(normalize(viewPos),normal,dither);
         reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
+
         // calculate sky reflection
         vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
         vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
         vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
         skyReflection /= 1.45;
-        // calculate ssr color
 
         // snells window refraction indexes
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
@@ -80,8 +82,8 @@ void main() {
             vec3 rayDir = refract(normalize(viewPos), normal, n1.r/n2.r); // calculate snell's window
             if (rayDir == vec3(0))
             {
-                // mix generic underwater color and ssr
-                gl_FragData[0] = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, 0.7), 1);
+                // mix generic underwater color and ssr based on ssr alpha
+                gl_FragData[0] = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, reflection.a), 1);
             }  
             else {
                 // use sky as water color, but make it more transparent
@@ -128,7 +130,10 @@ void main() {
         float dither = bayer64(gl_FragCoord.xy);
         vec4 reflection = reflection(normalize(viewPos),normal,dither);
         reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-        blockColor = vec4(mix(blockColor.rgb, reflection.rgb, 0.35), 1);
+        if (reflection.a >= 0.6) {
+            reflection.a -= 0.6;
+        }
+        blockColor = vec4(mix(blockColor.rgb, reflection.rgb, reflection.a), 0.95);
         #endif
         #endif
 
