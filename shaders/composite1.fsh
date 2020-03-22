@@ -58,14 +58,13 @@ uniform int isEyeInWater;
 
 void main() {
 
-    vec3 finalColor = texture2D(gcolor, texcoord.st).rgb;
+    vec4 finalColor = texture2D(gcolor, texcoord.st);
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
 
     // 0.1 emission marks translucent lighting
     if (frag.emission == 0.1) {
-        finalColor = calculateBasicLighting(frag, lightmap);
-        gl_FragData[0] = vec4(finalColor, 1.0);
+        finalColor = vec4(calculateBasicLighting(frag, lightmap), 1);
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {
@@ -104,11 +103,11 @@ void main() {
             if (rayDir == vec3(0))
             {
                 // mix generic underwater color and ssr based on ssr alpha
-                gl_FragData[0] = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, reflection.a), 1);
+                finalColor = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, reflection.a), 1);
             }  
             else {
                 // use sky as water color, but make it more transparent. (mix for translucency)
-                gl_FragData[0] = mix(vec4(finalColor, 1), vec4(skyReflection, 0.5), 0.5);
+                finalColor = mix(finalColor, vec4(skyReflection, 0.5), 0.5);
             }
         }
         // eye isn't in water, use sky for reflections and no snell's window
@@ -116,11 +115,11 @@ void main() {
             // calculate reflections
             if (closenessOfSunToWater < 0.998) {
                 // mix sky reflection and ssr based on ssr alpha
-                gl_FragData[0] = mix(vec4(finalColor, 1), vec4(mix(skyReflection, reflection.rgb, reflection.a), 0.85), 0.65);
+                finalColor = mix(finalColor, vec4(mix(skyReflection, reflection.rgb, reflection.a), 0.85), 0.65);
             } else {
                 // sun reflection
                 if (reflection.a < 0.1) {
-                    gl_FragData[0] = vec4(0.95,0.95,0.9, 0.7);
+                    finalColor = vec4(0.95,0.95,0.9, 0.7);
                 }
             }
         }
@@ -129,21 +128,17 @@ void main() {
         // calculate basic color
         if (closenessOfSunToWater < 0.998) {
             // basic sky reflection color
-            gl_FragData[0] = mix(vec4(finalColor, 1), vec4(skyReflection, 1), 0.65);
+            finalColor = mix(finalColor, vec4(skyReflection, 1), 0.65);
         }
         else {
             // basic sun reflection
-            gl_FragData[0] = mix(vec4(finalColor, 1), vec4(0.95,0.95,0.9,1), 0.7);
+            finalColor = mix(finalColor, vec4(0.95,0.95,0.9,1), 0.7);
         }
         #endif
     }
-    else {
-        gl_FragData[0] = vec4(finalColor, 1);
-    }
-    
 
     // output
-    //gl_FragData[0] = vec4(finalColor, 1);
+    gl_FragData[0] = finalColor;
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);
 }
