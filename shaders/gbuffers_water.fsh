@@ -66,10 +66,11 @@ void main() {
         vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
         vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
         vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
+        skyReflection /= 1.45;
         // calculate ssr color
         if (reflection.a > 0) {
             // mix sky reflection and ssr
-            gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, 0.7), 0.65);
+            gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, 0.7), 0.85);
         }
         // if ssr is non-applicable
         else {
