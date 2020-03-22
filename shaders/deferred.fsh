@@ -73,6 +73,6 @@ void main() {
 
     #ifdef SCREENSPACE_REFLECTIONS
     /*DRAWBUFFERS:05*/
-	gl_FragData[1] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0));
+	gl_FragData[1] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2
     #endif
 }

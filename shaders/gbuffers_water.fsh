@@ -29,6 +29,8 @@ varying float isWater;
 varying float isIce;
 varying float isTransparent;
 
+uniform int isEyeInWater;
+
 uniform float viewWidth;
 uniform float viewHeight;
 
@@ -68,20 +70,52 @@ void main() {
         vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
         skyReflection /= 1.45;
         // calculate ssr color
-        if (reflection.a > 0) {
-            // mix sky reflection and ssr
-            gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, 0.7), 0.85);
-        }
-        // if ssr is non-applicable
-        else {
-            if (closenessOfSunToWater < 0.998) {
-                // sky reflection
-                gl_FragData[0] = vec4(skyReflection, 0.85);
-            } else {
-                // sun reflection
-                gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
+
+        // snells window stuff
+        vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
+        vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);
+        vec3 rayDir = refract(normalize(toWorld(viewPos)), normal, n1.r/n2.r); // calculate snell's window
+        if (isEyeInWater == 1) {
+            if (rayDir == vec3(0))
+            {
+                // calculate reflections
+                if (reflection.a > 0) {
+                    // mix sky reflection and ssr
+                    gl_FragData[0] = vec4(mix(vec3(0.03, 0.04, 0.07), reflection.rgb, 0.7), 1);
+                }
+                else {
+                    if (closenessOfSunToWater < 0.998) {
+                        // sky reflection
+                        gl_FragData[0] = vec4(vec3(0.03, 0.04, 0.07), 1);
+                    } else {
+                        // sun reflection
+                        gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
+                    }
+                }
+            }  
+            else {
+                // use sky as water color, but make it more transparent
+                gl_FragData[0] = vec4(skyReflection, 0.5);
             }
         }
+        else {
+            // calculate reflections
+                if (reflection.a > 0) {
+                    // mix sky reflection and ssr
+                    gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, 0.7), 0.85);
+                }
+                else {
+                    if (closenessOfSunToWater < 0.998) {
+                        // sky reflection
+                        gl_FragData[0] = vec4(skyReflection, 0.85);
+                    } else {
+                        // sun reflection
+                        gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
+                    }
+                }
+        }
+
+        // if ssr is non-applicable
         #else
 
         // calculate basic color
