@@ -2,6 +2,8 @@
 #define iSteps 16
 #define jSteps 8
 
+#include "/lib/noise.glsl"
+
 // atmospheric scattering shader by wwwtyro https://github.com/wwwtyro/glsl-atmosphere 
 
 vec2 rsi(vec3 r0, vec3 rd, float sr) {
@@ -108,7 +110,18 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
     return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
 }
 
-vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
+vec3 DrawStars(vec3 worldPos) {
+    // get noise with multiplied world positon (so that the noise is small enough for stars)
+    float noise = cellular(worldPos * 32);
+    if (noise < 0.15) {
+        return mix(vec3(1), vec3(0), noise + 0.5);
+    } else {
+        return vec3(0);
+    }
+    //return vec3(noise);
+}
+
+vec3 GetSkyColor(vec3 worldPos, vec3 sunPos){
      vec3 color = atmosphere(
         normalize(worldPos),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin

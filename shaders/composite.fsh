@@ -45,7 +45,6 @@ varying vec3 normal;
 #include "/lib/shadow.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
-#include "/lib/noise.glsl"
 
 /* DRAWBUFFERS:012 */
 

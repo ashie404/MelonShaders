@@ -58,10 +58,10 @@ void main()
         isWater = 0;
     }
     if (worldTime < 12700 || worldTime > 23250) {
-        isNight = 1;
+        isNight = 0;
     } 
     else {
-        isNight = 0;
+        isNight = 1;
     }
     isTransparent = getIsTransparent(mc_Entity.x);
 }

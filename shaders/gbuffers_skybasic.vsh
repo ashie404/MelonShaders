@@ -7,10 +7,10 @@ varying vec4 texcoord;
 
 void main(){
 	if (worldTime < 12700 || worldTime > 23250) {
-        isNight = 1;
+        isNight = 0;
     } 
     else {
-        isNight = 0;
+        isNight = 1;
     }
 	gl_Position = ftransform();
 	texcoord = gl_MultiTexCoord0;

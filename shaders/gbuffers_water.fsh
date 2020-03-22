@@ -70,7 +70,10 @@ void main() {
         // calculate sky reflection
         vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
         vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
-        vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
+        vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld));
+        if (isNight == 1) {
+            skyReflection += DrawStars(normalize(mat3(gbufferModelViewInverse) * viewPos));
+        }
         skyReflection /= 1.45;
 
         // snells window refraction indexes
