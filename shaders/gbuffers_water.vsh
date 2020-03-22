@@ -16,7 +16,6 @@ varying vec4 position;
 
 varying float isWater;
 varying float isIce;
-varying float isNight;
 varying float isTransparent;
 
 float getIsTransparent(in float materialId) {
@@ -56,12 +55,6 @@ void main()
     else {
         isIce = 0;
         isWater = 0;
-    }
-    if (worldTime < 12700 || worldTime > 23250) {
-        isNight = 0;
-    } 
-    else {
-        isNight = 1;
     }
     isTransparent = getIsTransparent(mc_Entity.x);
 }

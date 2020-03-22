@@ -1,5 +1,7 @@
 #version 120
 
+// composite pass 0: sky and clouds
+
 varying vec4 texcoord;
 
 varying vec3 lightVector;
@@ -23,6 +25,7 @@ uniform sampler2D gaux2;
 uniform sampler2D shadow;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowcolor0;
+uniform sampler2D normals;
 
 uniform vec3 cameraPosition;
 uniform vec3 sunPosition;
@@ -39,6 +42,9 @@ uniform float viewHeight;
 
 varying float isTransparent;
 varying vec3 normal;
+
+varying vec4 position;
+uniform int isEyeInWater;
 
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
@@ -72,18 +78,10 @@ void main() {
             finalColor += DrawStars(normalize(worldPos));
         }
     }
-    else {
-        // calculate shadowmapped lighting for translucents (except for water)
-        // 0.1 emission marks translucent
-        if (frag.emission == 0.1) {
-            finalColor = calculateBasicLighting(frag, lightmap);
-        }
-        // 0.5 emission marks water, calculate basic lighting so shadows aren't cast on water
-        else if (frag.emission == 0.5) {
-            finalColor = calculateBasicLighting(frag, lightmap);
-        }
-    }
+    
 
     // output
     gl_FragData[0] = vec4(finalColor, 1);
+    gl_FragData[1] = texture2D(gdepth, texcoord.st);
+    gl_FragData[2] = texture2D(gnormal, texcoord.st);
 }
