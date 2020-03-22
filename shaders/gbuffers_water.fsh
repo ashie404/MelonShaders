@@ -74,7 +74,7 @@ void main() {
         // snells window stuff
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
         vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);
-        vec3 rayDir = refract(normalize(toWorld(viewPos)), normal, n1.r/n2.r); // calculate snell's window
+        vec3 rayDir = refract(normalize(viewPos), normal, n1.r/n2.r); // calculate snell's window
         if (isEyeInWater == 1) {
             if (rayDir == vec3(0))
             {
