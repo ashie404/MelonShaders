@@ -33,10 +33,12 @@ void main() {
     vec4 blockColor = texture2D(texture, texcoord.st);
     blockColor.rgb *= tintColor;
 
-    gl_FragData[0] = blockColor;
+    
     if (isWater == 1) {
+        gl_FragData[0] = vec4(0, 0, 0, 0.22);
         gl_FragData[1] = vec4(lmcoord.st / 16,0,0.5);
     } else {
+        gl_FragData[0] = blockColor;
         gl_FragData[1] = vec4(lmcoord.st / 16,0,0.1);
     }
     gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);

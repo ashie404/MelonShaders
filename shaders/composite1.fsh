@@ -107,8 +107,8 @@ void main() {
                 gl_FragData[0] = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, reflection.a), 1);
             }  
             else {
-                // use sky as water color, but make it more transparent
-                gl_FragData[0] = vec4(skyReflection, 0.5);
+                // use sky as water color, but make it more transparent. (mix for translucency)
+                gl_FragData[0] = mix(vec4(finalColor, 1), vec4(skyReflection, 0.5), 0.5);
             }
         }
         // eye isn't in water, use sky for reflections and no snell's window
@@ -116,11 +116,11 @@ void main() {
             // calculate reflections
             if (closenessOfSunToWater < 0.998) {
                 // mix sky reflection and ssr based on ssr alpha
-                gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, reflection.a), 0.85);
+                gl_FragData[0] = mix(vec4(finalColor, 1), vec4(mix(skyReflection, reflection.rgb, reflection.a), 0.85), 0.65);
             } else {
                 // sun reflection
                 if (reflection.a < 0.1) {
-                    gl_FragData[0] = vec4(0.95,0.95,0.9, 0.9);
+                    gl_FragData[0] = vec4(0.95,0.95,0.9, 0.7);
                 }
             }
         }
@@ -129,11 +129,11 @@ void main() {
         // calculate basic color
         if (closenessOfSunToWater < 0.998) {
             // basic sky reflection color
-            gl_FragData[0] = vec4(skyReflection, 0.85);
+            gl_FragData[0] = mix(vec4(finalColor, 1), vec4(skyReflection, 1), 0.65);
         }
         else {
             // basic sun reflection
-            gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
+            gl_FragData[0] = mix(vec4(finalColor, 1), vec4(0.95,0.95,0.9,1), 0.7);
         }
         #endif
     }
