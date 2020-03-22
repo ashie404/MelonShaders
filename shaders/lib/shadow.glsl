@@ -73,19 +73,6 @@ vec3 getShadows(in vec2 coord, in vec3 shadowPos)
     }
 }
 
-vec3 calcBasicShadows(in vec4 shadowPos) {
-    vec3 shadowCol = vec3(0.0);
-	if (texture2D(shadowtex1, shadowPos.xy).r < shadowPos.z) {
-			//surface is in shadows. reduce light level.
-			shadowCol = vec3(0.2);
-		}
-		else {
-			//surface is in direct sunlight. increase light level.
-			shadowCol = vec3(1);
-		}
-    return shadowCol;
-}
-
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos) {
     float directLightStrength = dot(frag.normal, lightVector);
 
@@ -100,7 +87,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     vec3 color = vec3(0);
     // if direct light is high, calculate lighting with shadows, if direct light is low, calculate lighting with no shadows
-    // mainly for fixing backface peter panning, which is ugly
+    // mainly for fixing surfaces that aren't facing the sun, which have peter panning, which is ugly
     if (directLightStrength > 0.3)
     {
         color = frag.albedo * (sunLight + skyLight + blockLight);
