@@ -114,9 +114,9 @@ vec3 DrawStars(vec3 worldPos) {
     // get noise with multiplied world positon (so that the noise is small enough for stars)
     float noise = cellular(worldPos * 32);
     if (noise < 0.15) {
-        return mix(vec3(1), vec3(0), noise + 0.5);
+        return mix(vec3(1), NIGHT_SKY_COLOR, noise + 0.85);
     } else {
-        return vec3(0);
+        return NIGHT_SKY_COLOR;
     }
     //return vec3(noise);
 }
