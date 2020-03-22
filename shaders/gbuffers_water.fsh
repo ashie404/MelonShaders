@@ -71,7 +71,7 @@ void main() {
         skyReflection /= 1.45;
         // calculate ssr color
 
-        // snells window stuff
+        // snells window refraction indexes
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
         vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);
 
@@ -91,19 +91,14 @@ void main() {
         // eye isn't in water, use sky for reflections and no snell's window
         else {
             // calculate reflections
-                if (reflection.a > 0) {
-                    // mix sky reflection and ssr
-                    gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, 0.7), 0.85);
-                }
-                else {
-                    if (closenessOfSunToWater < 0.998) {
-                        // sky reflection
-                        gl_FragData[0] = vec4(skyReflection, 0.85);
-                    } else {
-                        // sun reflection
-                        gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
-                    }
-                }
+            if (closenessOfSunToWater < 0.998) {
+                // mix sky reflection and ssr based on ssr alpha
+                gl_FragData[0] = vec4(mix(skyReflection, reflection.rgb, reflection.a), 0.85);
+            } else {
+                // sun reflection
+                if (reflection.a < 0.1)
+                    gl_FragData[0] = vec4(0.95,0.95,0.9, 0.9);
+            }
         }
 
         // if ssr is non-applicable
@@ -111,14 +106,11 @@ void main() {
 
         // calculate basic color
         if (closenessOfSunToWater < 0.998) {
-            // basic sky reflection
-            vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
-            vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
-            vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
+            // basic sky reflection color
             gl_FragData[0] = vec4(skyReflection, 0.85);
         }
         else {
-            // sun reflection
+            // basic sun reflection
             gl_FragData[0] = vec4(0.95,0.95,0.9,0.9);
         }
         #endif
@@ -141,13 +133,13 @@ void main() {
         #endif
 
         gl_FragData[0] = blockColor;
-        // return 0.1 on depth alpha so composite knows to calculate lighting
+        // return 0.1 on depth alpha so composite knows to calculate basic lighting
         gl_FragData[1] = vec4(lmcoord.st / 16,0,0.1);
         gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
     }
     else if (isTransparent == 1) {
         gl_FragData[0] = blockColor;
-        // return 0.1 on depth alpha so composite knows to calculate lighting
+        // return 0.1 on depth alpha so composite knows to calculate basic lighting
         gl_FragData[1] = vec4(lmcoord.st / 16,0,0.1);
         gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
     }
