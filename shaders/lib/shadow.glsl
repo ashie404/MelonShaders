@@ -91,7 +91,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     
     // if there is no shadow cast, add specular highlights
     if (sunLight.a > 0.5) {
-        color = mix(directLight, color, directLightStrength);
+        color += mix(vec3(0), directLight, directLightStrength);
     }
     if (frag.emission == 1) {
         return frag.albedo;
