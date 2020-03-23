@@ -73,16 +73,15 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     }
 }
 
-vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec) {
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in float roughness) {
     vec4 sunLight = getShadows(frag.coord, shadowPos.xyz);
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
-    float directLightStrength = ggx(normalize(frag.normal), normalize(viewVec), normalize(lightVector), 0.5, 0);
-    directLightStrength *= 1.5;
-    directLightStrength = max(0.7, directLightStrength);
+    float directLightStrength = ggx(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, 0);
+    directLightStrength = max(0.65, directLightStrength);
     vec3 directLight = (directLightStrength) * skyColor * sunLight.rgb;
 
     vec3 color = vec3(0);

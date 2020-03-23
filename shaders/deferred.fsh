@@ -37,6 +37,8 @@ uniform float viewHeight;
 
 varying vec3 normal;
 
+uniform sampler2D specular;
+
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
@@ -73,7 +75,10 @@ void main() {
     viewPos /= viewPos.w;
     vec3 worldPos = toWorld(viewPos.xyz);
 
-    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz));
+    float specularSmoothness = texture2D(specular, texcoord.st).r;
+    float roughness = pow(1 - specularSmoothness, 2);
+
+    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), roughness);
 
     /*DRAWBUFFERS:0*/
     gl_FragData[0] = vec4(finalColor, 1);
