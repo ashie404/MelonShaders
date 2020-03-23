@@ -1,5 +1,7 @@
 uniform sampler2D shadowtex1;
 
+#include "/lib/ggx.glsl"
+
 float getDepth(in vec2 coord) {
     return texture2D(gdepthtex, coord).r;
 }
@@ -104,9 +106,10 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 }
 
 // basic lighting (no shadowmap)
-vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap) {
-    float directLightStrength = dot(frag.normal, lightVector);
-    directLightStrength = max(0.2, directLightStrength);
+vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap, in vec3 viewVec) {
+    //float directLightStrength = dot(frag.normal, lightVector);
+    //directLightStrength = max(0.2, directLightStrength);
+    float directLightStrength = ggx(frag.normal, viewVec, lightVector, 0.5, 0);
     vec3 directLight = directLightStrength * lightColor;
     
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;

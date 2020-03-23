@@ -158,9 +158,11 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
     vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
 	vec3 viewPos = toNDC(screenPos.xyz);
 
+    vec3 lightVec = normalize(sunPos);
+    lightVec = mat3(gbufferModelViewInverse) * lightVec;
 
-    vec4 sunSpot = calculateSunSpot(viewPos, normalize(sunPos));
-    //color = sunSpot.rgb;
+    vec4 sunSpot = calculateSunSpot(worldPos, lightVec);
+    color = mix(color, sunSpot.rgb, sunSpot.a);
 
     return color;
 }

@@ -15,6 +15,8 @@ uniform sampler2D noisetex;
 uniform mat4 gbufferModelView;
 uniform mat4 gbufferProjection;
 
+uniform vec3 shadowLightPosition;
+
 uniform sampler2D colortex0;
 uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
@@ -62,31 +64,27 @@ void main() {
     vec4 finalColor = texture2D(gcolor, texcoord.st);
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
+    vec4 newPosition = position;
+    newPosition /= position.w;
+
+    vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
+    vec3 viewPos = toNDC(screenPos);
 
     // 0.1 emission marks translucent lighting
     if (frag.emission == 0.1) {
-        finalColor = vec4(calculateBasicLighting(frag, lightmap), 1);
+        finalColor = vec4(calculateBasicLighting(frag, lightmap, normalize(viewPos)), 1);
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {
         // calculate water reflections
         // calculate reflections
         // calculate screen space reflections
-        vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
-        vec3 viewPos = toNDC(screenPos);
         vec3 normal = getNormal(texcoord.st);
         vec3 sunPosWorld = mat3(gbufferModelViewInverse) * sunPosition;
         vec3 normalWorld = mat3(gbufferModelViewInverse) * normal;
         vec3 sunReflection = reflect(normalize(position.xyz), normalize(normalWorld));
         float closenessOfSunToWater = dot(normalize(sunReflection), normalize(sunPosWorld));
 
-        #ifdef SCREENSPACE_REFLECTIONS
-        // generate dither and depth variables
-        float z = texture2D(depthtex0, texcoord.st).r;
-        float dither = bayer64(gl_FragCoord.xy);
-        // calculate ssr color
-        vec4 reflection = reflection(normalize(viewPos),normal,dither);
-        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
         // calculate sky reflection
         vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
         vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
@@ -95,6 +93,14 @@ void main() {
             skyReflection += DrawStars(normalize(reflectionPosWS));
         }
         skyReflection /= 1.45;
+
+        #ifdef SCREENSPACE_REFLECTIONS
+        // generate dither and depth variables
+        float z = texture2D(depthtex0, texcoord.st).r;
+        float dither = bayer64(gl_FragCoord.xy);
+        // calculate ssr color
+        vec4 reflection = reflection(viewPos,normal,dither);
+        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
         // snells window refraction indexes
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
         vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);

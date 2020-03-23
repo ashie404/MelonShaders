@@ -37,6 +37,8 @@ uniform mat4 shadowProjection;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferProjectionInverse;
 
+uniform vec3 shadowLightPosition;
+
 uniform float viewWidth;
 uniform float viewHeight;
 

@@ -16,10 +16,6 @@ vec4 Raytrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither,
 			  float maxf, float stp, float ref, float inc){
 	vec3 pos = vec3(0.0);
 	float dist = 0.0;
-	
-	#if AA == 2
-	dither = fract(dither + frameTimeCounter);
-	#endif
 
 	vec3 start = viewPos;
 
@@ -48,19 +44,6 @@ vec4 Raytrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither,
         tvector += vector;
 		viewPos = start + tvector * (dither * 0.05 + 0.975);
     }
-
-	#ifdef REFLECT_PREVIOUS
-	//Previous frame reprojection from Chocapic13
-	vec4 viewPosPrev = gbufferProjectionInverse * vec4(pos * 2.0 - 1.0, 1.0);
-	viewPosPrev /= viewPosPrev.w;
-	
-	viewPosPrev = gbufferModelViewInverse * viewPosPrev;
-
-	vec4 previousPosition = viewPosPrev + vec4(cameraPosition - previousCameraPosition, 0.0);
-	previousPosition = gbufferPreviousModelView * previousPosition;
-	previousPosition = gbufferPreviousProjection * previousPosition;
-	pos.xy = previousPosition.xy / previousPosition.w * 0.5 + 0.5;
-	#endif
 
 	return vec4(pos, dist);
 }
