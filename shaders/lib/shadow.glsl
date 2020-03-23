@@ -1,6 +1,7 @@
 uniform sampler2D shadowtex1;
 
 #include "/lib/ggx.glsl"
+#include "/lib/diffuse.glsl"
 
 float getDepth(in vec2 coord) {
     return texture2D(gdepthtex, coord).r;
@@ -80,19 +81,29 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
-    float directLightStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, F0, 0.5);
-    //directLightStrength = max(0.65, directLightStrength);
-    vec3 directLight = (directLightStrength) * skyColor;
-    directLight /= 0.5;
+    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, F0, 0.5);
+    vec3 specularLight = (specularStrength) * vec3(0.1);
+    specularLight /= 0.5;
+
+    float diffuseStrength = Burley(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness);
+    diffuseStrength = max(0, diffuseStrength);
+    vec3 diffuseLight = (diffuseStrength) * vec3(0.1);
+
     vec3 color = vec3(0);
     // if direct light is high, calculate lighting with shadows, if direct light is low, calculate lighting with no shadows
     // mainly for fixing surfaces that aren't facing the sun, which have peter panning, which is ugly
-    color = frag.albedo * (sunLight.rgb + skyLight + blockLight);
+    color = frag.albedo * (sunLight.rgb);
     
-    // if there is no shadow cast, add specular highlights
+    // if there is no shadow cast, add specular highlights and diffuse light
     if (sunLight.a > 0.5) {
-        color += mix(vec3(0), directLight, directLightStrength);
+        color += mix(vec3(0), specularLight, specularStrength);
+        if (specularStrength < 0.1) {
+            color *= mix(skyColor, diffuseLight, diffuseStrength) * 8;
+        }
     }
+    // lightmap stuff
+    color += frag.albedo * (skyLight + blockLight);
+
     if (frag.emission == 1) {
         return frag.albedo;
     }

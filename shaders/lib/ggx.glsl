@@ -32,7 +32,6 @@ float GetNoHSquared(float radiusTan, float NoL, float NoV, float VoL)
     return max(0.0, NoH * NoH / HoH);
 }
 
-
 float GGX(vec3 normal, vec3 viewPos, vec3 lightVec, float smoothness, float f0, float sunSize) {
     float roughness = 1.0 - smoothness;
     if(roughness < 0.05) roughness = 0.05;
