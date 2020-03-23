@@ -40,6 +40,7 @@ varying vec3 normal;
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
+#include "/lib/util.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/distort.glsl"
 
@@ -66,7 +67,13 @@ void main() {
     else {
         fShadowPos = vec4(shadowPos, 0);
     }
-    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos);
+
+    vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
+	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
+    viewPos /= viewPos.w;
+    vec3 worldPos = toWorld(viewPos.xyz);
+
+    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz));
 
     /*DRAWBUFFERS:0*/
     gl_FragData[0] = vec4(finalColor, 1);

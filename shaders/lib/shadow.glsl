@@ -47,7 +47,7 @@ mat2 getRotationMatrix(in vec2 coord) {
     );
 }
 
-vec3 getShadows(in vec2 coord, in vec3 shadowPos)
+vec4 getShadows(in vec2 coord, in vec3 shadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
@@ -65,38 +65,35 @@ vec3 getShadows(in vec2 coord, in vec3 shadowPos)
                 shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
             }
         }
-        return vec3(shadowCol) / 256;
+        return vec4(shadowCol / 256, visibility);
     }
     else
     {
-        return vec3(0.35,0.15,0.15);
+        return vec4(0.35,0.15,0.15, 1);
     }
 }
 
-vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos) {
-    float directLightStrength = dot(frag.normal, lightVector);
-
-    directLightStrength = max(0, directLightStrength);
-
-    vec3 directLight = directLightStrength * lightColor;
-    vec3 sunLight = getShadows(frag.coord, shadowPos.xyz);
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec) {
+    vec4 sunLight = getShadows(frag.coord, shadowPos.xyz);
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
+    float directLightStrength = ggx(normalize(frag.normal), normalize(viewVec), normalize(lightVector), 0.5, 0);
+    directLightStrength *= 1.5;
+    directLightStrength = max(0.7, directLightStrength);
+    vec3 directLight = (directLightStrength) * skyColor * sunLight.rgb;
+
     vec3 color = vec3(0);
     // if direct light is high, calculate lighting with shadows, if direct light is low, calculate lighting with no shadows
     // mainly for fixing surfaces that aren't facing the sun, which have peter panning, which is ugly
-    if (directLightStrength > 0.15)
-    {
-        color = frag.albedo * (sunLight + skyLight + blockLight);
+    color = frag.albedo * (sunLight.rgb + skyLight + blockLight);
+    
+    // if there is no shadow cast, add specular highlights
+    if (sunLight.a > 0.5) {
+        color = mix(directLight, color, directLightStrength);
     }
-    else {
-
-        color = frag.albedo * (directLight + skyLight + blockLight);
-    }
-
     if (frag.emission == 1) {
         return frag.albedo;
     }
@@ -110,7 +107,8 @@ vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap, in vec3 view
     //float directLightStrength = dot(frag.normal, lightVector);
     //directLightStrength = max(0.2, directLightStrength);
     float directLightStrength = ggx(frag.normal, viewVec, lightVector, 0.5, 0);
-    vec3 directLight = directLightStrength * lightColor;
+    directLightStrength = max(0, directLightStrength);
+    vec3 directLight = directLightStrength * lightColor*2;
     
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
