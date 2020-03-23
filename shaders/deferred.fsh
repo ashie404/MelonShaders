@@ -76,9 +76,16 @@ void main() {
     vec3 worldPos = toWorld(viewPos.xyz);
 
     float specularSmoothness = texture2D(specular, texcoord.st).r;
-    float roughness = pow(1 - specularSmoothness, 2);
+    float specularGreen = texture2D(specular, texcoord.st).g;
+    float F0 = 0;
+    if (specularGreen <= 229)
+    {
+        F0 = pow(specularGreen, 2);
+    } else {
+        // todo: add processing for labpbr metals
+    }
 
-    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), roughness);
+    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), specularSmoothness, F0);
 
     /*DRAWBUFFERS:0*/
     gl_FragData[0] = vec4(finalColor, 1);

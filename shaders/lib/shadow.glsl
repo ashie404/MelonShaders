@@ -73,17 +73,17 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     }
 }
 
-vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in float roughness) {
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in float roughness, in float F0) {
     vec4 sunLight = getShadows(frag.coord, shadowPos.xyz);
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     vec3 skyLight = skyColor * lightmap.skyLightStrength;
 
-    float directLightStrength = ggx(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, 0);
-    directLightStrength = max(0.65, directLightStrength);
-    vec3 directLight = (directLightStrength) * skyColor * sunLight.rgb;
-
+    float directLightStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, F0, 0.5);
+    //directLightStrength = max(0.65, directLightStrength);
+    vec3 directLight = (directLightStrength) * skyColor;
+    directLight /= 0.5;
     vec3 color = vec3(0);
     // if direct light is high, calculate lighting with shadows, if direct light is low, calculate lighting with no shadows
     // mainly for fixing surfaces that aren't facing the sun, which have peter panning, which is ugly
@@ -105,7 +105,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap, in vec3 viewVec) {
     //float directLightStrength = dot(frag.normal, lightVector);
     //directLightStrength = max(0.2, directLightStrength);
-    float directLightStrength = ggx(frag.normal, viewVec, lightVector, 0.5, 0);
+    float directLightStrength = GGX(frag.normal, viewVec, lightVector, 0.5, 0, 0.5);
     directLightStrength = max(0, directLightStrength);
     vec3 directLight = directLightStrength * lightColor*2;
     
