@@ -76,13 +76,13 @@ void main()
     tintColor = gl_Color.rgb;
     position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
     normal = normalize(gl_NormalMatrix * gl_Normal);
-    normal.y -= getwaves(ftransform().xz, 48);
 
     if (mc_Entity.x == 8 || mc_Entity.x == 9) {
         isIce = 0;
         isWater = 1;
-        //position.xyz += WavingWater(position.xyz);
-        gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
+        //normal = mat3(gbufferModelViewInverse) * normal;
+        normal.y -= getwaves(ftransform().xz, 48);
+        //gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
     }
     else if (mc_Entity.x == 79.0) {
         isIce = 1;

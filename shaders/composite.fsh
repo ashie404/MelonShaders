@@ -52,9 +52,9 @@ uniform int isEyeInWater;
 #include "/lib/common.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
+#include "/lib/util.glsl"
 #include "/lib/labpbr.glsl"
 #include "/lib/shadow.glsl"
-#include "/lib/util.glsl"
 #include "/lib/sky.glsl"
 
 void main() {

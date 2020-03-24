@@ -19,3 +19,10 @@ PBRData getPBRData(vec4 specularData) {
 
     return pbrData;
 }
+
+// todo: decode normal AO
+vec3 decodeLabNormal(in vec3 normalTex, in mat3x3 tbnMat) {
+    vec3 labNormal = normalTex * 2.0 - (254.0 * (1/255.0));
+    labNormal.z  = sqrt(clamp01(1.0 - dot(labNormal.xy, labNormal.xy)));
+    return normalize(labNormal * tbnMat);
+}

@@ -1,4 +1,3 @@
-#define saturate(p) (clamp(p, 0.0, 1.0))
 const float pi = 3.1415926535897932384626433832795;
 
 float ggx(vec3 normal, vec3 svec, PBRData pbrData) {
@@ -7,9 +6,9 @@ float ggx(vec3 normal, vec3 svec, PBRData pbrData) {
 
     vec3 h      = lightVector - svec;
     float hn    = inversesqrt(dot(h, h));
-    float hDotL = saturate(dot(h, lightVector)*hn);
-    float hDotN = saturate(dot(h, normal)*hn);
-    float nDotL = saturate(dot(normal, lightVector));
+    float hDotL = clamp01(dot(h, lightVector)*hn);
+    float hDotN = clamp01(dot(h, normal)*hn);
+    float nDotL = clamp01(dot(normal, lightVector));
     float denom = (hDotN * roughness - hDotN) * hDotN + 1.0;
     float D     = roughness / (pi * denom * denom);
     float F     = f0 + (1.0-f0) * exp2((-5.55473*hDotL-6.98316)*hDotL);
