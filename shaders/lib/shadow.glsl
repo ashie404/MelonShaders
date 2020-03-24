@@ -92,14 +92,14 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     }
     // screen space reflections if surface is smooth enough
     #ifdef SCREENSPACE_REFLECTIONS
-    if (roughness <= 0.15) {
+    if (roughness <= 0.10) {
         // bayer64 dither
         float dither = bayer64(gl_FragCoord.xy);
         // calculate ssr color
         vec4 reflection = reflection(viewVec,frag.normal,dither,gcolor);
         reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
 
-        color *= mix(vec3(1), reflection.rgb, reflection.a);
+        color += mix(vec3(0), reflection.rgb, reflection.a);
     } 
     #endif
     #endif
