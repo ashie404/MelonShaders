@@ -133,7 +133,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     color = diffuseLight*fSunLight;
 
-    if (sunLight.a > 0.3) {
+    if (sunLight.a > 0.5) {
        color += specularLight*fSunLight;
     }
 
