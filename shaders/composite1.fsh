@@ -26,6 +26,7 @@ uniform sampler2D gdepthtex;
 uniform sampler2D gaux2;
 uniform sampler2D shadow;
 uniform sampler2D shadowtex0;
+uniform sampler2D specular;
 uniform sampler2D shadowcolor0;
 uniform sampler2D normals;
 
@@ -51,6 +52,8 @@ uniform int isEyeInWater;
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
+#include "/lib/distort.glsl"
+#include "/lib/labpbr.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
@@ -72,7 +75,27 @@ void main() {
 
     // 0.1 emission marks translucent lighting
     if (frag.emission == 0.1) {
-        finalColor = vec4(calculateBasicLighting(frag, lightmap, normalize(viewPos)), 1);
+        // calculate distorted shadow coordinate
+        vec4 pos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
+        pos = gbufferProjectionInverse * pos;
+        pos = gbufferModelViewInverse * pos;
+        pos = shadowModelView * pos;
+        pos = shadowProjection * pos;
+        pos /= pos.w;
+        vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
+
+        float lightDot = dot(normalize(shadowLightPosition), normal);
+        vec4 fShadowPos = vec4(shadowPos, 0);
+        if (lightDot > 0.0) {
+            fShadowPos = vec4(shadowPos, 1.0);
+        }
+        else {
+            fShadowPos = vec4(shadowPos, 0);
+        }
+
+        PBRData pbrData = getPBRData(texture2D(specular, texcoord.st));
+
+        finalColor = vec4(calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData.smoothness, pbrData.F0), 1);
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {

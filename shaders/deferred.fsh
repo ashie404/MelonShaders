@@ -43,6 +43,7 @@ uniform sampler2D specular;
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
 #include "/lib/util.glsl"
+#include "/lib/labpbr.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/distort.glsl"
 
@@ -75,23 +76,15 @@ void main() {
     viewPos /= viewPos.w;
     vec3 worldPos = toWorld(viewPos.xyz);
 
-    float specularSmoothness = texture2D(specular, texcoord.st).r;
-    float specularGreen = texture2D(specular, texcoord.st).g;
-    float F0 = 0;
-    if (specularGreen <= 229)
-    {
-        F0 = pow(specularGreen, 2);
-    } else {
-        // todo: add processing for labpbr metals
-    }
+    PBRData pbrData = getPBRData(texture2D(specular, texcoord.st));
 
-    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), specularSmoothness, F0);
+    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData.smoothness, pbrData.F0);
 
-    /*DRAWBUFFERS:0*/
+    /*DRAWBUFFERS:035*/
     gl_FragData[0] = vec4(finalColor, 1);
+    gl_FragData[1] = texture2D(specular, texcoord.st);
 
     #ifdef SCREENSPACE_REFLECTIONS
-    /*DRAWBUFFERS:05*/
-	gl_FragData[1] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2
+	gl_FragData[2] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2
     #endif
 }

@@ -74,39 +74,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     }
 }
 
-vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in float roughness, in float F0) {
-    /*vec4 sunLight = getShadows(frag.coord, shadowPos.xyz);
-    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
-    vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
-
-    vec3 skyLight = skyColor * lightmap.skyLightStrength;
-
-    // burley diffuse
-    float diffuseStrength = Burley(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness);
-    diffuseStrength = max(0.15, diffuseStrength);
-    vec3 diffuseLight = (diffuseStrength) * skyColor;
-
-    // ggx specular
-    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, F0, 0.5);
-    vec3 specularLight = frag.albedo * ((specularStrength) * (lightColor));
-
-    vec3 color = frag.albedo * (sunLight.rgb);
-    
-    // if there is no shadow cast, or the block light is bright enough, add specular highlights and diffuse light
-    if (sunLight.a > 0.5 || lightmap.blockLightStrength > 0.5) {
-        color *= frag.albedo * diffuseLight;
-        color += frag.albedo * specularLight;
-    }
-
-    color += frag.albedo * ((sunLight.rgb / 10) + skyLight + blockLight);
-
-    if (frag.emission == 1) {
-        return frag.albedo;
-    }
-    else {
-        return color;
-    }*/
-
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in float smoothness, in float F0) {
     // blocklight
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.04;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
@@ -119,49 +87,35 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     //sunLight.rgb *= skyColor;
 
     // oren-nayar diffuse
+
+    // diffuse uses roughness instead of perceptual smoothness, so convert smoothness to roughness
+    float roughness = pow(1 - smoothness, 2);
+
     float diffuseStrength = OrenNayar(normalize(viewVec),normalize(shadowLightPosition) , normalize(frag.normal), roughness);
     vec3 diffuseLight = diffuseStrength * lightColor;
     diffuseLight = max(skyColor*16, diffuseLight);
 
+    #ifdef SPECULAR
     // ggx specular
-    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(shadowLightPosition), roughness, F0, 0.5);
+    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(shadowLightPosition), smoothness, F0, 0.5);
     vec3 specularLight = specularStrength * lightColor;
+    #endif
 
-    vec3 color = vec3(0);
+    // calculate all light sources together
+    vec3 allLight = sunLight.rgb + skyLight + blockLight;
 
-    vec3 fSunLight = sunLight.rgb + skyLight + blockLight;
+    vec3 color = diffuseLight*allLight;
 
-    color = diffuseLight*fSunLight;
-
+    // if non-shadowed, calculate specular reflections
+    #ifdef SPECULAR
     if (sunLight.a > 0.5) {
-       color += specularLight*fSunLight;
+       color += specularLight*allLight;
     }
+    #endif
 
+    // multiply by albedo to get final color
     color *= frag.albedo;
 
     return vec3(color);
 
-}
-
-// basic lighting (no shadowmap)
-vec3 calculateBasicLighting(in Fragment frag, in Lightmap lightmap, in vec3 viewVec) {
-    //float directLightStrength = dot(frag.normal, lightVector);
-    //directLightStrength = max(0.2, directLightStrength);
-    float directLightStrength = GGX(frag.normal, viewVec, lightVector, 0.5, 0, 0.5);
-    directLightStrength = max(0, directLightStrength);
-    vec3 directLight = directLightStrength * lightColor*2;
-    
-    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.07;
-    vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
-
-    vec3 skyLight = skyColor * lightmap.skyLightStrength;
-
-    vec3 color = frag.albedo * (directLight + skyLight + blockLight);
-
-    if (frag.emission == 1) {
-        return frag.albedo;
-    }
-    else {
-        return color;
-    }
 }

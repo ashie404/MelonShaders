@@ -20,6 +20,8 @@ uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 
+uniform sampler2D specular;
+
 uniform sampler2D gdepthtex;
 uniform sampler2D gaux2;
 uniform sampler2D shadow;
@@ -83,7 +85,9 @@ void main() {
     }
     
     // output
+    /*DRAWBUFFERS:0123*/
     gl_FragData[0] = vec4(finalColor, 1);
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);
+    gl_FragData[3] = texture2D(specular, texcoord.st);
 }
