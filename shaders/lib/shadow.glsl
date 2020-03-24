@@ -3,37 +3,6 @@ uniform sampler2D shadowtex1;
 #include "/lib/ggx.glsl"
 #include "/lib/diffuse.glsl"
 
-float getDepth(in vec2 coord) {
-    return texture2D(gdepthtex, coord).r;
-}
-
-vec4 getCameraSpacePosition(in vec2 coord) {
-    float depth = getDepth(coord);
-    vec4 positionNdcSpace = vec4(coord.s * 2.0 - 1.0, coord.t * 2.0 - 1.0, 2.0 * depth - 1.0, 1.0);
-
-    vec4 positionCameraSpace = gbufferProjectionInverse * positionNdcSpace;
-    return positionCameraSpace / positionCameraSpace.w;
-}
-
-vec4 getWorldSpacePosition(in vec2 coord) {
-    vec4 positionCameraSpace = getCameraSpacePosition(coord);
-    vec4 positionWorldSpace = gbufferModelViewInverse * positionCameraSpace;
-    positionWorldSpace.xyz += cameraPosition.xyz;
-
-    return positionWorldSpace;
-}
-
-vec3 getShadowSpacePosition(in vec2 coord) {
-    vec4 positionWorldSpace = getWorldSpacePosition(coord);
-    
-    positionWorldSpace.xyz -= cameraPosition;
-    vec4 positionShadowSpace = shadowModelView * positionWorldSpace;
-    positionShadowSpace = shadowProjection * positionShadowSpace;
-    positionShadowSpace /= positionShadowSpace.w;
-
-    return positionShadowSpace.xyz * 0.5 + 0.5;
-}
-
 mat2 getRotationMatrix(in vec2 coord) {
     float rotationAmount = texture2D(
         noisetex,
@@ -91,7 +60,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // oren-nayar diffuse
     float diffuseStrength = OrenNayar(normalize(viewVec),normalize(lightVector) , normalize(frag.normal), roughness);
     vec3 diffuseLight = diffuseStrength * lightColor;
-    diffuseLight = max(skyColor*16, diffuseLight);
+    //diffuseLight = max(skyColor, diffuseLight);
 
     #ifdef SPECULAR
     // ggx specular
@@ -114,7 +83,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // calculate all light sources together except for blocklight
     vec3 allLight = sunLight.rgb + skyLight;
 
-    vec3 color = diffuseLight*allLight;
+    vec3 color = (sunLight.rgb*diffuseLight)+skyLight;
 
     // if non-shadowed, calculate specular reflections
     #ifdef SPECULAR
