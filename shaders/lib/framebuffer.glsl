@@ -1,7 +1,8 @@
 const int RGBA = 0;
 const int RGBA16 = 1;
+const int RGBA16F = 5;
 
-const int gcolorFormat = RGBA16;
+const int gcolorFormat = RGBA16F;
 const int gdepthFormat = RGBA;
 const int gnormalFormat = RGBA16;
 
