@@ -22,18 +22,6 @@ void vignette(inout vec3 color) {
     color.rgb *= 1.0 - dist;
 }
 
-// basic hdr
-vec3 convertToHdr(in vec3 color) {
-    vec3 hdrImage;
-
-    vec3 overExposed = color * 1.2;
-    vec3 underExposed = color / 1.5;
-
-    hdrImage = mix(underExposed, overExposed, color);
-
-    return hdrImage;
-}
-
 vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     #ifndef LUT
     return textureColor;
@@ -84,11 +72,6 @@ void main() {
     
     // apply lut
     color = lookup(color, colortex6);
-
-    // crude hdr
-    #ifdef HDR
-    color = convertToHdr(color);
-    #endif
 
     #ifdef VIGNETTE
     vignette(color);

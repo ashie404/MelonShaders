@@ -28,11 +28,17 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
             for (int x = -2; x < 2; x++) {
                 vec2 offset = vec2(x, y) / shadowMapResolution;
                 offset = rotationMatrix * offset;
-                // sample shadow map and shadow color
+                // sample shadow map
                 float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r; // sampling shadow map
                 visibility += step(shadowPos.z - shadowMapSample, 0.001);
-                vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
-                shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
+                
+                // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
+                if (texture2D(shadowtex0, shadowPos.xy + offset).r < texture2D(shadowtex1, shadowPos.xy + offset).r ) {
+                    vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
+                    shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
+                } else {
+                    shadowCol += mix(vec3(shadowMapSample), lightColor, visibility) * 1.2;
+                }
             }
         }
         return vec4(shadowCol / 256, visibility);
@@ -43,7 +49,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     }
 }
 
-vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in float smoothness, in float F0) {
+vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in PBRData pbrData) {
     // blocklight
     vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.05;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
@@ -55,7 +61,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     vec4 sunLight = getShadows(frag.coord, shadowPos.xyz);
 
     // diffuse uses roughness instead of perceptual smoothness, so convert smoothness to roughness. also helpful when calculating reflections
-    float roughness = pow(1 - smoothness, 2);
+    float roughness = pow(1 - pbrData.smoothness, 2);
 
     // oren-nayar diffuse
     float diffuseStrength = OrenNayar(normalize(viewVec),normalize(lightVector) , normalize(frag.normal), roughness);
@@ -64,20 +70,8 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     #ifdef SPECULAR
     // ggx specular
-    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), smoothness, F0, 0.5);
+    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), pbrData.smoothness, pbrData.F0, CELESTIAL_RADIUS);
     vec3 specularLight = specularStrength * lightColor;
-    // screen space reflections if surface is smooth enough
-    #ifdef SCREENSPACE_REFLECTIONS
-    if (roughness <= 0.25) {
-        // bayer64 dither
-        float dither = bayer64(gl_FragCoord.xy);
-        // calculate ssr color
-        vec4 reflection = reflection(viewVec,frag.normal,dither,gcolor);
-        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-
-        specularLight *= mix(specularLight, reflection.rgb, reflection.a);
-    } 
-    #endif
     #endif
 
     // calculate all light sources together except for blocklight
@@ -89,13 +83,25 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     #ifdef SPECULAR
     if (isNight == 0) {
         if (sunLight.a > 0.5) {
-            color += specularLight*allLight;
+            color += specularLight;
         }
     } else {
         if (sunLight.a > 0.1) {
-            color += specularLight*allLight;
+            color += specularLight;
         }
     }
+    // screen space reflections if surface is smooth enough
+    #ifdef SCREENSPACE_REFLECTIONS
+    if (roughness <= 0.15) {
+        // bayer64 dither
+        float dither = bayer64(gl_FragCoord.xy);
+        // calculate ssr color
+        vec4 reflection = reflection(viewVec,frag.normal,dither,gcolor);
+        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
+
+        color *= mix(vec3(1), reflection.rgb, reflection.a);
+    } 
+    #endif
     #endif
     
     // add blocklight

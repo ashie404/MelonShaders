@@ -80,7 +80,7 @@ void main() {
 
     PBRData pbrData = getPBRData(texture2D(specular, texcoord.st));
 
-    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData.smoothness, pbrData.F0);
+    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
 
     /*DRAWBUFFERS:035*/
     gl_FragData[0] = vec4(finalColor, 1);

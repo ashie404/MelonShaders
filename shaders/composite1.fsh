@@ -59,8 +59,6 @@ uniform int isEyeInWater;
 #include "/lib/util.glsl"
 #include "/lib/sky.glsl"
 
-/* DRAWBUFFERS:012 */
-
 void main() {
 
     vec4 finalColor = texture2D(gcolor, texcoord.st);
@@ -94,7 +92,7 @@ void main() {
 
         PBRData pbrData = getPBRData(texture2D(specular, texcoord.st));
 
-        finalColor = vec4(calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData.smoothness, pbrData.F0), 1);
+        finalColor = vec4(calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData), 1);
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {
@@ -166,6 +164,7 @@ void main() {
     }
 
     // output
+    /* DRAWBUFFERS:012 */
     gl_FragData[0] = finalColor;
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);
