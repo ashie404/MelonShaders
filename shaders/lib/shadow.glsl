@@ -116,27 +116,28 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     // sunlight
     vec4 sunLight = getShadows(frag.coord, shadowPos.xyz);
-    sunLight.rgb *= skyColor;
+    //sunLight.rgb *= skyColor;
 
-    // burley diffuse
-    float diffuseStrength = OrenNayar(normalize(frag.normal), normalize(viewVec), normalize(lightVector), 1);
-    diffuseStrength = max(0.75, diffuseStrength);
-    vec3 diffuseLight = diffuseStrength * skyLight;
+    // oren-nayar diffuse
+    float diffuseStrength = OrenNayar(normalize(viewVec),normalize(shadowLightPosition) , normalize(frag.normal), roughness);
+    vec3 diffuseLight = diffuseStrength * lightColor;
+    diffuseLight = max(skyColor*16, diffuseLight);
 
     // ggx specular
-    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, F0, 0.5);
+    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(shadowLightPosition), roughness, F0, 0.5);
     vec3 specularLight = specularStrength * lightColor;
 
     vec3 color = vec3(0);
 
-    color = frag.albedo * (sunLight.rgb + skyLight + blockLight);
+    vec3 fSunLight = sunLight.rgb + skyLight + blockLight;
 
-    if (sunLight.a > 0.5) {
-        color *= diffuseLight;
-        color += frag.albedo * (specularLight / 1.5);
+    color = diffuseLight*fSunLight;
+
+    if (sunLight.a > 0.3) {
+       color += specularLight*fSunLight;
     }
 
-    color *= 3;
+    color *= frag.albedo;
 
     return vec3(color);
 
