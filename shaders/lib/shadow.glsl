@@ -91,13 +91,13 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // diffuse uses roughness instead of perceptual smoothness, so convert smoothness to roughness
     float roughness = pow(1 - smoothness, 2);
 
-    float diffuseStrength = OrenNayar(normalize(viewVec),normalize(shadowLightPosition) , normalize(frag.normal), roughness);
+    float diffuseStrength = OrenNayar(normalize(viewVec),normalize(lightVector) , normalize(frag.normal), roughness);
     vec3 diffuseLight = diffuseStrength * lightColor;
     diffuseLight = max(skyColor*16, diffuseLight);
 
     #ifdef SPECULAR
     // ggx specular
-    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(shadowLightPosition), smoothness, F0, 0.5);
+    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), smoothness, F0, 0.5);
     vec3 specularLight = specularStrength * lightColor;
     #endif
 
@@ -108,8 +108,14 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     // if non-shadowed, calculate specular reflections
     #ifdef SPECULAR
-    if (sunLight.a > 0.5) {
-       color += specularLight*allLight;
+    if (isNight == 0) {
+        if (sunLight.a > 0.5) {
+            color += specularLight*allLight;
+        }
+    } else {
+        if (sunLight.a > 0.1) {
+            color += specularLight*allLight;
+        }
     }
     #endif
     
