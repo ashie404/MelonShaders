@@ -76,7 +76,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
 
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in float smoothness, in float F0) {
     // blocklight
-    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.35;
+    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.05;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     // skylight
@@ -101,8 +101,8 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     vec3 specularLight = specularStrength * lightColor;
     #endif
 
-    // calculate all light sources together
-    vec3 allLight = sunLight.rgb + skyLight + blockLight;
+    // calculate all light sources together except for blocklight
+    vec3 allLight = sunLight.rgb + skyLight;
 
     vec3 color = diffuseLight*allLight;
 
@@ -112,6 +112,9 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
        color += specularLight*allLight;
     }
     #endif
+    
+    // add blocklight
+    color += blockLight;
 
     // multiply by albedo to get final color
     color *= frag.albedo;
