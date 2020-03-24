@@ -82,7 +82,7 @@ void main() {
 
     vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
 
-    /*DRAWBUFFERS:035*/
+    /* DRAWBUFFERS:035 */
     gl_FragData[0] = vec4(finalColor, 1);
     gl_FragData[1] = texture2D(specular, texcoord.st);
 

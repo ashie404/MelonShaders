@@ -1,9 +1,13 @@
 #version 120
 
+#extension GL_ARB_shader_texture_lod : enable
+
 #include "/lib/settings.glsl"
 #include "/lib/tonemap.glsl"
 
-#define DEBUG finalColor //Debug output [finalColor compColor shadow0 shadow1 shadowColor]
+#define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor]
+
+const bool gcolorMipmapEnabled = true;
 
 varying vec4 texcoord;
 
@@ -13,6 +17,9 @@ uniform sampler2D gcolor;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
 uniform sampler2D shadowcolor0;
+
+uniform float viewHeight;
+uniform float viewWidth;
 
 void vignette(inout vec3 color) {
     float dist = distance(texcoord.st, vec2(0.5));
@@ -59,7 +66,20 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
 
     vec4 newColor = mix(newColor1, newColor2, fract(blueColor));
     return vec3(newColor.rgb);
-}vec4 shadow1 = texture2D(shadowtex1, texcoord.st);
+}
+
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+void autoExposure(inout vec3 color){
+	float exposureLod = log2(max(viewWidth, viewHeight));
+
+	float exposure = luma(texture2DLod(gcolor, vec2(0.5), exposureLod).rgb);
+	exposure = clamp(exposure, 0.001, 0.15);
+	
+	color /= 2.5 * exposure;
+}
 
 void main() {
     vec3 color = texture2D(gcolor, texcoord.st).rgb;
@@ -70,6 +90,9 @@ void main() {
         color = tonemapACES(color);
     #endif
     
+    // auto exposure
+    //autoExposure(color);
+
     // apply lut
     color = lookup(color, colortex6);
 

@@ -18,7 +18,7 @@ void main() {
     vec4 blockColor = texture2D(texture, texcoord.st);
     blockColor.rgb *= tintColor;
 
-    /*DRAWBUFFERS:0123*/
+    /* DRAWBUFFERS:0123 */
     gl_FragData[0] = blockColor;
     gl_FragData[1] = vec4(lmcoord.st / 16,0,0);
     gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);

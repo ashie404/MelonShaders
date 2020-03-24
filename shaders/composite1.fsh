@@ -164,7 +164,7 @@ void main() {
     }
 
     // output
-    /* DRAWBUFFERS:012*/
+    /* DRAWBUFFERS:012 */
     gl_FragData[0] = finalColor;
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);

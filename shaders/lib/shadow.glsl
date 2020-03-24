@@ -70,7 +70,8 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     #ifdef SPECULAR
     // ggx specular
-    float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), pbrData.smoothness, pbrData.F0, CELESTIAL_RADIUS);
+    //float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, pbrData.F0, CELESTIAL_RADIUS);
+    float specularStrength = ggx(normalize(frag.normal), normalize(viewVec), pbrData);
     vec3 specularLight = specularStrength * lightColor;
     #endif
 
