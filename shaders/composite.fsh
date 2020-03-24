@@ -18,10 +18,7 @@ uniform mat4 gbufferProjection;
 uniform sampler2D colortex0;
 uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
-uniform sampler2D depthtex1;
-
 uniform sampler2D specular;
-
 uniform sampler2D gdepthtex;
 uniform sampler2D gaux2;
 uniform sampler2D shadow;
@@ -53,9 +50,9 @@ uniform int isEyeInWater;
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
-#include "/lib/shadow.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
+#include "/lib/shadow.glsl"
 #include "/lib/util.glsl"
 #include "/lib/sky.glsl"
 

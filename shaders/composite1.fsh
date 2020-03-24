@@ -20,7 +20,6 @@ uniform vec3 shadowLightPosition;
 uniform sampler2D colortex0;
 uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
-uniform sampler2D depthtex1;
 
 uniform sampler2D gdepthtex;
 uniform sampler2D gaux2;
@@ -54,9 +53,9 @@ uniform int isEyeInWater;
 #include "/lib/common.glsl"
 #include "/lib/distort.glsl"
 #include "/lib/labpbr.glsl"
-#include "/lib/shadow.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
+#include "/lib/shadow.glsl"
 #include "/lib/util.glsl"
 #include "/lib/sky.glsl"
 
@@ -118,11 +117,10 @@ void main() {
         skyReflection /= 1.45;
 
         #ifdef SCREENSPACE_REFLECTIONS
-        // generate dither and depth variables
-        float z = texture2D(depthtex0, texcoord.st).r;
+        // bayer64 dither
         float dither = bayer64(gl_FragCoord.xy);
         // calculate ssr color
-        vec4 reflection = reflection(viewPos,normal,dither);
+        vec4 reflection = reflection(viewPos,normal,dither, gaux2);
         reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
         // snells window refraction indexes
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);

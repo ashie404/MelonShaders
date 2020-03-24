@@ -84,13 +84,11 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     // sunlight
     vec4 sunLight = getShadows(frag.coord, shadowPos.xyz);
-    //sunLight.rgb *= skyColor;
 
-    // oren-nayar diffuse
-
-    // diffuse uses roughness instead of perceptual smoothness, so convert smoothness to roughness
+    // diffuse uses roughness instead of perceptual smoothness, so convert smoothness to roughness. also helpful when calculating reflections
     float roughness = pow(1 - smoothness, 2);
 
+    // oren-nayar diffuse
     float diffuseStrength = OrenNayar(normalize(viewVec),normalize(lightVector) , normalize(frag.normal), roughness);
     vec3 diffuseLight = diffuseStrength * lightColor;
     diffuseLight = max(skyColor*16, diffuseLight);
@@ -99,6 +97,18 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // ggx specular
     float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), smoothness, F0, 0.5);
     vec3 specularLight = specularStrength * lightColor;
+    // screen space reflections if surface is smooth enough
+    #ifdef SCREENSPACE_REFLECTIONS
+    if (roughness <= 0.25) {
+        // bayer64 dither
+        float dither = bayer64(gl_FragCoord.xy);
+        // calculate ssr color
+        vec4 reflection = reflection(viewVec,frag.normal,dither,gcolor);
+        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
+
+        specularLight *= mix(specularLight, reflection.rgb, reflection.a);
+    } 
+    #endif
     #endif
 
     // calculate all light sources together except for blocklight
@@ -125,6 +135,6 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // multiply by albedo to get final color
     color *= frag.albedo;
 
-    return vec3(color);
+    return color;
 
 }

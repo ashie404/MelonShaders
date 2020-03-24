@@ -44,6 +44,8 @@ uniform sampler2D specular;
 #include "/lib/common.glsl"
 #include "/lib/util.glsl"
 #include "/lib/labpbr.glsl"
+#include "/lib/dither.glsl"
+#include "/lib/reflection.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/distort.glsl"
 
