@@ -8,7 +8,6 @@
 #define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor specDebug]
 
 #define INFO 0 //[0 1]
-#define INFO2 0 //[0 1]
 
 const bool gcolorMipmapEnabled = true;
 

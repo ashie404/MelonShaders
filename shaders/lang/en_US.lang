@@ -1,7 +1,3 @@
-option.INFO=§6Cloudberry
-value.INFO.0=
-value.INFO.1=
-
-option.INFO2=§bBy 
-value.INFO2.0=§bJosh
-value.INFO2.1=§bJosh
+option.INFO=§aMelon Shaders
+value.INFO.0=§6By Josh
+value.INFO.1=§6By Josh
