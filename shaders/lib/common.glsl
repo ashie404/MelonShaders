@@ -40,12 +40,12 @@ void dayNightCalc(out float night, out vec3 lightVec, out vec3 lightCol, out vec
     if (worldTime < 12700 || worldTime > 23250) {
         lightVec = normalize(sunPosition);
         lightCol = vec3(1.65);
-        skyCol = vec3(0.012, 0.015, 0.03);
+        skyCol = vec3(0.012, 0.015, 0.023);
         night = 0;
     } else {
         lightVec = normalize(moonPosition);
-        lightCol = vec3(0.5);
-        skyCol = vec3(0.0008, 0.0011, 0.0013);
+        lightCol = vec3(0.75);
+        skyCol = vec3(0.0012, 0.0015, 0.0023);
         night = 1;
     }
 }
