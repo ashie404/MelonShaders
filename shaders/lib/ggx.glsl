@@ -1,4 +1,4 @@
-const float pi = 3.1415926535897932384626433832795;
+const float pi = 3.1415926535897;
 
 float ggx(vec3 normal, vec3 svec, PBRData pbrData) {
     float f0  = pbrData.F0;

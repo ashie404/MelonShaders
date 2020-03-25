@@ -1,7 +1,6 @@
 // post processing settings
 #define LUT // Color LUT. Makes some things look nicer, but can be too contrasty at times.
 //#define INVERT_Y_LUT //Inverts your colors on the LUT. Has no effect if the LUT isn't enabled.
-#define TONEMAP_ACES // Rough ACES tonemapping curve.
 #define VIGNETTE
 #define BLOOM // Whether to apply a bloom filter or not.
 
@@ -17,6 +16,27 @@ const int shadowDistance = 128; //[128 256 512 1024]
 
 // ungrouped
 #define CELESTIAL_RADIUS 0.75 // Radius of celestial bodies (sun and moon). [0.5 0.75 1.25 1.5]
+
+// ACES settings
+#define TONEMAP_ACES // Whether to enable the ACES tonemap operator or not.
+#define SAT_MOD                      0.5       
+#define VIB_MOD                     -0.1        
+#define CONT_MOD                     0.8         
+#define CONT_MIDPOINT                0.3       
+#define GAIN_MOD                     0.1         
+#define LIFT_MOD                     0.0         
+#define WHITE_BALANCE                6500        
+
+#define Film_Slope                   0.50        
+#define Film_Toe                     0.57        
+#define Film_Shoulder                0.4         
+#define Black_Clip                   0.0         
+#define White_Clip                   0.045       
+#define Blue_Correction              0.7     
+#define Gamut_Expansion              1.5         
+
+#define in_Match                     0.14        
+#define Out_Match                    0.14
 
 // non-user-settable
 #define NIGHT_SKY_COLOR vec3(0.001, 0.004, 0.01)

@@ -3,7 +3,7 @@
 #extension GL_ARB_shader_texture_lod : enable
 
 #include "/lib/settings.glsl"
-#include "/lib/tonemap.glsl"
+#include "/lib/aces/ACES.glsl"
 
 #define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor specDebug]
 
@@ -90,11 +90,12 @@ void main() {
 
     // tonemapping
     #ifdef TONEMAP_ACES
-        // rough ACES approximation
-        color = tonemapACES(color);
+    // ACES Tonemap (the real one)
+    // Tonemap code from Raspberry Shaders https://rutherin.netlify.com
+    color = FilmToneMap(color);
     #endif
     
-    // convert linear back to gamma for rest of post
+    // convert linear back to gamma
     color = pow(color, vec3(1 / 2.2));
 
     // auto exposure
