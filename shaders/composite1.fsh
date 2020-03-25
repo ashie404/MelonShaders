@@ -168,6 +168,7 @@ void main() {
         #endif
     }
 
+    #ifdef BLOOM
     vec4 bloomSample = vec4(0);
 
     if (isNight == 0) {
@@ -179,6 +180,7 @@ void main() {
             bloomSample = finalColor;
         }
     }
+    #endif
 
     // output
     /* DRAWBUFFERS:01234 */
@@ -186,5 +188,7 @@ void main() {
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);
     gl_FragData[3] = texture2D(colortex3, texcoord.st);
+    #ifdef BLOOM
     gl_FragData[4] = bloomSample;
+    #endif
 }

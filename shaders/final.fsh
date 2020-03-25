@@ -7,6 +7,12 @@
 
 #define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor specDebug]
 
+#define INFO 0 //[0 1]
+
+#ifdef INFO
+//lol
+#endif
+
 const bool gcolorMipmapEnabled = true;
 
 varying vec4 texcoord;
