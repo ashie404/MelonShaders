@@ -60,6 +60,10 @@ uniform int isEyeInWater;
 #include "/lib/shadow.glsl"
 #include "/lib/sky.glsl"
 
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
 void main() {
 
     vec4 finalColor = texture2D(gcolor, texcoord.st);
@@ -164,10 +168,23 @@ void main() {
         #endif
     }
 
+    vec4 bloomSample = vec4(0);
+
+    if (isNight == 0) {
+        if (luma(finalColor.rgb) > 0.75) {
+            bloomSample = finalColor;
+        }
+    } else {
+        if (luma(finalColor.rgb) > 0.5) {
+            bloomSample = finalColor;
+        }
+    }
+
     // output
-    /* DRAWBUFFERS:0123 */
+    /* DRAWBUFFERS:01234 */
     gl_FragData[0] = finalColor;
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);
     gl_FragData[3] = texture2D(colortex3, texcoord.st);
+    gl_FragData[4] = bloomSample;
 }
