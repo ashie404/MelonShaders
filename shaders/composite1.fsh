@@ -18,6 +18,7 @@ uniform mat4 gbufferProjection;
 uniform vec3 shadowLightPosition;
 
 uniform sampler2D colortex0;
+uniform sampler2D colortex3;
 uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
 
@@ -164,8 +165,9 @@ void main() {
     }
 
     // output
-    /* DRAWBUFFERS:012 */
+    /* DRAWBUFFERS:0123 */
     gl_FragData[0] = finalColor;
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);
+    gl_FragData[3] = texture2D(colortex3, texcoord.st);
 }

@@ -5,12 +5,13 @@
 #include "/lib/settings.glsl"
 #include "/lib/tonemap.glsl"
 
-#define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor]
+#define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor specDebug]
 
 const bool gcolorMipmapEnabled = true;
 
 varying vec4 texcoord;
 
+uniform sampler2D colortex3;
 uniform sampler2D colortex6;
 uniform sampler2D gcolor;
 
@@ -106,6 +107,7 @@ void main() {
     vec4 shadow1 = texture2D(shadowtex1, texcoord.st);
     vec4 shadowColor = texture2D(shadowcolor0, texcoord.st);
     vec4 compColor = texture2D(gcolor, texcoord.st);
+    vec4 specDebug = texture2D(colortex3, texcoord.st);
 
     gl_FragColor = DEBUG;
 }

@@ -16,6 +16,7 @@ uniform mat4 gbufferModelView;
 uniform mat4 gbufferProjection;
 
 uniform sampler2D colortex0;
+uniform sampler2D colortex3;
 uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
 uniform sampler2D specular;
@@ -85,5 +86,5 @@ void main() {
     gl_FragData[0] = vec4(finalColor, 1);
     gl_FragData[1] = texture2D(gdepth, texcoord.st);
     gl_FragData[2] = texture2D(gnormal, texcoord.st);
-    gl_FragData[3] = texture2D(specular, texcoord.st);
+    gl_FragData[3] = texture2D(colortex3, texcoord.st);
 }

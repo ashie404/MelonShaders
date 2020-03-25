@@ -14,6 +14,7 @@ uniform mat4 gbufferModelView;
 uniform mat4 gbufferProjection;
 
 uniform sampler2D colortex0;
+uniform sampler2D colortex3;
 uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
 
@@ -78,13 +79,13 @@ void main() {
     viewPos /= viewPos.w;
     vec3 worldPos = toWorld(viewPos.xyz);
 
-    PBRData pbrData = getPBRData(texture2D(specular, texcoord.st));
+    PBRData pbrData = getPBRData(texture2D(colortex3, texcoord.st));
 
     vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
 
     /* DRAWBUFFERS:035 */
     gl_FragData[0] = vec4(finalColor, 1);
-    gl_FragData[1] = texture2D(specular, texcoord.st);
+    gl_FragData[1] = texture2D(colortex3, texcoord.st);
 
     #ifdef SCREENSPACE_REFLECTIONS
 	gl_FragData[2] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2
