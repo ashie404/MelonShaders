@@ -98,7 +98,7 @@ void main() {
     // convert linear back to gamma
     color = pow(color, vec3(1 / 2.2));
 
-    // auto exposure
+    // auto exposure (currently The Big Broke)
     //autoExposure(color);
 
     // apply lut
