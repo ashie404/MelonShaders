@@ -83,26 +83,14 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // if non-shadowed, calculate specular reflections
     #ifdef SPECULAR
     if (isNight == 0) {
-        if (sunLight.a > 0.25) {
+        if (sunLight.a > 0.3) {
             color += specularLight;
         }
     } else {
-        if (sunLight.a > 0.05) {
+        if (sunLight.a > 0.1) {
             color += specularLight;
         }
     }
-    // screen space reflections if surface is smooth enough
-    #ifdef SCREENSPACE_REFLECTIONS
-    if (roughness <= 0.10) {
-        // bayer64 dither
-        float dither = bayer64(gl_FragCoord.xy);
-        // calculate ssr color
-        vec4 reflection = reflection(viewVec,frag.normal,dither,gcolor);
-        reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-
-        color += mix(vec3(0), reflection.rgb, reflection.a);
-    } 
-    #endif
     #endif
     
     // add blocklight
