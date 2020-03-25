@@ -4,18 +4,18 @@
 #define VIGNETTE
 #define BLOOM // Whether to apply a bloom filter or not.
 
-// lighting settings
+// visual settings
 #define SCREENSPACE_REFLECTIONS // Enables reflections.
 #define SPECULAR // Whether to enable specular highlight calculation or not. Not recommended if resource pack doesn't comply with LabPBR.
-const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 -5.0 0.0 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0 55.0 60.0]
 
 // shadow settings
 #define SHADOW_BIAS 0.020 //Increase this if you get shadow acne. Decrease this if you get peter panning. [0.000 0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.008 0.009 0.010 0.012 0.014 0.016 0.018 0.020 0.022 0.024 0.026 0.028 0.030 0.035 0.040 0.045 0.050]
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
 
-// ungrouped
+// sky settings
 #define CELESTIAL_RADIUS 0.75 // Radius of celestial bodies (sun and moon). [0.5 0.75 1.25 1.5]
+const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 -5.0 0.0 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0 55.0 60.0]
 
 // ACES settings
 #define TONEMAP_ACES // Whether to enable the ACES tonemap operator or not.
@@ -37,6 +37,9 @@ const int shadowDistance = 128; //[128 256 512 1024]
 
 #define in_Match                     0.14        //[0.0 0.02 0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.18 0.20 0.22 0.24 0.26 0.28 0.30 0.40]
 #define Out_Match                    0.14        //[0.0 0.02 0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.18 0.20 0.22 0.24 0.26 0.28 0.30 0.40]
+
+// misc
+//#define WHITEWORLD // Returns white on albedo. Useful for debugging lighting.
 
 // non-user-settable
 #define NIGHT_SKY_COLOR vec3(0.001, 0.004, 0.01)

@@ -14,7 +14,11 @@ uniform sampler2D gdepth;
 
 vec3 getAlbedo(in vec2 coord) {
     // return albedo in linear space
+    #ifndef WHITEWORLD
     return pow(texture2D(gcolor, coord).rgb, vec3(2.2));
+    #else
+    return vec3(1);
+    #endif
 }
 
 vec3 getNormal(in vec2 coord) {
