@@ -1,5 +1,9 @@
 #version 120
 
+#extension GL_ARB_shader_texture_lod : enable
+
+// deferred pass 0: lighting
+
 varying vec4 texcoord;
 
 varying vec3 lightVector;

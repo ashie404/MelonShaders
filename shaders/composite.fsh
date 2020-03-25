@@ -1,5 +1,7 @@
 #version 120
 
+#extension GL_ARB_shader_texture_lod : enable
+
 // composite pass 0: sky and clouds
 
 varying vec4 texcoord;

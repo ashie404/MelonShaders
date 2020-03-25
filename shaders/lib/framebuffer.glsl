@@ -6,6 +6,8 @@ const int gcolorFormat = RGBA16F;
 const int gdepthFormat = RGBA;
 const int gnormalFormat = RGBA16;
 
+const bool gaux2MipmapEnabled = true;
+
 uniform sampler2D gcolor;
 uniform sampler2D gnormal;
 uniform sampler2D gdepth;

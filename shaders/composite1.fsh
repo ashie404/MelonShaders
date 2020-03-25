@@ -1,5 +1,7 @@
 #version 120
 
+#extension GL_ARB_shader_texture_lod : enable
+
 // composite pass 1: reflections & translucent lighting
 
 varying vec4 texcoord;
@@ -95,7 +97,7 @@ void main() {
             fShadowPos = vec4(shadowPos, 0);
         }
 
-        PBRData pbrData = getPBRData(texture2D(specular, texcoord.st));
+        PBRData pbrData = getPBRData(texture2D(colortex3, texcoord.st));
 
         finalColor = vec4(calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData), 1);
     }
