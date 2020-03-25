@@ -153,7 +153,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
         0.758                           // Mie preferred scattering direction
     );
     // Apply exposure.
-    color = 1.0 - exp(-0.25 * color);
+    color = 1.0 - exp(-1 * color);
 
     vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
 	vec3 viewPos = toNDC(screenPos.xyz);
