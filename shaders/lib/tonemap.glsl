@@ -6,7 +6,6 @@ vec3 tonemapACES( vec3 x )
     float d = 0.59;
     float e = 0.14;
     vec3 color = clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
-
-    // convert linear space back to gamma
-    return pow(color, vec3(1 / 2.2));
+    
+    return color;
 }

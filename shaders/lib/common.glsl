@@ -39,7 +39,7 @@ Lightmap getLightmapSample(in vec2 coord) {
 void dayNightCalc(out float night, out vec3 lightVec, out vec3 lightCol, out vec3 skyCol) {
     if (worldTime < 12700 || worldTime > 23250) {
         lightVec = normalize(sunPosition);
-        lightCol = vec3(1.0);
+        lightCol = vec3(1.65);
         skyCol = vec3(0.012, 0.015, 0.03);
         night = 0;
     } else {

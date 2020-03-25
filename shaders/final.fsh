@@ -94,6 +94,9 @@ void main() {
         color = tonemapACES(color);
     #endif
     
+    // convert linear back to gamma for rest of post
+    color = pow(color, vec3(1 / 2.2));
+
     // auto exposure
     //autoExposure(color);
 
