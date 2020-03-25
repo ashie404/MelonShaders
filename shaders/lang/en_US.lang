@@ -1,3 +1,7 @@
 option.INFO=§6Cloudberry
-value.INFO.0=§bby Josh
-value.INFO.1=§a<3
+value.INFO.0=
+value.INFO.1=
+
+option.INFO2=§bBy 
+value.INFO2.0=§bJosh
+value.INFO2.1=§bJosh

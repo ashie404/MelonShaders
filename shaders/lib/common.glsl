@@ -44,7 +44,7 @@ void dayNightCalc(out float night, out vec3 lightVec, out vec3 lightCol, out vec
         night = 0;
     } else {
         lightVec = normalize(moonPosition);
-        lightCol = vec3(0.65);
+        lightCol = vec3(0.5);
         skyCol = vec3(0.0008, 0.0011, 0.0013);
         night = 1;
     }
