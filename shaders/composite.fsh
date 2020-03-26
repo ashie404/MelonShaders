@@ -67,15 +67,13 @@ void main() {
         vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
 	    vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
         viewPos /= viewPos.w;
-        finalColor = vec3(0);
+        vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
 
+        finalColor = vec3(0);
         // get accurate atmospheric scattering
-	    finalColor = GetSkyColor(mat3(gbufferModelViewInverse) * viewPos.xyz, mat3(gbufferModelViewInverse) * sunPosition, isNight);
-        // if night time, draw stars
-        if (isNight == 1) {
-            vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
-            finalColor += DrawStars(normalize(worldPos));
-        }
+	    finalColor = GetSkyColor(worldPos, mat3(gbufferModelViewInverse) * sunPosition, isNight);
+        // draw stars based on night transition value
+        finalColor += mix(vec3(0), DrawStars(normalize(worldPos)), isNight);
     }
     
     // output

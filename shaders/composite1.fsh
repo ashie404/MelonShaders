@@ -120,7 +120,7 @@ void main() {
         // bayer64 dither
         float dither = bayer64(gl_FragCoord.xy);
         // calculate ssr color
-        vec4 reflection = reflection(viewPos,normal,dither, gaux2);
+        vec4 reflection = reflection(viewPos,normal,dither,gaux2,0);
         reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
         // snells window refraction indexes
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
