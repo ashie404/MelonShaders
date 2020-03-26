@@ -26,3 +26,4 @@ vec3 decodeLabNormal(in vec3 normalTex, in mat3x3 tbnMat) {
     labNormal.z  = sqrt(clamp01(1.0 - dot(labNormal.xy, labNormal.xy)));
     return normalize(labNormal * tbnMat);
 }
+

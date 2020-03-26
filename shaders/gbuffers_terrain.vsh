@@ -8,6 +8,13 @@ attribute vec4 at_tangent;
 varying vec4 texcoord;
 varying vec4 lmcoord;
 
+varying mat3 viewTBN;
+varying mat3 worldTBN;
+
+uniform mat4 gbufferModelViewInverse;
+
+#include "/lib/settings.glsl"
+
 void main()
 {
     gl_Position = ftransform();
@@ -15,14 +22,20 @@ void main()
     lmcoord = gl_MultiTexCoord1;
     tintColor = gl_Color.rgb;
     #ifdef NORMAL_MAP
-    binormal = normalize(gl_NormalMatrix * cross(at_tangent.xyz, gl_Normal.xyz) * at_tangent.w);
-	tangent  = normalize(gl_NormalMatrix * at_tangent.xyz);
-	
-	mat3 tbnMatrix = mat3(tangent.x, binormal.x, normal.x,
-						  tangent.y, binormal.y, normal.y,
-						  tangent.z, binormal.z, normal.z);
+
+    vec3 normal   = normalize(gl_NormalMatrix * gl_Normal);
+    vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
+
+         viewTBN  = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
+
+         normal   = mat3(gbufferModelViewInverse) * normal;
+         tangent  = mat3(gbufferModelViewInverse) * tangent;
+
+    vec3 binormal = normalize(cross(tangent, normal));
+
+         worldTBN = transpose(mat3(tangent, binormal, normal));
 								  
-	viewVector = tbnMatrix * (gl_ModelViewMatrix * gl_Vertex).xyz;
+	//viewVector = tbnMatrix * (gl_ModelViewMatrix * gl_Vertex).xyz;
     #endif
     
     normal = normalize(gl_NormalMatrix * gl_Normal);

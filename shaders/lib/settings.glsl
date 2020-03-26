@@ -7,6 +7,7 @@
 // visual settings
 #define SCREENSPACE_REFLECTIONS // Enables reflections.
 #define SPECULAR // Whether to enable specular highlight calculation or not. Not recommended if resource pack doesn't comply with LabPBR.
+#define NORMAL_MAP // Whether to enable normal mapping or not. Not recommended if resource pack doesn't comply with LabPBR.
 
 // shadow settings
 #define SHADOW_BIAS 0.020 //Increase this if you get shadow acne. Decrease this if you get peter panning. [0.000 0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.008 0.009 0.010 0.012 0.014 0.016 0.018 0.020 0.022 0.024 0.026 0.028 0.030 0.035 0.040 0.045 0.050]

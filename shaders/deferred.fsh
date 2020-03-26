@@ -31,10 +31,6 @@ uniform vec3 cameraPosition;
 
 uniform vec3 upPosition;
 
-uniform mat4 shadowModelView;
-uniform mat4 shadowProjection;
-uniform mat4 gbufferModelViewInverse;
-uniform mat4 gbufferProjectionInverse;
 uniform vec3 shadowLightPosition;
 
 uniform float viewWidth;
@@ -87,9 +83,10 @@ void main() {
 
     vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
 
-    /* DRAWBUFFERS:035 */
+    /* DRAWBUFFERS:0352 */
     gl_FragData[0] = vec4(finalColor, 1);
     gl_FragData[1] = texture2D(colortex3, texcoord.st);
+    gl_FragData[3] = texture2D(gnormal, texcoord.st);
 
     #ifdef SCREENSPACE_REFLECTIONS
 	gl_FragData[2] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2

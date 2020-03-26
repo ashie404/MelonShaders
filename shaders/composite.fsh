@@ -34,11 +34,6 @@ uniform vec3 sunPosition;
 
 uniform vec3 upPosition;
 
-uniform mat4 shadowModelView;
-uniform mat4 shadowProjection;
-uniform mat4 gbufferModelViewInverse;
-uniform mat4 gbufferProjectionInverse;
-
 uniform vec3 shadowLightPosition;
 
 uniform float viewWidth;
@@ -51,11 +46,11 @@ varying vec4 position;
 uniform int isEyeInWater;
 
 #include "/lib/settings.glsl"
+#include "/lib/util.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
-#include "/lib/util.glsl"
 #include "/lib/labpbr.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/sky.glsl"

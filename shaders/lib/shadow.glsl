@@ -1,7 +1,6 @@
 uniform sampler2D shadowtex1;
 
-#include "/lib/ggx.glsl"
-#include "/lib/diffuse.glsl"
+#include "/lib/BSDF.glsl"
 
 mat2 getRotationMatrix(in vec2 coord) {
     float rotationAmount = texture2D(

@@ -1,4 +1,22 @@
-const float pi = 3.1415926535897;
+const float PI = 3.1415926535897;
+
+float OrenNayar(vec3 v, vec3 l, vec3 n, float r) {
+    
+    r *= r;
+    
+    float NdotL = dot(n,l);
+    float NdotV = dot(n,v);
+    
+    float t = max(NdotL,NdotV);
+    float g = max(.0, dot(v - n * NdotV, l - n * NdotL));
+    float c = g/t - g*t;
+    
+    float a = .285 / (r+.57) + .5;
+    float b = .45 * r / (r+.09);
+
+    return max(0., NdotL) * ( b * c + a);
+
+}
 
 float ggx(vec3 normal, vec3 svec, PBRData pbrData) {
     float f0  = pbrData.F0;
@@ -10,7 +28,7 @@ float ggx(vec3 normal, vec3 svec, PBRData pbrData) {
     float hDotN = clamp01(dot(h, normal)*hn);
     float nDotL = clamp01(dot(normal, lightVector));
     float denom = (hDotN * roughness - hDotN) * hDotN + 1.0;
-    float D     = roughness / (pi * denom * denom);
+    float D     = roughness / (PI * denom * denom);
     float F     = f0 + (1.0-f0) * exp2((-5.55473*hDotL-6.98316)*hDotL);
     float k2    = 0.25 * roughness;
 

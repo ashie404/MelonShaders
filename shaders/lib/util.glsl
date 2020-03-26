@@ -3,6 +3,11 @@
 #define transMAD(mat, v) (     mat3(mat) * (v) + (mat)[3].xyz)
 #define clamp01(p) (clamp(p, 0.0, 1.0))
 
+uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferModelViewInverse;
+uniform mat4 shadowModelView;
+uniform mat4 shadowProjection;
+
 vec3 toNDC(vec3 pos){
 	vec4 iProjDiag = vec4(gbufferProjectionInverse[0].x, gbufferProjectionInverse[1].y, gbufferProjectionInverse[2].zw);
     vec3 p3 = pos * 2. - 1.;
