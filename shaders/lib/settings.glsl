@@ -49,4 +49,4 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 #define NIGHT_SKY_COLOR vec3(0.001, 0.004, 0.01)
 const float shadowMapBias = 0.85;
 const int noiseTextureResolution = 256;
-const vec3 celestialTint = vec3(0.99, 0.99, 0.58);
+const vec3 celestialTint = vec3(3, 3, 2.5);
