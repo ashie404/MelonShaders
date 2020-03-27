@@ -28,7 +28,8 @@ void main() {
 
 	gl_Position = ftransform();
 
-    normal = normalize(gl_NormalMatrix * gl_Normal);
+    normal = gl_Normal;
+
 
     texcoord = gl_MultiTexCoord0;
 }

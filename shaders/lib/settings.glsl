@@ -6,6 +6,7 @@
 
 // visual settings
 #define SCREENSPACE_REFLECTIONS // Enables reflections.
+//#define SPECULAR_REFLECTIONS // Enables screen space reflections on smooth surfaces. Has no effect if screenspace reflections or specular mapping is disabled. Not recommended if resource pack doesn't comply with LabPBR.
 #define SPECULAR // Whether to enable specular highlight calculation or not. Not recommended if resource pack doesn't comply with LabPBR.
 #define NORMAL_MAP // Whether to enable normal mapping or not. Not recommended if resource pack doesn't comply with LabPBR.
 

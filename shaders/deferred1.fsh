@@ -54,29 +54,40 @@ uniform sampler2D specular;
 void main() {
     float z = texture2D(depthtex0, texcoord.st).r;
     // get current fragment and calculate lighting
-    //Fragment frag = getFragment(texcoord.st);
+    Fragment frag = getFragment(texcoord.st);
     
     vec3 finalColor = texture2D(colortex0, texcoord.st).rgb;
 
-    vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
+    /*vec4 screenPos = vec4(texcoord.st, z, 1.0);
 	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
-    viewPos /= viewPos.w;
+	viewPos /= viewPos.w;*/
+
+    vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
+	    vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
+        viewPos /= viewPos.w;
+
     vec3 worldPos = toWorld(viewPos.xyz);
 
     #ifdef SPECULAR
+    #ifdef SCREENSPACE_REFLECTIONS
+    #ifdef SPECULAR_REFLECTIONS
     PBRData pbrData = getPBRData(texture2D(colortex3, texcoord.st));
     float roughness = pow(1 - pbrData.smoothness, 2);
     // get pbr data and calculate SSR if enabled
-    #ifdef SCREENSPACE_REFLECTIONS
-    if (roughness < 0.1) {
-        // bayer64 dither
-        float dither = bayer64(gl_FragCoord.xy);
-        // calculate ssr color
-        vec4 reflection = reflection(viewPos.xyz, normal, dither, colortex0, roughness);
-        //reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-        //reflection.rgb /= 16;
-        //finalColor *= mix(vec3(1), reflection.rgb, reflection.a);
+    if (roughness < 0.25) {
+        if (z != 1) {
+            // bayer64 dither
+            float dither = bayer64(gl_FragCoord.xy);
+            // calculate ssr color
+            vec4 reflection = Reflection(viewPos.xyz, frag.normal, dither, colortex0, roughness);
+            //reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
+            //reflection.rgb /= 16;
+            finalColor *= mix(vec3(1), reflection.rgb, reflection.a-roughness);
+        } else {
+
+        }
     }
+    #endif
     #endif
     #endif
 

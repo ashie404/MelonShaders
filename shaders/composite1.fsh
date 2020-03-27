@@ -120,7 +120,7 @@ void main() {
         // bayer64 dither
         float dither = bayer64(gl_FragCoord.xy);
         // calculate ssr color
-        vec4 reflection = reflection(viewPos,normal,dither,gaux2,0);
+        vec4 reflection = reflection(viewPos,normal,dither,gaux2);
         reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
         // snells window refraction indexes
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
@@ -169,11 +169,11 @@ void main() {
     vec4 bloomSample = vec4(0);
 
     if (isNight == 0) {
-        if (luma(finalColor.rgb) > 0.75) {
+        if (luma(finalColor.rgb) > 0.95) {
             bloomSample = finalColor;
         }
-    } else {
-        if (luma(finalColor.rgb) > 0.5) {
+    } else if (isNight == 1) {
+        if (luma(finalColor.rgb) > 0.75) {
             bloomSample = finalColor;
         }
     }

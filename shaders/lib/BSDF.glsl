@@ -34,3 +34,10 @@ float ggx(vec3 normal, vec3 svec, PBRData pbrData) {
 
     return nDotL * D * F / (hDotL * hDotL * (1.0-k2) + k2);
 }
+
+// unused V
+
+vec3 distributeMicrofacets(vec3 normal, vec4 noise, float alpha2, vec2 pattern) {
+    noise.xyz = normalize(cross(normal, noise.xyz * 2.0 - 1.0));
+    return normalize(noise.xyz * sqrt(alpha2 * noise.w / (1.0 - noise.w * 0.9)) + normal);
+}

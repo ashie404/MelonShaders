@@ -1,5 +1,8 @@
 // raytracing code based on BSL shaders by capt tatsu
 
+uniform float far;
+uniform float near;
+
 vec3 nvec3(vec4 pos){
     return pos.xyz/pos.w;
 }
