@@ -18,6 +18,8 @@ varying mat3 worldTBN;
 varying vec4 texcoord;
 varying vec4 lmcoord;
 
+varying float id;
+
 #include "/lib/settings.glsl"
 #include "/lib/util.glsl"
 #include "/lib/labpbr.glsl"
@@ -40,7 +42,12 @@ void main() {
 
     /* DRAWBUFFERS:0123 */
     gl_FragData[0] = blockColor;
-    gl_FragData[1] = vec4(lmcoord.st / 16,0,0);
+    
+    if (id == 31) {
+        gl_FragData[1] = vec4(lmcoord.st / 16,0,0.3);
+    } else {
+        gl_FragData[1] = vec4(lmcoord.st / 16,0,0);
+    }
     gl_FragData[2] = vec4(normalData * 0.5 + 0.5, 1.0);
     gl_FragData[3] = texture2D(specular, texcoord.st);
 }

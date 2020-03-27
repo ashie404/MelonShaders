@@ -1,6 +1,7 @@
 uniform sampler2D shadowtex1;
 
 #include "/lib/BSDF.glsl"
+#include "/lib/SSS.glsl"
 
 mat2 getRotationMatrix(in vec2 coord) {
     float rotationAmount = texture2D(
@@ -78,6 +79,19 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     vec3 allLight = sunLight.rgb + skyLight;
 
     vec3 color = (sunLight.rgb*diffuseLight)+skyLight;
+
+    // calculate subsurface scattering if enabled
+    #ifdef SSS
+
+    // 0.3 emission is tag for sss
+    float sunDepth = texture2D(shadowtex0, shadowPos.xy).r;
+    if (frag.emission == 0.3 && sunLight.a > 0.5) {
+        float subsurfStrength = calcSSS(viewVec, frag.normal, lightVector);
+        vec3 subsurfColor = mix(vec3(0), subsurfStrength * lightColor, sunDepth);
+        color += subsurfColor;
+    }
+
+    #endif
 
     // if non-shadowed, calculate specular reflections
     #ifdef SPECULAR

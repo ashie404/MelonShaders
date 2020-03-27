@@ -13,6 +13,9 @@ varying mat3 worldTBN;
 
 uniform mat4 gbufferModelViewInverse;
 
+attribute vec4 mc_Entity;
+varying float id;
+
 #include "/lib/settings.glsl"
 
 void main()
@@ -38,5 +41,6 @@ void main()
 	//viewVector = tbnMatrix * (gl_ModelViewMatrix * gl_Vertex).xyz;
     #endif
     
+    id = mc_Entity.x;
     normal = normalize(gl_NormalMatrix * gl_Normal);
 }

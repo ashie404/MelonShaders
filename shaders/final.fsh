@@ -15,6 +15,8 @@ varying vec4 texcoord;
 
 uniform sampler2D colortex3;
 uniform sampler2D colortex6;
+uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 uniform sampler2D gcolor;
 uniform sampler2D gnormal;
 
