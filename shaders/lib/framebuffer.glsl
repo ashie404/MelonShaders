@@ -12,10 +12,18 @@ uniform sampler2D gcolor;
 uniform sampler2D gnormal;
 uniform sampler2D gdepth;
 
+vec3 srgbToLinear(vec3 srgb) {
+    return mix(
+        srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
+        pow(0.947867 * srgb + 0.0521327, vec3(2.4)),
+        step(0.04045, srgb)
+    );
+}
+
 vec3 getAlbedo(in vec2 coord) {
     // return albedo in linear space
     #ifndef WHITEWORLD
-    return pow(texture2D(gcolor, coord).rgb, vec3(2.2));
+    return srgbToLinear(texture2D(gcolor, coord).rgb);
     #else
     return vec3(1);
     #endif

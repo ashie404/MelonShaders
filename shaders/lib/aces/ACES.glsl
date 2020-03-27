@@ -1,5 +1,7 @@
 // from raspberry shaders https://rutherin.netlify.com
 
+const float PI = 3.1415926535897;
+
 #define log10(x) log(x) / log(10.0)
 
     struct ColorCorrection {
@@ -13,8 +15,6 @@
 	vec3 lift;
 	vec3 InvGamma;
 } m;
-
-const float PI = 3.1415926535897;
 
 float max3(float x, float y, float z) {
   	return max(max(x, y), z);

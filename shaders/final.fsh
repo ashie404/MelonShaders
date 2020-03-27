@@ -112,11 +112,7 @@ void main() {
     color = LiftGammaGain(color, m);
     #endif
     
-    // convert linear back to gamma
-    color = pow(color, vec3(1 / 2.2));
-
-    // auto exposure (currently The Big Broke)
-    //autoExposure(color);
+    color = linearToSrgb(color);
 
     // apply lut
     color = lookup(color, colortex6);
@@ -124,6 +120,8 @@ void main() {
     #ifdef VIGNETTE
     vignette(color);
     #endif
+
+    color = clamp01(color);
 
     vec4 finalColor = vec4(color, 1);
 
