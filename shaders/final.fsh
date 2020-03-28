@@ -113,6 +113,13 @@ void main() {
 	color = Saturation(color, m);
     color = Contrast(color, m);
     color = LiftGammaGain(color, m);
+    #else
+    // just do night time desaturation
+    ColorCorrection m;
+    m.lum = vec3(0.2125, 0.7154, 0.0721);
+    m.saturation = 0.95 - nightDesaturation;
+    
+    color = Saturation(color, m);
     #endif
     
     color = linearToSrgb(color);

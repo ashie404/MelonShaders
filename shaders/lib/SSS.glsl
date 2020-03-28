@@ -15,7 +15,7 @@
 }*/
 
 float power = 1;
-float scale = 2;
+float scale = 1;
 
 float calcSSS(in vec3 viewPos, in vec3 normal, in vec3 lightVec) {
     // very basic subsurface scattering
