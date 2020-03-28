@@ -59,5 +59,14 @@ void dayNightCalc(out float night, out vec3 lightVec, out vec3 lightCol, out vec
         skyCol = mix(vec3(0.0022, 0.0025, 0.006), vec3(0.022, 0.025, 0.06), transition);
     }
 }
-
+void desaturateNight(out float desaturationAmt) {
+    if (worldTime >= 23645 || worldTime <= 12400) {
+        desaturationAmt = 0;
+    } else if (worldTime >= 12820 && worldTime <= 23200) {
+        desaturationAmt = NIGHT_DESATURATION;
+    } else {
+        float transition = smoothstep(50,820,abs(abs(float(worldTime)-17990)-5220));
+        desaturationAmt = mix(NIGHT_DESATURATION, 0, transition);
+    }
+}
 #endif

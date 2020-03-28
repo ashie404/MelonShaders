@@ -20,6 +20,7 @@ varying vec3 normal;
 attribute vec4 mc_Entity;
 
 #define VSH
+#include "/lib/settings.glsl"
 #include "/lib/common.glsl"
 
 void main() {

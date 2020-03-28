@@ -20,6 +20,7 @@ attribute vec4 mc_Entity;
 varying float isTransparent;
 
 #define VSH
+#include "/lib/settings.glsl"
 #include "/lib/common.glsl"
 
 float getIsTransparent(in float materialId) {

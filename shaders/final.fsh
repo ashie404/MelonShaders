@@ -26,6 +26,7 @@ uniform sampler2D shadowcolor0;
 
 uniform float viewHeight;
 uniform float viewWidth;
+varying float nightDesaturation;
 
 void vignette(inout vec3 color) {
     float dist = distance(texcoord.st, vec2(0.5));
@@ -97,7 +98,7 @@ void main() {
 
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
-	m.saturation = 0.95 + SAT_MOD;
+	m.saturation = 0.95 + SAT_MOD - nightDesaturation;
 	m.vibrance = VIB_MOD;
 	m.contrast = 1.0 - CONT_MOD;
 	m.contrastMidpoint = CONT_MIDPOINT;
