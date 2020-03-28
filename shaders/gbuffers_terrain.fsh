@@ -49,7 +49,7 @@ void main() {
 
     colortex0Out = blockColor;
     
-    if (id == 31) {
+    if (id == 31 || id == 32) {
         // subsurf scattering
         colortex1Out = vec4(lmcoord.st / 16,0,0.3);
     } else if (id == 21) {
