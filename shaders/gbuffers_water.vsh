@@ -20,6 +20,9 @@ uniform float frameTimeCounter;
 
 uniform vec3 cameraPosition;
 
+uniform float viewWidth;
+uniform float viewHeight;
+
 #define DRAG_MULT 0.048
 #define ITERATIONS_NORMAL 48
 #define WATER_DEPTH 1.25
