@@ -66,7 +66,7 @@ void desaturateNight(out float desaturationAmt) {
         desaturationAmt = NIGHT_DESATURATION;
     } else {
         float transition = smoothstep(50,820,abs(abs(float(worldTime)-17990)-5220));
-        desaturationAmt = mix(NIGHT_DESATURATION, 0, transition);
+        desaturationAmt = mix(NIGHT_DESATURATION, 0.0, transition);
     }
 }
 #endif
