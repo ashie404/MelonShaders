@@ -1,9 +1,9 @@
-#version 120
+#version 450 compatibility
 
 attribute vec4 mc_Entity;
 
-varying vec2 texcoord;
-varying vec4 color;
+out vec2 texcoord;
+out vec4 color;
 
 #include "/lib/settings.glsl"
 #include "/lib/distort.glsl"

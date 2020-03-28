@@ -1,15 +1,21 @@
-#version 120
+#version 450 compatibility
 
 #extension GL_ARB_shader_texture_lod : enable
 
+/* DRAWBUFFERS:0123 */
+layout (location = 0) out vec4 colortex0Out;
+layout (location = 1) out vec4 colortex1Out;
+layout (location = 2) out vec4 colortex2Out;
+layout (location = 3) out vec4 colortex3Out;
+
 // composite pass 0: sky and clouds
 
-varying vec4 texcoord;
+in vec4 texcoord;
 
-varying vec3 lightVector;
-varying vec3 lightColor;
-varying vec3 skyColor;
-varying float isNight;
+in vec3 lightVector;
+in vec3 lightColor;
+in vec3 skyColor;
+in float isNight;
 uniform int worldTime;
 
 uniform sampler2D noisetex;
@@ -39,10 +45,10 @@ uniform vec3 shadowLightPosition;
 uniform float viewWidth;
 uniform float viewHeight;
 
-varying float isTransparent;
-varying vec3 normal;
+in float isTransparent;
+in vec3 normal;
 
-varying vec4 position;
+in vec4 position;
 uniform int isEyeInWater;
 
 #include "/lib/settings.glsl"
@@ -77,9 +83,9 @@ void main() {
     }
     
     // output
-    /* DRAWBUFFERS:0123 */
-    gl_FragData[0] = vec4(finalColor, 1);
-    gl_FragData[1] = texture2D(gdepth, texcoord.st);
-    gl_FragData[2] = texture2D(gnormal, texcoord.st);
-    gl_FragData[3] = texture2D(colortex3, texcoord.st);
+    
+    colortex0Out = vec4(finalColor, 1);
+    colortex1Out = texture2D(gdepth, texcoord.st);
+    colortex2Out = texture2D(gnormal, texcoord.st);
+    colortex3Out = texture2D(colortex3, texcoord.st);
 }

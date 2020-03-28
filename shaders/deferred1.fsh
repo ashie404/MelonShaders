@@ -1,15 +1,21 @@
-#version 120
+#version 450 compatibility
 
 #extension GL_ARB_shader_texture_lod : enable
 
 // deferred pass 1: reflections on solid terrain
 
-varying vec4 texcoord;
+/* DRAWBUFFERS:0352 */
+layout (location = 0) out vec4 colortex0Out;
+layout (location = 1) out vec4 colortex3Out;
+layout (location = 2) out vec4 colortex5Out;
+layout (location = 3) out vec4 colortex2Out;
 
-varying vec3 lightVector;
-varying vec3 lightColor;
-varying vec3 skyColor;
-varying float isNight;
+in vec4 texcoord;
+
+in vec3 lightVector;
+in vec3 lightColor;
+in vec3 skyColor;
+in float isNight;
 uniform int worldTime;
 
 uniform sampler2D noisetex;
@@ -37,7 +43,7 @@ uniform vec3 shadowLightPosition;
 uniform float viewWidth;
 uniform float viewHeight;
 
-varying vec3 normal;
+in vec3 normal;
 
 uniform sampler2D specular;
 
@@ -91,12 +97,13 @@ void main() {
     #endif
     #endif
 
-    /* DRAWBUFFERS:0352 */
-    gl_FragData[0] = vec4(finalColor, 1);
-    gl_FragData[1] = texture2D(colortex3, texcoord.st);
-    gl_FragData[3] = texture2D(gnormal, texcoord.st);
+    // output
+
+    colortex0Out = vec4(finalColor, 1);
+    colortex3Out = texture2D(colortex3, texcoord.st);
+    colortex2Out = texture2D(gnormal, texcoord.st);
     
     #ifdef SCREENSPACE_REFLECTIONS
-	gl_FragData[2] = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2
+	colortex5Out = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2
     #endif
 }

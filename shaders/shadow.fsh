@@ -1,14 +1,17 @@
-#version 120
+#version 450 compatibility
+
+/* DRAWBUFFERS:0 */
+layout (location = 0) out vec4 colortex0Out;
 
 uniform sampler2D lightmap;
 uniform sampler2D texture;
 
-varying vec2 lmcoord;
-varying vec2 texcoord;
-varying vec4 color;
+in vec2 lmcoord;
+in vec2 texcoord;
+in vec4 color;
 
 void main() {
 	vec4 color = texture2D(texture, texcoord) * color;
 
-	gl_FragData[0] = color;
+	colortex0Out = color;
 }

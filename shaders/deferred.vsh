@@ -1,4 +1,4 @@
-#version 120
+#version 450 compatibility
 
 uniform int worldTime;
 uniform vec3 sunPosition;
@@ -9,13 +9,13 @@ uniform mat4 gbufferModelView;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 shadowProjection;
 
-varying vec4 texcoord;
+out vec4 texcoord;
 
-varying vec3 lightVector;
-varying vec3 lightColor;
-varying vec3 skyColor;
-varying float isNight;
-varying vec3 normal;
+out vec3 lightVector;
+out vec3 lightColor;
+out vec3 skyColor;
+out float isNight;
+out vec3 normal;
 
 attribute vec4 mc_Entity;
 

@@ -1,8 +1,8 @@
-#version 120
+#version 450 compatibility
 
-varying vec4 texcoord;
+out vec4 texcoord;
 
-varying float nightDesaturation;
+out float nightDesaturation;
 
 uniform int worldTime;
 uniform vec3 sunPosition;

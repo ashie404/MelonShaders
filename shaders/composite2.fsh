@@ -1,6 +1,12 @@
-#version 120
+#version 450 compatibility
 
 // composite pass 2: bloom pass 1
+
+/* DRAWBUFFERS:0124 */
+layout (location = 0) out vec4 colortex0Out;
+layout (location = 1) out vec4 colortex1Out;
+layout (location = 2) out vec4 colortex2Out;
+layout (location = 3) out vec4 colortex4Out;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex4;
@@ -11,7 +17,7 @@ uniform sampler2D colortex3;
 uniform float viewWidth;
 uniform float viewHeight;
 
-varying vec4 texcoord;
+in vec4 texcoord;
 
 #include "/lib/settings.glsl"
 
@@ -30,11 +36,12 @@ void main() {
     #endif
     vec4 color = texture2D(colortex0, texcoord.st);
 
-    /* DRAWBUFFERS:0124 */
-    gl_FragData[0] = color;
-    gl_FragData[1] = texture2D(gdepth, texcoord.st);
-    gl_FragData[2] = texture2D(gnormal, texcoord.st);
+    // output
+    
+    colortex0Out = color;
+    colortex1Out = texture2D(gdepth, texcoord.st);
+    colortex2Out = texture2D(gnormal, texcoord.st);
     #ifdef BLOOM
-    gl_FragData[3] = vec4(result,1);
+    colortex4Out = vec4(result,1);
     #endif
 }

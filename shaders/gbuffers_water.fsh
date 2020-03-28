@@ -1,4 +1,9 @@
-#version 120
+#version 450 compatibility
+
+/* DRAWBUFFERS:012 */
+layout (location = 0) out vec4 colortex0Out;
+layout (location = 1) out vec4 colortex1Out;
+layout (location = 2) out vec4 colortex2Out;
 
 uniform sampler2D colortex0;
 uniform sampler2D depthtex0;
@@ -12,16 +17,16 @@ uniform mat4 shadowProjection;
 uniform sampler2D texture;
 uniform sampler2D depthtex1;
 
-varying vec3 tintColor;
-varying vec3 normal;
+in vec3 tintColor;
+in vec3 normal;
 
-varying vec4 texcoord;
-varying vec4 lmcoord;
+in vec4 texcoord;
+in vec4 lmcoord;
 
-varying vec4 position;
-varying float isWater;
-varying float isIce;
-varying float isTransparent;
+in vec4 position;
+in float isWater;
+in float isIce;
+in float isTransparent;
 
 uniform float viewWidth;
 uniform float viewHeight;
@@ -35,11 +40,11 @@ void main() {
 
     
     if (isWater == 1) {
-        gl_FragData[0] = vec4(0, 0, 0, 0.22);
-        gl_FragData[1] = vec4(lmcoord.st / 16,0,0.5);
+        colortex0Out = vec4(0, 0, 0, 0.22);
+        colortex1Out = vec4(lmcoord.st / 16,0,0.5);
     } else {
-        gl_FragData[0] = blockColor;
-        gl_FragData[1] = vec4(lmcoord.st / 16,0,0.1);
+        colortex0Out = blockColor;
+        colortex1Out = vec4(lmcoord.st / 16,0,0.1);
     }
-    gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
+    colortex2Out = vec4(normal * 0.5 + 0.5, 1.0);
 }

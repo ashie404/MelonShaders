@@ -1,6 +1,9 @@
-#version 120
+#version 450 compatibility
 
 #extension GL_ARB_shader_texture_lod : enable
+
+/* DRAWBUFFERS:0 */
+layout (location = 0) out vec4 colortex0Out;
 
 #include "/lib/settings.glsl"
 #include "/lib/aces/ACES.glsl"
@@ -11,7 +14,7 @@
 
 const bool gcolorMipmapEnabled = true;
 
-varying vec4 texcoord;
+in vec4 texcoord;
 
 uniform sampler2D colortex3;
 uniform sampler2D colortex6;
@@ -26,7 +29,7 @@ uniform sampler2D shadowcolor0;
 
 uniform float viewHeight;
 uniform float viewWidth;
-varying float nightDesaturation;
+in float nightDesaturation;
 
 void vignette(inout vec3 color) {
     float dist = distance(texcoord.st, vec2(0.5));
@@ -118,7 +121,7 @@ void main() {
     ColorCorrection m;
     m.lum = vec3(0.2125, 0.7154, 0.0721);
     m.saturation = 0.95 - nightDesaturation;
-    
+
     color = Saturation(color, m);
     #endif
     
@@ -142,5 +145,5 @@ void main() {
     vec4 specDebug = texture2D(colortex3, texcoord.st);
     vec4 normal = texture2D(gnormal, texcoord.st);
 
-    gl_FragColor = DEBUG;
+    colortex0Out = DEBUG;
 }

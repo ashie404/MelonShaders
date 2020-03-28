@@ -1,15 +1,15 @@
-#version 120
+#version 450 compatibility
 
-varying vec3 tintColor;
-varying vec3 normal;
+out vec3 tintColor;
+out vec3 normal;
 
 attribute vec4 at_tangent;
 
-varying vec4 texcoord;
-varying vec4 lmcoord;
+out vec4 texcoord;
+out vec4 lmcoord;
 
-varying mat3 viewTBN;
-varying mat3 worldTBN;
+out mat3 viewTBN;
+out mat3 worldTBN;
 
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
@@ -20,7 +20,7 @@ uniform float viewHeight;
 uniform float viewWidth;
 
 attribute vec4 mc_Entity;
-varying float id;
+out float id;
 
 #include "/lib/settings.glsl"
 

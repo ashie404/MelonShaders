@@ -1,20 +1,20 @@
-#version 120
+#version 450 compatibility
 
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
 
 attribute vec4 mc_Entity;
 
-varying vec3 tintColor;
-varying vec3 normal;
+out vec3 tintColor;
+out vec3 normal;
 
-varying vec4 texcoord;
-varying vec4 lmcoord;
-varying vec4 position;
+out vec4 texcoord;
+out vec4 lmcoord;
+out vec4 position;
 
-varying float isWater;
-varying float isIce;
-varying float isTransparent;
+out float isWater;
+out float isIce;
+out float isTransparent;
 
 uniform float frameTimeCounter;
 

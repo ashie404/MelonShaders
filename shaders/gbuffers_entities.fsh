@@ -1,4 +1,10 @@
-#version 120
+#version 450 compatibility
+
+/* DRAWBUFFERS:0123 */
+layout (location = 0) out vec4 colortex0Out;
+layout (location = 1) out vec4 colortex1Out;
+layout (location = 2) out vec4 colortex2Out;
+layout (location = 3) out vec4 colortex3Out;
 
 #include "/lib/framebuffer.glsl"
 
@@ -9,14 +15,14 @@ uniform sampler2D normals;
 
 uniform int worldTime;
 
-varying vec3 tintColor;
-varying vec3 normal;
-varying mat3 viewTBN;
-varying mat3 worldTBN;
+in vec3 tintColor;
+in vec3 normal;
+in mat3 viewTBN;
+in mat3 worldTBN;
 
 
-varying vec4 texcoord;
-varying vec4 lmcoord;
+in vec4 texcoord;
+in vec4 lmcoord;
 
 #include "/lib/settings.glsl"
 #include "/lib/util.glsl"
@@ -38,9 +44,10 @@ void main() {
     normalData = normalize((normalTex.xyz) * viewTBN);
     #endif
 
-    /* DRAWBUFFERS:0123 */
-    gl_FragData[0] = blockColor;
-    gl_FragData[1] = vec4(lmcoord.st / 16,0,0);
-    gl_FragData[2] = vec4(normalData * 0.5 + 0.5, 1.0);
-    gl_FragData[3] = texture2D(specular, texcoord.st);
+    // output
+
+    colortex0Out = blockColor;
+    colortex1Out = vec4(lmcoord.st / 16,0,0);
+    colortex2Out = vec4(normalData * 0.5 + 0.5, 1.0);
+    colortex3Out = texture2D(specular, texcoord.st);
 }

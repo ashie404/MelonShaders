@@ -1,21 +1,26 @@
-#version 120
+#version 450 compatibility
+
+/* DRAWBUFFERS:012 */
+layout (location = 0) out vec4 colortex0Out;
+layout (location = 1) out vec4 colortex1Out;
+layout (location = 2) out vec4 colortex2Out;
 
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 
 uniform sampler2D texture;
 
-varying vec3 tintColor;
-varying vec3 normal;
+in vec3 tintColor;
+in vec3 normal;
 
-varying vec4 texcoord;
-varying vec4 lmcoord;
+in vec4 texcoord;
+in vec4 lmcoord;
 
 void main() {
     vec4 handColor = texture2D(texture, texcoord.st);
     handColor.rgb *= tintColor;
 
-    gl_FragData[0] = handColor;
-    gl_FragData[1] = vec4(lmcoord.st / 16, 0, 0);
-    gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
+    colortex0Out = handColor;
+    colortex1Out = vec4(lmcoord.st / 16, 0, 0);
+    colortex2Out = vec4(normal * 0.5 + 0.5, 1.0);
 }
