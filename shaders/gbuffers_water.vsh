@@ -16,12 +16,15 @@ varying float isWater;
 varying float isIce;
 varying float isTransparent;
 
-uniform int worldTime;
+uniform float frameTimeCounter;
+
+uniform vec3 cameraPosition;
 
 #define DRAG_MULT 0.048
 #define ITERATIONS_NORMAL 48
 #define WATER_DEPTH 1.25
 
+#include "/lib/settings.glsl"
 
 float getIsTransparent(in float materialId) {
     if (materialId == 8.0) { //water 
@@ -47,7 +50,7 @@ float getwaves(vec2 position, int iterations){
     float ws = 0.0;
     for(int i=0;i<iterations;i++){
         vec2 p = vec2(sin(iter), cos(iter));
-        vec2 res = wavedx(position, p, speed, phase, worldTime/1.75);
+        vec2 res = wavedx(position, p, speed, phase, frameTimeCounter*6);
         position += normalize(p) * res.y * weight * DRAG_MULT;
         w += res.x * weight;
         iter += 12.0;
@@ -72,18 +75,15 @@ void main()
     position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
     normal = normalize(gl_NormalMatrix * gl_Normal);
 
-    if (mc_Entity.x == 8 || mc_Entity.x == 9) {
+    if (mc_Entity.x == 8) {
         isIce = 0;
         isWater = 1;
-        //normal = mat3(gbufferModelViewInverse) * normal;
-        normal.y -= getwaves(ftransform().xz, 48);
-        //gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
-    }
-    else if (mc_Entity.x == 79.0) {
-        isIce = 1;
-        isWater = 0;
-    }
-    else {
+        vec3 worldPos = position.xyz + cameraPosition;
+        float waves = getwaves(worldPos.xz, 48);
+        normal.y -= waves;
+        position.y -= waves;
+        gl_Position.y -= waves/2;
+    } else {
         isIce = 0;
         isWater = 0;
     }
