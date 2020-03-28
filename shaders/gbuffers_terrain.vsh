@@ -12,6 +12,12 @@ varying mat3 viewTBN;
 varying mat3 worldTBN;
 
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
+uniform mat4 gbufferProjection;
+uniform mat4 gbufferProjectionInverse;
+
+uniform float viewHeight;
+uniform float viewWidth;
 
 attribute vec4 mc_Entity;
 varying float id;
@@ -20,7 +26,11 @@ varying float id;
 
 void main()
 {
+    #ifndef ISOMETRIC
     gl_Position = ftransform();
+    #else
+    gl_Position = gl_ModelViewMatrix * gl_Vertex * vec4(1 * (viewHeight / viewWidth), 1, -0.01, 8);
+    #endif
     texcoord = gl_MultiTexCoord0;
     lmcoord = gl_MultiTexCoord1;
     tintColor = gl_Color.rgb;

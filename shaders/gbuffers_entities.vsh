@@ -11,13 +11,20 @@ varying vec4 lmcoord;
 varying mat3 viewTBN;
 varying mat3 worldTBN;
 
+uniform float viewWidth;
+uniform float viewHeight;
+
 uniform mat4 gbufferModelViewInverse;
 
 #include "/lib/settings.glsl"
 
 void main()
 {
+    #ifndef ISOMETRIC
     gl_Position = ftransform();
+    #else
+    gl_Position = gl_ModelViewMatrix * gl_Vertex * vec4(1 * (viewHeight / viewWidth), 1, -0.01, 8);
+    #endif
     texcoord = gl_MultiTexCoord0;
     lmcoord = gl_MultiTexCoord1;
     tintColor = gl_Color.rgb;

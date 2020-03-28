@@ -169,11 +169,11 @@ void main() {
     vec4 bloomSample = vec4(0);
 
     if (isNight == 0) {
-        if (luma(finalColor.rgb) > 0.95) {
+        if (luma(finalColor.rgb) > 0.98) {
             bloomSample = finalColor;
         }
     } else if (isNight == 1) {
-        if (luma(finalColor.rgb) > 0.75) {
+        if (luma(finalColor.rgb) > 0.88) {
             bloomSample = finalColor;
         }
     }
