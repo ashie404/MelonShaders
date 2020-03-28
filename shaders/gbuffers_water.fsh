@@ -25,8 +25,6 @@ in vec4 lmcoord;
 
 in vec4 position;
 in float isWater;
-in float isIce;
-in float isTransparent;
 
 uniform float viewWidth;
 uniform float viewHeight;
@@ -37,10 +35,10 @@ uniform float viewHeight;
 void main() {
     vec4 blockColor = texture2D(texture, texcoord.st);
     blockColor.rgb *= tintColor;
-
-    
-    if (isWater == 1) {
-        //colortex0Out = vec4(0, 0, 0, 0.22);
+    // floating point precision correction
+    int isWaterCorrected = int(isWater + 0.5);
+    if (isWaterCorrected == 1) {
+        colortex0Out = vec4(0,0,0,0.12);
         colortex1Out = vec4(lmcoord.st / 16,0,0.5);
     } else {
         colortex0Out = blockColor;

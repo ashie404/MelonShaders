@@ -48,11 +48,14 @@ void main() {
 
 
     colortex0Out = blockColor;
+
+    // floating point precision correction
+    int idCorrected = int(id + 0.5);
     
-    if (id == 31 || id == 32) {
+    if (idCorrected == 31 || idCorrected == 32) {
         // subsurf scattering
         colortex1Out = vec4(lmcoord.st / 16,0,0.3);
-    } else if (id == 21) {
+    } else if (idCorrected == 21) {
         // emissives
         colortex1Out = vec4(lmcoord.st / 16,0,1);
     } else {

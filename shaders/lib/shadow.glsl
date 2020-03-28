@@ -95,7 +95,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
 
     // if non-shadowed, calculate specular reflections
     #ifdef SPECULAR
-    if (isNight == 0) {
+    if (isNight < 0.1) {
         if (sunLight.a > 0.3) {
             color += specularLight;
         }

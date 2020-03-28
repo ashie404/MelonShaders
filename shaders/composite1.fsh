@@ -118,7 +118,7 @@ void main() {
         vec3 reflectionPos = reflect(normalize(viewPos.xyz), normal);
         vec3 reflectionPosWS = mat3(gbufferModelViewInverse) * reflectionPos;
         vec3 skyReflection = GetSkyColor(normalize(reflectionPosWS), normalize(sunPosWorld), isNight);
-        if (isNight == 1) {
+        if (isNight > 0.9) {
             skyReflection += DrawStars(normalize(reflectionPosWS));
         }
         skyReflection /= 1.45;
@@ -174,22 +174,12 @@ void main() {
 
     #ifdef BLOOM
     vec4 bloomSample = vec4(0);
-
-    /*if (isNight == 0) {
-        if (luma(finalColor.rgb) > 1.2) {
-            bloomSample = finalColor;
-        }
-    } else if (isNight == 1) {
-        if (luma(finalColor.rgb) > 0.9) {
-            bloomSample = finalColor;
-        }
-    }*/
     if (frag.emission == 1) {
-        if (isNight == 0) {
+        if (isNight < 0.1) {
             if (luma(finalColor.rgb) > 0.75) {
                 bloomSample = finalColor;
             }
-        } else if (isNight == 1) {
+        } else if (isNight > 0.9) {
             if (luma(finalColor.rgb) > 0.45) {
                 bloomSample = finalColor;
             }

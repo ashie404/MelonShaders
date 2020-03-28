@@ -20,7 +20,6 @@ in vec3 normal;
 in mat3 viewTBN;
 in mat3 worldTBN;
 
-
 in vec4 texcoord;
 in vec4 lmcoord;
 

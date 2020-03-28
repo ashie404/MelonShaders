@@ -13,8 +13,6 @@ out vec4 lmcoord;
 out vec4 position;
 
 out float isWater;
-out float isIce;
-out float isTransparent;
 
 uniform float frameTimeCounter;
 
@@ -28,13 +26,6 @@ uniform float viewHeight;
 #define WATER_DEPTH 1.25
 
 #include "/lib/settings.glsl"
-
-float getIsTransparent(in float materialId) {
-    if (materialId == 8.0) { //water 
-        return 1.0;
-    }
-    return 0.0;
-}
 
 // returns vec2 with wave height in X and its derivative in Y
 vec2 wavedx(vec2 position, vec2 direction, float speed, float frequency, float timeshift) {
@@ -79,7 +70,6 @@ void main()
     normal = normalize(gl_NormalMatrix * gl_Normal);
 
     if (mc_Entity.x == 8) {
-        isIce = 0;
         isWater = 1;
         vec3 worldPos = position.xyz + cameraPosition;
         float waves = getwaves(worldPos.xz, 48);
@@ -87,8 +77,6 @@ void main()
         position.y -= waves;
         gl_Position.y -= waves/2;
     } else {
-        isIce = 0;
         isWater = 0;
     }
-    isTransparent = getIsTransparent(mc_Entity.x);
 }

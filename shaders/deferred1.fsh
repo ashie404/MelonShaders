@@ -89,8 +89,6 @@ void main() {
             //reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
             //reflection.rgb /= 16;
             finalColor *= mix(vec3(1), reflection.rgb, reflection.a-roughness);
-        } else {
-
         }
     }
     #endif
