@@ -50,8 +50,13 @@ void main() {
     colortex0Out = blockColor;
     
     if (id == 31) {
+        // subsurf scattering
         colortex1Out = vec4(lmcoord.st / 16,0,0.3);
+    } else if (id == 21) {
+        // emissives
+        colortex1Out = vec4(lmcoord.st / 16,0,1);
     } else {
+        // everything else
         colortex1Out = vec4(lmcoord.st / 16,0,0);
     }
     colortex2Out = vec4(normalData * 0.5 + 0.5, 1.0);
