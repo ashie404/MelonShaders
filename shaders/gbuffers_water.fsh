@@ -40,7 +40,7 @@ void main() {
 
     
     if (isWater == 1) {
-        colortex0Out = vec4(0, 0, 0, 0.22);
+        //colortex0Out = vec4(0, 0, 0, 0.22);
         colortex1Out = vec4(lmcoord.st / 16,0,0.5);
     } else {
         colortex0Out = blockColor;
