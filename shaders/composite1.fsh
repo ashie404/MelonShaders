@@ -175,14 +175,8 @@ void main() {
     #ifdef BLOOM
     vec4 bloomSample = vec4(0);
     if (frag.emission == 1) {
-        if (isNight < 0.1) {
-            if (luma(finalColor.rgb) > 0.75) {
-                bloomSample = finalColor;
-            }
-        } else if (isNight > 0.9) {
-            if (luma(finalColor.rgb) > 0.45) {
-                bloomSample = finalColor;
-            }
+        if (luma(finalColor.rgb) > 0.5) {
+            bloomSample = finalColor;
         }
     }
     #endif

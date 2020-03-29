@@ -87,7 +87,9 @@ void main() {
 
     PBRData pbrData = getPBRData(texture2D(colortex3, texcoord.st));
 
-    vec3 finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
+    vec3 finalColor = vec3(0);
+
+    finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
 
     // output
 

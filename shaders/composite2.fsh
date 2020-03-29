@@ -21,16 +21,22 @@ in vec4 texcoord;
 
 #include "/lib/settings.glsl"
 
+const float PI = 3.1415926535897;
+
 void main() {
 
     #ifdef BLOOM
     vec2 tex_offset = 1.0 / vec2(viewWidth, viewHeight); // gets size of single texel
     vec3 result = texture2D(colortex4, texcoord.st).rgb; // current fragment's contribution
-    for(int i = 1; i <= 64; ++i)
+    for(int i = 1; i <= 16; ++i)
     {
-        float weight = 0.25 / (i * i + 1.0);
+        float weight = 0.25 / ((i*i*PI/32) + 1);
         result += texture2D(colortex4, texcoord.st + vec2(tex_offset.x * i, 0.0)).rgb * weight;
         result += texture2D(colortex4, texcoord.st - vec2(tex_offset.x * i, 0.0)).rgb * weight;
+        result += texture2D(colortex4, texcoord.st + vec2(tex_offset.x * i * 1.5, 0.0)).rgb * weight;
+        result += texture2D(colortex4, texcoord.st - vec2(tex_offset.x * i * 1.5, 0.0)).rgb * weight;
+        result += texture2D(colortex4, texcoord.st + vec2(tex_offset.x * i * 2, 0.0)).rgb * weight;
+        result += texture2D(colortex4, texcoord.st - vec2(tex_offset.x * i * 2, 0.0)).rgb * weight;
     }
     #endif
     vec4 color = texture2D(colortex0, texcoord.st);
