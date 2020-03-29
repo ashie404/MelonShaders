@@ -22,6 +22,7 @@ uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 uniform sampler2D gcolor;
 uniform sampler2D gnormal;
+uniform sampler2D gdepth;
 
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
@@ -94,6 +95,9 @@ void autoExposure(inout vec3 color){
 void main() {
     vec3 color = texture2D(gcolor, texcoord.st).rgb;
 
+    // create new night desaturation value based on how lit an area is
+    float nightDesat = mix(nightDesaturation, 0.0, texture2D(gdepth, texcoord.st).r/16);
+
     // tonemapping
     #ifdef TONEMAP_ACES
     // ACES Tonemap (the real one)
@@ -101,7 +105,7 @@ void main() {
 
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
-	m.saturation = 0.95 + SAT_MOD - nightDesaturation;
+	m.saturation = 0.95 + SAT_MOD - nightDesat;
 	m.vibrance = VIB_MOD;
 	m.contrast = 1.0 - CONT_MOD;
 	m.contrastMidpoint = CONT_MIDPOINT;
@@ -120,7 +124,7 @@ void main() {
     // just do night time desaturation
     ColorCorrection m;
     m.lum = vec3(0.2125, 0.7154, 0.0721);
-    m.saturation = 0.95 - nightDesaturation;
+    m.saturation = 0.95 - nightDesat;
 
     color = Saturation(color, m);
     #endif
