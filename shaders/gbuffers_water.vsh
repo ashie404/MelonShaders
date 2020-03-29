@@ -74,7 +74,7 @@ void main()
         vec3 worldPos = position.xyz + cameraPosition;
         float waves = getwaves(worldPos.xz, 48);
         normal.y -= waves;
-        position.y -= waves;
+        position.y -= waves/2;
         gl_Position.y -= waves/2;
     } else {
         isWater = 0;
