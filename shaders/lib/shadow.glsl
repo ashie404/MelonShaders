@@ -66,11 +66,9 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // oren-nayar diffuse
     float diffuseStrength = OrenNayar(normalize(viewVec),normalize(lightVector) , normalize(frag.normal), roughness);
     vec3 diffuseLight = diffuseStrength * lightColor;
-    //diffuseLight = max(skyColor, diffuseLight);
 
     #ifdef SPECULAR
     // ggx specular
-    //float specularStrength = GGX(normalize(frag.normal), normalize(viewVec), normalize(lightVector), roughness, pbrData.F0, CELESTIAL_RADIUS);
     float specularStrength = ggx(normalize(frag.normal), normalize(viewVec), pbrData);
     vec3 specularLight = specularStrength * lightColor;
     #endif
@@ -84,10 +82,9 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     #ifdef SSS
 
     // 0.3 emission is tag for sss
-    float sunDepth = texture2D(shadowtex0, shadowPos.xy).r;
-    if (frag.emission == 0.3 && sunLight.a > 0.4) {
+    if (frag.emission == 0.3) {
         float subsurfStrength = calcSSS(viewVec, frag.normal, lightVector);
-        vec3 subsurfColor = mix(vec3(0), subsurfStrength * lightColor, sunDepth)*SSS_STRENGTH;
+        vec3 subsurfColor = mix(vec3(0), subsurfStrength * lightColor/24, sunLight.a)*SSS_STRENGTH;
         color += subsurfColor;
     }
 
