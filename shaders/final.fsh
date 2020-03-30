@@ -121,7 +121,8 @@ void main() {
     color = Contrast(color, m);
     color = LiftGammaGain(color, m);
     #else
-    // just do night time desaturation
+
+    // just do night time desaturation if aces is disabled
     ColorCorrection m;
     m.lum = vec3(0.2125, 0.7154, 0.0721);
     m.saturation = 0.95 - nightDesat;
