@@ -29,7 +29,7 @@ attribute vec4 at_tangent;
 
 void main()
 {
-    #ifndef ISOMETRIC
+    #ifndef ORTHOGRAPHIC
     gl_Position = ftransform();
     #else
     gl_Position = gl_ModelViewMatrix * gl_Vertex * vec4(1 * (viewHeight / viewWidth), 1, -0.01, 8);

@@ -45,7 +45,7 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 
 // misc
 //#define WHITEWORLD // Returns white on albedo. Useful for debugging lighting.
-//#define ISOMETRIC // Removes all perspective projection. Mainly for fun purposes, breaks most lighting effects.
+//#define ORTHOGRAPHIC // Removes all perspective projection. Mainly for fun purposes, breaks most lighting effects.
 #define WAVING_TERRAIN // Enables waving leaves, grass and other plants.
 
 // non-user-settable

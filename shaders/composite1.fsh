@@ -63,7 +63,7 @@ float luma(vec3 color) {
 
 void main() {
 
-    vec4 finalColor = texture2D(gcolor, texcoord.st);
+    vec4 finalColor = texture2D(colortex0, texcoord.st);
     Fragment frag = getFragment(texcoord.st);
     Lightmap lightmap = getLightmapSample(texcoord.st);
     vec4 newPosition = position;
@@ -126,7 +126,7 @@ void main() {
         vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
         vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);
         // eye is in water, calculate snell's window and use generic underwater color for reflections
-        if (isEyeInWater == 1) {
+        if (isEyeInWater > 0) {
             vec3 rayDir = refract(normalize(viewPos), normal, n1.r/n2.r); // calculate snell's window
             if (rayDir == vec3(0))
             {
