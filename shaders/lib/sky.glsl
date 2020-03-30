@@ -161,5 +161,25 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
     vec4 sunSpot = calculateSunSpot(normalize(worldPos), mat3(gbufferModelViewInverse) * normalize(lightVector));
     color = mix(color, sunSpot.rgb, sunSpot.r);
 
+    // cloud
+
+    #ifdef CLOUDS
+    float cirrus = 0.7;
+    float cumulus = 1;
+
+    float time = frameTimeCounter * CLOUD_SPEED;
+
+    // cirrus clouds
+    float density = smoothstep(1.0 - CIRRUS_DENSITY, 1.0, fbm(worldPos.xyz / worldPos.y * 2.0 + time * 0.05)) * 0.3;
+    color = mix(color, vec3(1.0), density * max(worldPos.y, 0.0));
+
+    // cumulus clouds
+    for (int i = 0; i < CUMULUS_LAYERS; i++)
+    {
+      float density = smoothstep(1.0 - CUMULUS_DENSITY, 1.0, fbm((0.7 + float(i) * 0.01) * worldPos.xyz / worldPos.y + time * 0.3));
+      color = mix(color, vec3(density * 5.0), min(density, 1.0) * max(worldPos.y, 0.0));
+    }
+    #endif
+
     return color;
 }

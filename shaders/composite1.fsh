@@ -30,6 +30,7 @@ uniform int worldTime;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float frameTimeCounter;
 
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;

@@ -26,6 +26,7 @@ in vec4 texcoord;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float frameTimeCounter;
 
 uniform vec3 sunPosition;
 
