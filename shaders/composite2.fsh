@@ -27,7 +27,6 @@ void main() {
     #ifdef BLOOM
     vec2 tex_offset = 1.0 / vec2(viewWidth, viewHeight); // gets size of single texel
     vec3 result = texture2D(colortex4, texcoord.st).rgb; // current fragment's contribution
-    // diagonal pass 1
     for(int i = 1; i <= 16; ++i)
     {
         float weight = 0.25 / ((i*i*PI/32) + 1);
@@ -37,11 +36,6 @@ void main() {
         result += texture2D(colortex4, texcoord.st - vec2(tex_offset.x * i * 1.5, tex_offset.y * i * 1.5)).rgb * weight;
         result += texture2D(colortex4, texcoord.st + vec2(tex_offset.x * i * 2, tex_offset.y * i * 2)).rgb * weight;
         result += texture2D(colortex4, texcoord.st - vec2(tex_offset.x * i * 2, tex_offset.y * i * 2)).rgb * weight;
-    }
-    // diagonal pass 2
-    for(int i = 1; i <= 16; ++i)
-    {
-        float weight = 0.25 / ((i*i*PI/32) + 1);
         result += texture2D(colortex4, texcoord.st + vec2(-tex_offset.x * i, tex_offset.y * i)).rgb * weight;
         result += texture2D(colortex4, texcoord.st - vec2(-tex_offset.x * i, tex_offset.y * i)).rgb * weight;
         result += texture2D(colortex4, texcoord.st + vec2(-tex_offset.x * i * 1.5, tex_offset.y * i * 1.5)).rgb * weight;
