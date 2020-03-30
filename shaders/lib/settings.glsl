@@ -35,7 +35,7 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 
 // water settings
 #define WATER_WAVES // Whether to enable wavy water or not.
-#define WAVE_SPEED 0.4 // Water waves speed. [0.25 0.3 0.4 0.5 0.6 0.75 0.8 0.9 1]
+#define WAVE_SPEED 0.15 // Water waves speed. [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6]
 
 // ACES settings
 #define TONEMAP_ACES // Whether to enable the ACES tonemap operator or not.
