@@ -6,11 +6,16 @@
 
 // visual settings
 #define SCREENSPACE_REFLECTIONS // Enables reflections.
+
+#define WAVING_TERRAIN // Enables waving leaves, grass and other plants.
+
+#define SSS // Subsurface scattering. Helps with semi-translucents like leaves and grass and makes them look better from behind.
+#define SSS_STRENGTH 1 // Strength of subsurface scattering. [0 0.25 0.5 0.75 1 1.25 1.5 1.75 2]
+
+// pbr settings
 //#define SPECULAR_REFLECTIONS // Enables screen space reflections on smooth surfaces. Has no effect if screenspace reflections or specular mapping is disabled. Not recommended if resource pack doesn't comply with LabPBR.
 #define SPECULAR // Whether to enable specular highlight calculation or not. Not recommended if resource pack doesn't comply with LabPBR.
 #define NORMAL_MAP // Whether to enable normal mapping or not. Not recommended if resource pack doesn't comply with LabPBR.
-#define SSS // Subsurface scattering. Helps with semi-translucents like leaves and grass and makes them look better from behind.
-#define SSS_STRENGTH 1 // Strength of subsurface scattering. [0 0.25 0.5 0.75 1 1.25 1.5 1.75 2]
 
 // shadow settings
 #define SHADOW_BIAS 0.020 //Increase this if you get shadow acne. Decrease this if you get peter panning. [0.000 0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.008 0.009 0.010 0.012 0.014 0.016 0.018 0.020 0.022 0.024 0.026 0.028 0.030 0.035 0.040 0.045 0.050]
@@ -53,7 +58,6 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 // misc
 //#define WHITEWORLD // Returns white on albedo. Useful for debugging lighting.
 //#define ORTHOGRAPHIC // Removes all perspective projection. Mainly for fun purposes, breaks most lighting effects.
-#define WAVING_TERRAIN // Enables waving leaves, grass and other plants.
 
 // non-user-settable
 #define NIGHT_SKY_COLOR vec3(0.001, 0.004, 0.01)
