@@ -1,12 +1,17 @@
 #version 450 compatibility
 
-out vec4 texcoord;
+// outputs to fragment shader
 
+out vec4 texcoord;
 out float nightDesaturation;
+
+// uniforms
 
 uniform int worldTime;
 uniform vec3 sunPosition;
 uniform vec3 moonPosition;
+
+// includes
 
 #define VSH
 #include "/lib/settings.glsl"

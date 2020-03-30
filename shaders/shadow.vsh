@@ -1,9 +1,14 @@
 #version 450 compatibility
 
-attribute vec4 mc_Entity;
+// outputs to fragment shader
 
 out vec2 texcoord;
 out vec4 color;
+
+// uniforms
+attribute vec4 mc_Entity;
+
+// includes
 
 #include "/lib/settings.glsl"
 #include "/lib/distort.glsl"

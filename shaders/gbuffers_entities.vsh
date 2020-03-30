@@ -1,20 +1,22 @@
 #version 450 compatibility
 
+// outputs to fragment shader
+
 out vec3 tintColor;
 out vec3 normal;
-
-attribute vec4 at_tangent;
-
 out vec4 texcoord;
 out vec4 lmcoord;
-
 out mat3 viewTBN;
 out mat3 worldTBN;
 
+// uniforms
+
 uniform float viewWidth;
 uniform float viewHeight;
-
 uniform mat4 gbufferModelViewInverse;
+attribute vec4 at_tangent;
+
+// includes
 
 #include "/lib/settings.glsl"
 

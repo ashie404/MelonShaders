@@ -5,17 +5,18 @@
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colortex0Out;
 
-#include "/lib/settings.glsl"
-#include "/lib/aces/ACES.glsl"
-
 #define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor specDebug normal]
-
 #define INFO 0 //[0 1]
 
-const bool gcolorMipmapEnabled = true;
+// inputs from vertex shader
 
 in vec4 texcoord;
+in float nightDesaturation;
 
+// uniforms
+
+uniform float viewHeight;
+uniform float viewWidth;
 uniform sampler2D colortex3;
 uniform sampler2D colortex6;
 uniform sampler2D depthtex0;
@@ -23,14 +24,19 @@ uniform sampler2D depthtex1;
 uniform sampler2D gcolor;
 uniform sampler2D gnormal;
 uniform sampler2D gdepth;
-
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
 uniform sampler2D shadowcolor0;
 
-uniform float viewHeight;
-uniform float viewWidth;
-in float nightDesaturation;
+// constants
+
+const bool gcolorMipmapEnabled = true;
+
+// includes
+
+#include "/lib/settings.glsl"
+#include "/lib/aces/ACES.glsl"
+
 
 void vignette(inout vec3 color) {
     float dist = distance(texcoord.st, vec2(0.5));

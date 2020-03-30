@@ -1,9 +1,9 @@
 #version 450 compatibility
 
+// outputs to fragment shader
+
 out vec3 tintColor;
-
 out vec3 normal;
-
 out vec4 texcoord;
 out vec4 lmcoord;
 

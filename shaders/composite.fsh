@@ -10,55 +10,35 @@ layout (location = 3) out vec4 colortex3Out;
 
 // composite pass 0: sky and clouds
 
-in vec4 texcoord;
+// inputs from vertex shader
+
+in float isNight;
 
 in vec3 lightVector;
 in vec3 lightColor;
 in vec3 skyColor;
-in float isNight;
-uniform int worldTime;
+in vec3 normal;
 
-uniform sampler2D noisetex;
+in vec4 position;
+in vec4 texcoord;
 
-uniform mat4 gbufferModelView;
-uniform mat4 gbufferProjection;
-
-uniform sampler2D colortex0;
-uniform sampler2D colortex3;
-uniform sampler2D colortex7;
-uniform sampler2D depthtex0;
-uniform sampler2D specular;
-uniform sampler2D gdepthtex;
-uniform sampler2D gaux2;
-uniform sampler2D shadow;
-uniform sampler2D shadowtex0;
-uniform sampler2D shadowcolor0;
-uniform sampler2D normals;
-
-uniform vec3 cameraPosition;
-uniform vec3 sunPosition;
-
-uniform vec3 upPosition;
-
-uniform vec3 shadowLightPosition;
+// uniforms
 
 uniform float viewWidth;
 uniform float viewHeight;
 
-in float isTransparent;
-in vec3 normal;
+uniform vec3 sunPosition;
 
-in vec4 position;
-uniform int isEyeInWater;
+uniform sampler2D colortex0;
+uniform sampler2D colortex3;
+uniform sampler2D depthtex0;
+
+// includes
 
 #include "/lib/settings.glsl"
 #include "/lib/util.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
-#include "/lib/dither.glsl"
-#include "/lib/reflection.glsl"
-#include "/lib/labpbr.glsl"
-#include "/lib/shadow.glsl"
 #include "/lib/sky.glsl"
 
 void main() {

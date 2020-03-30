@@ -1,13 +1,6 @@
 #version 450 compatibility
 
-uniform int worldTime;
-uniform vec3 sunPosition;
-uniform vec3 moonPosition;
-uniform vec3 shadowLightPosition;
-uniform mat4 shadowModelView;
-uniform mat4 gbufferModelView;
-uniform mat4 gbufferModelViewInverse;
-uniform mat4 shadowProjection;
+// outputs to fragment shader
 
 out vec4 texcoord;
 
@@ -17,7 +10,18 @@ out vec3 skyColor;
 out float isNight;
 out vec3 normal;
 
-attribute vec4 mc_Entity;
+// uniforms
+
+uniform int worldTime;
+uniform vec3 sunPosition;
+uniform vec3 moonPosition;
+uniform vec3 shadowLightPosition;
+uniform mat4 shadowModelView;
+uniform mat4 gbufferModelView;
+uniform mat4 gbufferModelViewInverse;
+uniform mat4 shadowProjection;
+
+// includes
 
 #define VSH
 #include "/lib/settings.glsl"

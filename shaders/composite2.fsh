@@ -7,20 +7,27 @@ layout (location = 0) out vec4 colortex0Out;
 layout (location = 1) out vec4 colortex1Out;
 layout (location = 2) out vec4 colortex2Out;
 
+// inputs from vertex shader
+
+in vec4 texcoord;
+
+// uniforms
+
+uniform float viewWidth;
+uniform float viewHeight;
 uniform sampler2D colortex0;
 uniform sampler2D colortex4;
 uniform sampler2D gdepth;
 uniform sampler2D gnormal;
 uniform sampler2D colortex3;
 
-uniform float viewWidth;
-uniform float viewHeight;
-
-in vec4 texcoord;
-
-#include "/lib/settings.glsl"
+// constants
 
 const float PI = 3.1415926535897;
+
+// includes
+
+#include "/lib/settings.glsl"
 
 void main() {
 

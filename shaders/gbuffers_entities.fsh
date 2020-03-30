@@ -6,14 +6,7 @@ layout (location = 1) out vec4 colortex1Out;
 layout (location = 2) out vec4 colortex2Out;
 layout (location = 3) out vec4 colortex3Out;
 
-#include "/lib/framebuffer.glsl"
-
-uniform sampler2D texture;
-
-uniform sampler2D specular;
-uniform sampler2D normals;
-
-uniform int worldTime;
+// inputs from vertex shader
 
 in vec3 tintColor;
 in vec3 normal;
@@ -23,6 +16,16 @@ in mat3 worldTBN;
 in vec4 texcoord;
 in vec4 lmcoord;
 
+// uniforms
+
+uniform sampler2D texture;
+uniform sampler2D specular;
+uniform sampler2D normals;
+uniform int worldTime;
+
+// includes
+
+#include "/lib/framebuffer.glsl"
 #include "/lib/settings.glsl"
 #include "/lib/util.glsl"
 #include "/lib/labpbr.glsl"

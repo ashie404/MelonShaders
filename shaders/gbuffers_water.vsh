@@ -1,29 +1,31 @@
 #version 450 compatibility
 
-uniform mat4 gbufferModelViewInverse;
-uniform mat4 gbufferModelView;
-
-attribute vec4 mc_Entity;
+// outputs to fragment shader
 
 out vec3 tintColor;
 out vec3 normal;
-
 out vec4 texcoord;
 out vec4 lmcoord;
 out vec4 position;
-
 out float isWater;
 
+// uniforms
+
 uniform float frameTimeCounter;
-
+uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
 uniform vec3 cameraPosition;
-
 uniform float viewWidth;
 uniform float viewHeight;
+attribute vec4 mc_Entity;
+
+// defines
 
 #define DRAG_MULT 0.048
 #define ITERATIONS_NORMAL 48
 #define WATER_DEPTH 1.25
+
+// includes
 
 #include "/lib/settings.glsl"
 

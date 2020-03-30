@@ -1,27 +1,28 @@
 #version 450 compatibility
 
+// outputs to fragment shader
+
 out vec3 tintColor;
 out vec3 normal;
-
-attribute vec4 at_tangent;
-
 out vec4 texcoord;
 out vec4 lmcoord;
-
+out float id;
 out mat3 viewTBN;
 out mat3 worldTBN;
+
+// uniforms
 
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
 uniform mat4 gbufferProjection;
 uniform mat4 gbufferProjectionInverse;
-
 uniform float viewHeight;
 uniform float viewWidth;
 uniform float frameTimeCounter;
-
 attribute vec4 mc_Entity;
-out float id;
+attribute vec4 at_tangent;
+
+// includes
 
 #include "/lib/settings.glsl"
 #include "/lib/noise.glsl"
