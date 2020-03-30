@@ -28,34 +28,22 @@ attribute vec4 mc_Entity;
 // includes
 
 #include "/lib/settings.glsl"
+#include "/lib/noise.glsl"
 
-// returns vec2 with wave height in X and its derivative in Y
-vec2 wavedx(vec2 position, vec2 direction, float speed, float frequency, float timeshift) {
-    float x = dot(direction, position) * frequency + timeshift * speed;
-    float wave = exp(sin(x) - 1.0);
-    float dx = wave * cos(x);
-    return vec2(wave, -dx);
-}
-
-float getwaves(vec2 position, int iterations){
-	float iter = 0.0;
-    float phase = 6.0;
-    float speed = 0.5;
-    float weight = 1.0;
-    float w = 0.0;
-    float ws = 0.0;
-    for(int i=0;i<iterations;i++){
-        vec2 p = vec2(sin(iter), cos(iter));
-        vec2 res = wavedx(position, p, speed, phase, frameTimeCounter*6);
-        position += normalize(p) * res.y * weight * DRAG_MULT;
-        w += res.x * weight;
-        iter += 12.0;
-        ws += weight;
-        weight = mix(weight, 0.0, 0.2);
-        phase *= 1.18;
-        speed *= 1.07;
+float waves(vec2 position, int iterations) {
+    // this is just totally random code to create fancy waves
+    float iter = 0.0;
+    float finalWave = 0.0;
+    float time = frameTimeCounter*WAVE_SPEED;
+    for (int i=0; i<=iterations; i++) {
+        float wx = -abs(sin(position.x-i+time*4));
+        float wy = -abs(cos(position.y+i-time*4));
+        float wz = abs(cos(sin(wx+wy/position.x-i+time*16)));
+        float wfbm = abs(sin(fbm(vec3(wx,wy,wz)+position.xyx)));
+        finalWave += wx*wy+wz/wfbm;
     }
-    return w / ws;
+
+    return finalWave/iterations;
 }
 
 void main()
@@ -73,11 +61,13 @@ void main()
 
     if (mc_Entity.x == 8) {
         isWater = 1;
+        #ifdef WATER_WAVES
         vec3 worldPos = position.xyz + cameraPosition;
-        float waves = getwaves(worldPos.xz, 48);
+        float waves = waves(worldPos.xz, 48)/10;
         normal.y -= waves;
-        position.y -= waves/2;
-        gl_Position.y -= waves/2;
+        position.y -= waves;
+        gl_Position.y -= waves;
+        #endif
     } else {
         isWater = 0;
     }

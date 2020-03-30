@@ -33,6 +33,10 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 #define CIRRUS_DENSITY 0.4 // Density of cirrus clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1]
 #define CLOUD_SPEED 0.1 // How fast the clouds move. [0.01 0.05 0.1 0.15 0.2 0.25 0.35 0.5 0.65 0.75]
 
+// water settings
+#define WATER_WAVES // Whether to enable wavy water or not.
+#define WAVE_SPEED 0.4 // Water waves speed. [0.25 0.3 0.4 0.5 0.6 0.75 0.8 0.9 1]
+
 // ACES settings
 #define TONEMAP_ACES // Whether to enable the ACES tonemap operator or not.
 #define SAT_MOD                      0.15     // [-1.0 -0.95 -0.9 -0.85 -0.8 -0.75 -0.7 -0.65 -0.6 -0.55 -0.5 -0.45 -0.4 -0.35 -0.3 -0.25 -0.2 -0.15 -0.1 -0.05 0.0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
