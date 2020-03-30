@@ -18,7 +18,7 @@
 #define NORMAL_MAP // Whether to enable normal mapping or not. Not recommended if resource pack doesn't comply with LabPBR.
 
 // shadow settings
-#define SHADOW_BIAS 0.020 //Increase this if you get shadow acne. Decrease this if you get peter panning. [0.000 0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.008 0.009 0.010 0.012 0.014 0.016 0.018 0.020 0.022 0.024 0.026 0.028 0.030 0.035 0.040 0.045 0.050]
+#define SHADOW_BIAS 0.0001 //Increase this if you get shadow acne. Decrease this if you get peter panning. [0.0000 0.0001 0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.008 0.009 0.010 0.012 0.014 0.016 0.018 0.020 0.022 0.024 0.026 0.028 0.030 0.035 0.040 0.045 0.050]
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
 
@@ -68,4 +68,4 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 #define NIGHT_SKY_COLOR vec3(0.001, 0.004, 0.01)
 const float shadowMapBias = 0.85;
 const int noiseTextureResolution = 256;
-const vec3 celestialTint = vec3(3, 3, 2.5);
+const vec3 celestialTint = vec3(9, 9, 7.5);

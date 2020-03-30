@@ -23,7 +23,7 @@ uniform sampler2D texture;
 void main() {
     vec4 eyeColor = texture2D(texture, texcoord.st);
 
-    colortex0Out = eyeColor;
+    colortex0Out = eyeColor * 1000;
     colortex1Out = vec4(lmcoord.st / 16, 0, 1);
     colortex2Out = vec4(normal * 0.5 + 0.5, 1.0);
 }

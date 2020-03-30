@@ -21,32 +21,25 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
-    if (texture2D(depthtex0, coord).r < 1) // if not sky, calculate shadows
-    {
-        float visibility = 0;
-        for (int y = -2; y < 2; y++) {
-            for (int x = -2; x < 2; x++) {
-                vec2 offset = vec2(x, y) / shadowMapResolution;
-                offset = rotationMatrix * offset;
-                // sample shadow map
-                float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r; // sampling shadow map
-                visibility += step(shadowPos.z - shadowMapSample, 0.001);
-                
-                // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
-                if (texture2D(shadowtex0, shadowPos.xy + offset).r < texture2D(shadowtex1, shadowPos.xy + offset).r ) {
-                    vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
-                    shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
-                } else {
-                    shadowCol += mix(vec3(shadowMapSample), lightColor, visibility) * 1.2;
-                }
+    float visibility = 0;
+    for (int y = -2; y < 2; y++) {
+        for (int x = -2; x < 2; x++) {
+            vec2 offset = vec2(x, y) / shadowMapResolution;
+            offset = rotationMatrix * offset;
+            // sample shadow map
+            float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r; // sampling shadow map
+            visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
+            
+            // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
+            if (texture2D(shadowtex0, shadowPos.xy + offset).r < texture2D(shadowtex1, shadowPos.xy + offset).r ) {
+                vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
+                shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
+            } else {
+                shadowCol += mix(vec3(shadowMapSample), lightColor, visibility) * 1.2;
             }
         }
-        return vec4(shadowCol / 256, visibility);
     }
-    else
-    {
-        return vec4(0.35,0.15,0.15, 1);
-    }
+    return vec4(shadowCol / 256, visibility);
 }
 
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in PBRData pbrData) {
