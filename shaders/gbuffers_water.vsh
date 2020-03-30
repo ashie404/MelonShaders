@@ -30,11 +30,12 @@ attribute vec4 mc_Entity;
 #include "/lib/settings.glsl"
 #include "/lib/noise.glsl"
 
-float waves(vec2 position, int iterations) {
+float waves(vec2 pos, int iterations, int detail) {
     // this is just totally random code to create fancy waves
     float iter = 0.0;
     float finalWave = 0.0;
     float time = frameTimeCounter*WAVE_SPEED;
+    vec2 position = pos/detail;
     for (int i=0; i<=iterations; i++) {
         float wx = -abs(sin(position.x-i+time*4));
         float wy = -abs(cos(position.y+i-time*4));
@@ -43,7 +44,7 @@ float waves(vec2 position, int iterations) {
         finalWave += wx*wy+wz/wfbm;
     }
 
-    return finalWave/iterations;
+    return finalWave/(iterations/detail);
 }
 
 void main()
@@ -63,7 +64,7 @@ void main()
         isWater = 1;
         #ifdef WATER_WAVES
         vec3 worldPos = position.xyz + cameraPosition;
-        float waves = waves(worldPos.xz, 48)/10;
+        float waves = waves(worldPos.xz, 48, WAVE_SCALE)/(10*WAVE_SCALE);
         normal.y -= waves;
         position.y -= waves;
         gl_Position.y -= waves;
