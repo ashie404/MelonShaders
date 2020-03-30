@@ -15,6 +15,7 @@ in mat3 worldTBN;
 in vec4 texcoord;
 in vec4 lmcoord;
 in float id;
+in vec4 position;
 
 // uniforms
 
@@ -22,6 +23,13 @@ uniform sampler2D texture;
 uniform sampler2D specular;
 uniform sampler2D normals;
 uniform int worldTime;
+uniform float frameTimeCounter;
+uniform float viewWidth;
+uniform float viewHeight;
+
+// constants
+
+const mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
 
 // includes
 
