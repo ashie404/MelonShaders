@@ -66,8 +66,8 @@ void main() {
         colortex1Out = vec4(lmcoord.st / 16,0,0.3);
     } else if (idCorrected == 21) {
         // emissives
-        if (luma(blockColor.rgb) > 0.65) {
-            blockColor.rgb *= 5;
+        if (luma(blockColor.rgb) > 0.5) {
+            blockColor.rgb *= 5*(luma(blockColor.rgb)+0.5);
         }
         colortex1Out = vec4(lmcoord.st / 16,0,0);
     } else {
