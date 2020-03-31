@@ -1,3 +1,4 @@
+const float PI = 3.1415926535897;
 vec3 calcBloomTile(vec2 offset, float lod) {
     // get size of single texel
     vec2 texelSize = 1.0 / vec2(viewWidth, viewHeight);
@@ -17,8 +18,7 @@ vec3 calcBloomTile(vec2 offset, float lod) {
     // calculate blurred tile
     for (int x=-2; x<=2; x++) { 
         for (int y=-2; y<=2; y++) {
-            float weight = 2.546479089 / (x * y + 10.185916358); //simplified version of: 0.25 / ((x*y*PI/32) + 1);
-
+            float weight = (PI-(x*x)-(y*y))/sqrt(PI)+5;
             totalBloom += texture2DLod(colortex4, coord + vec2(x,y) * scale, lod).rgb * weight;
 
             totalWeight += weight;
