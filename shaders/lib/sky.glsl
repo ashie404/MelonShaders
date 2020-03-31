@@ -28,7 +28,7 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 
     // Calculate the step size of the primary ray.
     vec2 p = rsi(r0, r, rAtmos);
-    if (p.x > p.y) return vec3(0,0,0);
+    if (p.x > p.y) return vec3(0.0);
     p.y = min(p.y, rsi(r0, r, rPlanet).x);
     float iStepSize = (p.y - p.x) / float(iSteps);
 
@@ -139,7 +139,7 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector) {
 }
 
 vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
-     vec3 color = atmosphere(
+    vec3 color = atmosphere(
         normalize(worldPos),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
         sunPos,                        // position of the sun
@@ -152,6 +152,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
         1.2e3,                  // Mie scale height
         0.758                           // Mie preferred scattering direction
     );
+
     // Apply exposure.
     color = 1.0 - exp(-1 * color);
 
@@ -167,15 +168,17 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
 
     float time = frameTimeCounter * CLOUD_SPEED;
 
+    float cloudBrightness = CLOUD_DENSITY * (1.0-(isNight/1.05));
+
     // cirrus clouds
     float density = smoothstep(1.0 - CIRRUS_DENSITY, 1.0, fbm(worldPos.xyz / worldPos.y * 2.0 + time * 0.05)) * 0.3;
-    color = mix(color, vec3(1.0), density * max(worldPos.y, 0.0));
+    color = mix(color, vec3(1.0), cloudBrightness * density * max(worldPos.y, 0.0));
 
     // cumulus clouds
     for (int i = 0; i < CUMULUS_LAYERS; i++)
     {
         float density = smoothstep(1.0 - CUMULUS_DENSITY, 1.0, fbm((0.7 + float(i) * 0.01) * worldPos.xyz / worldPos.y + time * 0.3));
-        color = mix(color, vec3(density * 5.0), min(density, 1.0) * max(worldPos.y, 0.0));
+        color = mix(color, vec3(cloudBrightness * density * 5.0), min(density, 1.0) * max(worldPos.y, 0.0));
     }
     
     #endif

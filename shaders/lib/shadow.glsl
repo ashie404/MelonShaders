@@ -22,8 +22,8 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     float visibility = 0;
-    for (int y = -2; y < 2; y++) {
-        for (int x = -2; x < 2; x++) {
+    for (int y = -4; y < 4; y++) {
+        for (int x = -4; x < 4; x++) {
             vec2 offset = vec2(x, y) / shadowMapResolution;
             offset = rotationMatrix * offset;
             // sample shadow map
@@ -39,7 +39,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
             }
         }
     }
-    return vec4(shadowCol / 256, visibility);
+    return vec4(shadowCol / 4096, visibility);
 }
 
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in PBRData pbrData) {

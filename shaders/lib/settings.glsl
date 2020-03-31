@@ -34,6 +34,7 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 #define CUMULUS_DENSITY 0.7 // Density of cumulus clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1]
 #define CIRRUS_DENSITY 0.4 // Density of cirrus clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1]
 #define CLOUD_SPEED 0.1 // How fast the clouds move. [0.01 0.05 0.1 0.15 0.2 0.25 0.35 0.5 0.65 0.75]
+#define CLOUD_DENSITY 1 // How "dense" the clouds are. Affects transparency level of clouds. [0.25 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2 2.5 3]
 
 // water settings
 #define WATER_WAVES // Whether to enable wavy water or not.
