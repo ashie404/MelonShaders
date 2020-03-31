@@ -31,8 +31,6 @@ const bool colortex4MipmapEnabled = true;
 #include "/lib/settings.glsl"
 #include "/lib/util.glsl"
 #include "/lib/framebuffer.glsl"
-#include "/lib/bloom.glsl"
-
 
 void main() {
 
@@ -59,10 +57,6 @@ void main() {
     result /= 8;
     #endif
 
-    #ifdef BLOOM
-    vec3 bloomTiles = calculateBloomTiles();
-    #endif
-
     vec4 color = texture2D(colortex0, texcoord.st);
 
     // output
@@ -74,7 +68,4 @@ void main() {
     #endif
     colortex1Out = texture2D(gdepth, texcoord.st);
     colortex2Out = texture2D(gnormal, texcoord.st);
-    #ifdef BLOOM
-    colortex4Out = vec4(bloomTiles, 1);
-    #endif
 }
