@@ -69,7 +69,7 @@ void main() {
         if (luma(blockColor.rgb) > 0.5) {
             blockColor.rgb *= 5*(luma(blockColor.rgb)+0.5);
         }
-        colortex1Out = vec4(lmcoord.st / 16,0,0);
+        colortex1Out = vec4(lmcoord.st / 16,0,1);
     } else {
         blockColor.rgb *= tintColor;
         // everything else
