@@ -27,6 +27,6 @@ void main() {
     handColor.rgb *= tintColor;
 
     colortex0Out = handColor;
-    colortex1Out = vec4(lmcoord.st / 16, 0, 0);
+    colortex1Out = vec4(lmcoord.st / 16, 0, 0.7);
     colortex2Out = vec4(normal * 0.5 + 0.5, 1.0);
 }

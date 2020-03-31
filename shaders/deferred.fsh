@@ -85,7 +85,12 @@ void main() {
 
     vec3 finalColor = vec3(0);
 
-    finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
+    // if is not hand
+    if (frag.emission != 0.7) {
+        finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
+    } else {
+        finalColor = texture2D(colortex0, texcoord.st).rgb;
+    }
 
     // output
 
