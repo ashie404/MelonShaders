@@ -177,6 +177,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
         float density = smoothstep(1.0 - CUMULUS_DENSITY, 1.0, fbm((0.7 + float(i) * 0.01) * worldPos.xyz / worldPos.y + time * 0.3));
         color = mix(color, vec3(density * 5.0), min(density, 1.0) * max(worldPos.y, 0.0));
     }
+    
     #endif
 
     return color;
