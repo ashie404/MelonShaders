@@ -31,8 +31,11 @@ const bool colortex4MipmapEnabled = true;
 #include "/lib/settings.glsl"
 #include "/lib/util.glsl"
 #include "/lib/framebuffer.glsl"
+#include "/lib/bloom.glsl"
 
 void main() {
+
+    vec4 color = texture2D(colortex0, texcoord.st);
 
     #ifdef LENS_FLARE
     vec2 tex_offset = 1.0 / vec2(viewWidth, viewHeight); // gets size of single texel
@@ -55,17 +58,23 @@ void main() {
         result += texture2D(colortex4, texcoord.st - vec2(-tex_offset.x * i * 2, tex_offset.y * i * 2)).rgb * weight;
     }
     result /= 8;
+    color += vec4(result, 1);
     #endif
 
-    vec4 color = texture2D(colortex0, texcoord.st);
+    #ifdef BLOOM
+    // calculate all bloom tiles
+    vec3 bloomTiles = vec3(0.0);
+    bloomTiles += calcBloomTile(vec2(0,0), 2.0);
+    bloomTiles += calcBloomTile(vec2(0.25,0), 3.0);
+    bloomTiles += calcBloomTile(vec2(0.25,0.25), 4.0);
+    bloomTiles += calcBloomTile(vec2(0.5,0.25), 5.0);
+    bloomTiles += calcBloomTile(vec2(0.5,0.5), 6.0);
+    colortex4Out = vec4(bloomTiles,1);
+    #endif
 
     // output
 
-    #ifndef LENS_FLARE
     colortex0Out = color;
-    #else
-    colortex0Out = color + vec4(result,1);
-    #endif
     colortex1Out = texture2D(gdepth, texcoord.st);
     colortex2Out = texture2D(gnormal, texcoord.st);
 }

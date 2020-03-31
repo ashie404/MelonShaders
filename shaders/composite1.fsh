@@ -153,6 +153,8 @@ void main() {
     #ifdef BLOOM
     vec4 bloomSample = vec4(0);
     if (luma(finalColor.rgb) > 7.5) {
+        // move final color back into SDR
+        finalColor /= 7.5;
         bloomSample = finalColor;
     }
     #endif
