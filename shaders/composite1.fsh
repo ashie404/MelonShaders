@@ -154,8 +154,10 @@ void main() {
     #ifdef BLOOM
     vec4 bloomSample = vec4(0);
     if (luma(finalColor.rgb) > 7.5) {
-        // move final color back into SDR
-        finalColor /= 7.5;
+        // move final color back into SDR if in HDR (only emissives should be in hdr, so check that value) 
+        if (frag.emission >= 0.99) {
+            finalColor /= 7.5;
+        }
         bloomSample = finalColor;
     }
     #endif
