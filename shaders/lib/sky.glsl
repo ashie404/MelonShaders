@@ -169,6 +169,12 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
     float time = frameTimeCounter * CLOUD_SPEED;
 
     float cloudBrightness = CLOUD_DENSITY * (1.0-(isNight/1.05));
+    float cumulusDensity = CUMULUS_DENSITY;
+    if (rainStrength >= 0.1) {
+        cumulusDensity = clamp01(CUMULUS_DENSITY / (1.0-rainStrength));
+        cloudBrightness /= (1.0-rainStrength);
+        cloudBrightness = clamp(cloudBrightness, 0, 4);
+    }
 
     // cirrus clouds
     float density = smoothstep(1.0 - CIRRUS_DENSITY, 1.0, fbm(worldPos.xyz / worldPos.y * 2.0 + time * 0.05)) * 0.3;
@@ -177,7 +183,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
     // cumulus clouds
     for (int i = 0; i < CUMULUS_LAYERS; i++)
     {
-        float density = smoothstep(1.0 - CUMULUS_DENSITY, 1.0, fbm((0.7 + float(i) * 0.01) * worldPos.xyz / worldPos.y + time * 0.3));
+        float density = smoothstep(1.0 - cumulusDensity, 1.0, fbm((0.7 + float(i) * 0.01) * worldPos.xyz / worldPos.y + time * 0.3));
         color = mix(color, vec3(cloudBrightness * density * 5.0), min(density, 1.0) * max(worldPos.y, 0.0));
     }
     
