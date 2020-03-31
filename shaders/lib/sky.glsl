@@ -170,7 +170,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
 
     float cloudBrightness = CLOUD_DENSITY * (1.0-(isNight/1.05));
     float cumulusDensity = CUMULUS_DENSITY;
-    if (rainStrength >= 0.1) {
+    if (rainStrength >= 0.01) {
         cumulusDensity = clamp01(CUMULUS_DENSITY / (1.0-rainStrength));
         cloudBrightness /= (1.0-rainStrength);
         cloudBrightness = clamp(cloudBrightness, 0, 4);
