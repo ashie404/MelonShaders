@@ -138,15 +138,23 @@ void main() {
         }
         // eye isn't in water, use sky for reflections and no snell's window
         else {
+            // calculate water color
+            vec4 waterColor = vec4(0.25, 0.64, 0.87,1);
+            waterColor.rgb*=(1.0-isNight);
+            vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a),1);
+            waterColor = mix(waterColor, reflectionColor, 0.5);
             // calculate reflections
-            // mix sky reflection and ssr based on ssr alpha
-            finalColor = mix(finalColor, vec4(mix(skyReflection, reflection.rgb, reflection.a), 0.85), 0.25);
+            // mix water color and underwater
+            finalColor = mix(finalColor, waterColor, 0.25);
         }
         // if ssr is disabled
         #else
 
         // calculate basic color
-        finalColor = mix(finalColor, vec4(skyReflection, 1), 0.65);
+        vec4 waterColor = vec4(0.25, 0.64, 0.87,1);
+        waterColor.rgb*=(1.0-isNight);
+        waterColor = mix(waterColor, vec4(skyReflection, 1), 0.5);
+        finalColor = mix(finalColor, waterColor, 0.65);
 
         #endif
     }
