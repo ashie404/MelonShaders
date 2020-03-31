@@ -18,7 +18,7 @@ in float nightDesaturation;
 uniform float viewHeight;
 uniform float viewWidth;
 uniform sampler2D colortex3;
-uniform sampler2D colortex6;
+uniform sampler2D colortex7;
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 uniform sampler2D gcolor;
@@ -139,7 +139,7 @@ void main() {
     color = linearToSrgb(color);
 
     // apply lut
-    color = lookup(color, colortex6);
+    color = lookup(color, colortex7);
 
     #ifdef VIGNETTE
     vignette(color);
