@@ -52,6 +52,8 @@ void main() {
 
     vec3 normalData = normal;
 
+    vec4 specularData = texture2D(specular, texcoord.st);
+
     #ifdef NORMAL_MAP
     vec4 normalTex = getTangentNormals(texcoord.st);
     normalData = normalize((normalTex.xyz) * viewTBN);
@@ -70,6 +72,14 @@ void main() {
             blockColor.rgb *= 5*(luma(blockColor.rgb)+0.525);
         }
         colortex1Out = vec4(lmcoord.st / 16,0,1);
+    } else if (EMISSIVE == 1 && specularData.b != 0.0) { // emissive format 1: blue channel
+        // blue channel emissives
+        blockColor.rgb *= 15*(specularData.b);
+        colortex1Out = vec4(lmcoord.st / 16,0,1);
+    } else if (EMISSIVE == 2 && specularData.a != 1.0) { // emissive format 2: alpha channel (labPBR)
+        // labpbr emissives
+        blockColor.rgb *= 15*(1.0-specularData.a);
+        colortex1Out = vec4(lmcoord.st / 16,0,1);
     } else {
         blockColor.rgb *= tintColor;
         // everything else
@@ -78,5 +88,5 @@ void main() {
     }
     colortex0Out = blockColor;
     colortex2Out = vec4(normalData * 0.5 + 0.5, 1.0);
-    colortex3Out = texture2D(specular, texcoord.st);
+    colortex3Out = specularData;
 }

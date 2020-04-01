@@ -102,7 +102,11 @@ void main() {
     vec3 color = texture2D(gcolor, texcoord.st).rgb;
 
     // create new night desaturation value based on how lit an area is
-    float nightDesat = mix(nightDesaturation, 0.0, texture2D(gdepth, texcoord.st).r/16);
+    //float nightDesat = mix(nightDesaturation, 0.0, texture2D(gdepth, texcoord.st).r/16);
+    // adjust night desaturation value based on pixel brightness
+    float nightDesat = mix(nightDesaturation, 0.0, clamp01(luma(color)*2));
+    // clamp night desaturation value to prevent negative saturation
+    //nightDesat = clamp01(nightDesat);
 
     // tonemapping
     #ifdef TONEMAP_ACES
