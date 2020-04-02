@@ -78,7 +78,7 @@ void main() {
         colortex1Out = vec4(lmcoord.st / 16,0,1);
     } else if (EMISSIVE == 2 && specularData.a != 1.0) { // emissive format 2: alpha channel (labPBR)
         // labpbr emissives
-        blockColor.rgb *= 15*(1.0-specularData.a);
+        blockColor.rgb *= 15*specularData.a;
         colortex1Out = vec4(lmcoord.st / 16,0,1);
     } else {
         blockColor.rgb *= tintColor;
