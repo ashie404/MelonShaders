@@ -77,7 +77,7 @@ vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos
     // 0.3 emission is tag for sss
     if (frag.emission == 0.3) {
         float subsurfStrength = calcSSS(viewVec, frag.normal, lightVector);
-        vec3 subsurfColor = mix(vec3(0), subsurfStrength * lightColor/24, sunLight.a)*SSS_STRENGTH;
+        vec3 subsurfColor = mix(vec3(0), subsurfStrength * lightColor/128, sunLight.a)*SSS_STRENGTH;
         color += subsurfColor;
     }
 
