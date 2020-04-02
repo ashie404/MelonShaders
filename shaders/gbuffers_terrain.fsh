@@ -66,7 +66,7 @@ void main() {
         // subsurf scattering
         blockColor.rgb *= tintColor;
         colortex1Out = vec4(lmcoord.st / 16,0,0.3);
-    } else if (idCorrected == 21) {
+    } else if (idCorrected == 21 && EMISSIVE == 0) {
         // emissives
         if (luma(blockColor.rgb) > 0.625) {
             blockColor.rgb *= 5*(luma(blockColor.rgb)+0.625);
