@@ -27,6 +27,8 @@ uniform int worldTime;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float far;
+uniform float near;
 
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;

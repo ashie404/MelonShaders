@@ -27,6 +27,8 @@ uniform sampler2D texture;
 uniform sampler2D depthtex1;
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float near;
+uniform float far;
 
 // includes
 

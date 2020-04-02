@@ -32,6 +32,8 @@ uniform float viewWidth;
 uniform float viewHeight;
 uniform float frameTimeCounter;
 uniform float rainStrength;
+uniform float far;
+uniform float near;
 
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;
@@ -100,6 +102,13 @@ void main() {
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {
+
+        // calculate water fog
+        float linearDepth = (2.0 * near) / (far + near - texture2D(depthtex0, texcoord.st).r * (far - near));
+        float linearDepth1 = (2.0 * near) / (far + near - texture2D(depthtex1, texcoord.st).r * (far - near));
+        float depth = clamp01((linearDepth-linearDepth1)*24);
+        finalColor = mix(finalColor, vec4(0,0.01,0.05,1), depth);
+
         // calculate water reflections
         // calculate reflections
         // calculate screen space reflections
@@ -142,10 +151,10 @@ void main() {
             vec4 waterColor = vec4(0.25, 0.64, 0.87,1);
             waterColor.rgb*=(1.0-isNight);
             vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a),1);
-            waterColor = mix(waterColor, reflectionColor, 0.5);
+            waterColor = mix(waterColor, reflectionColor, 0.4);
             // calculate reflections
             // mix water color and underwater
-            finalColor = mix(finalColor, waterColor, 0.25);
+            finalColor = mix(finalColor, waterColor, 0.075);
         }
         // if ssr is disabled
         #else
@@ -153,8 +162,8 @@ void main() {
         // calculate basic color
         vec4 waterColor = vec4(0.25, 0.64, 0.87,1);
         waterColor.rgb*=(1.0-isNight);
-        waterColor = mix(waterColor, vec4(skyReflection, 1), 0.5);
-        finalColor = mix(finalColor, waterColor, 0.65);
+        waterColor = mix(waterColor, vec4(skyReflection, 1), 0.4);
+        finalColor = mix(finalColor, waterColor, 0.075);
 
         #endif
     }
@@ -168,6 +177,13 @@ void main() {
         }
         bloomSample = finalColor;
     }
+    #endif
+
+    #ifdef FOG
+    // calculate fog
+    float depth = texture2D(depthtex0, texcoord.st);
+    float ldepth = (2.0 * near) / (far + near - depth * (far - near));
+
     #endif
 
     // output
