@@ -68,8 +68,8 @@ void main() {
         colortex1Out = vec4(lmcoord.st / 16,0,0.3);
     } else if (idCorrected == 21) {
         // emissives
-        if (luma(blockColor.rgb) > 0.525) {
-            blockColor.rgb *= 5*(luma(blockColor.rgb)+0.525);
+        if (luma(blockColor.rgb) > 0.625) {
+            blockColor.rgb *= 5*(luma(blockColor.rgb)+0.625);
         }
         colortex1Out = vec4(lmcoord.st / 16,0,1);
     } else if (EMISSIVE == 1 && specularData.b != 0.0) { // emissive format 1: blue channel
