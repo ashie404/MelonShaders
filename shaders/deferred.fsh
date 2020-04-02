@@ -30,6 +30,8 @@ uniform float viewHeight;
 
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;
+uniform float frameTimeCounter;
+uniform float rainStrength;
 
 uniform mat4 gbufferProjection;
 
@@ -52,6 +54,7 @@ uniform sampler2D noisetex;
 #include "/lib/reflection.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/distort.glsl"
+#include "/lib/sky.glsl"
 
 void main() {
     float z = texture2D(depthtex0, texcoord.st).r;
@@ -79,17 +82,25 @@ void main() {
     vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
 	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
     viewPos /= viewPos.w;
-    vec3 worldPos = toWorld(viewPos.xyz);
+    vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
 
     PBRData pbrData = getPBRData(texture2D(colortex3, texcoord.st));
 
     vec3 finalColor = vec3(0);
 
-    // if is not hand
-    if (frag.emission != 0.7) {
-        finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
+    // if sky
+    if (texture2D(depthtex0, texcoord.st).r == 1) {
+        // render sky
+	    finalColor = GetSkyColor(worldPos, mat3(gbufferModelViewInverse) * sunPosition, isNight);
+        // draw stars based on night transition value
+        finalColor += mix(vec3(0), DrawStars(normalize(worldPos)), isNight);
     } else {
-        finalColor = texture2D(colortex0, texcoord.st).rgb;
+        // if is not hand calculate lighting
+        if (frag.emission != 0.7) {
+            finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
+        } else {
+            finalColor = texture2D(colortex0, texcoord.st).rgb;
+        }
     }
 
     // output

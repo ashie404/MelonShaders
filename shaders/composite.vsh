@@ -7,8 +7,8 @@ out vec3 lightVector;
 out vec3 lightColor;
 out vec3 skyColor;
 out vec3 normal;
-out vec4 texcoord;
 out vec4 position;
+out vec4 texcoord;
 
 // uniforms
 
