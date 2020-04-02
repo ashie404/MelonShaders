@@ -181,9 +181,14 @@ void main() {
 
     #ifdef FOG
     // calculate fog
-    float depth = texture2D(depthtex0, texcoord.st);
+    float depth = texture2D(depthtex0, texcoord.st).r;
     float ldepth = (2.0 * near) / (far + near - depth * (far - near));
-
+    ldepth *= FOG_DENSITY;
+    ldepth = clamp01(ldepth);
+    vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
+    if (depth != 1) {
+        finalColor = mix(finalColor, fogColor, ldepth);
+    }
     #endif
 
     // output

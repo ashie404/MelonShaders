@@ -31,6 +31,10 @@ const int shadowDistance = 128; //[128 256 512 1024]
 #define CELESTIAL_RADIUS 0.75 // Radius of celestial bodies (sun and moon). [0.5 0.75 1.25 1.5]
 const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 -5.0 0.0 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0 55.0 60.0]
 
+// fog settings
+#define FOG // Whether to enable fog or not.
+#define FOG_DENSITY 1 // Density of fog. [0.25 0.3 0.4 0.5 0.6 0.75 0.8 0.9 1 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2 2.25 2.5 2.75 3]
+
 // cloud settings
 #define CLOUDS // Whether to enable clouds or not.
 #define CUMULUS_LAYERS 10 // How many iterations should be done on cumulus clouds. More iterations causes more lag. [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]
