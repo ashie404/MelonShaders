@@ -24,7 +24,12 @@ float directionalLightmap(float rawLightmap, vec3 normal, mat3 lightmapTBN){
     lightmap *= pwr;
 
     // mix so it doesnt look bad
+
+    // make directional lightmap fade properly
+    lightmap = mix(0.0, lightmap, clamp01(rawLightmap/64));
+
+    // mix directional lightmap with vanilla lightmap
     lightmap = mix(lightmap, rawLightmap, (2.0 - DIRECTIONAL_LIGHTMAP_STRENGTH) / 200);
 
-	return clamp01(lightmap);
+	return lightmap*32;
 }
