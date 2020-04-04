@@ -19,6 +19,9 @@
 #define SPECULAR // Whether to enable specular highlight calculation or not. Not recommended if resource pack doesn't comply with LabPBR.
 #define NORMAL_MAP // Whether to enable normal mapping or not. Not recommended if resource pack doesn't comply with LabPBR.
 
+#define DIRECTIONAL_LIGHTMAP // Whether to enable the directional lightmap or not. Makes lightmap aware of normal maps.
+#define DIRECTIONAL_LIGHTMAP_STRENGTH 1 // Strength of directional lightmaps. [ 0.5 0.6 0.75 0.8 0.9 1 1.1 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2 ]
+
 #define EMISSIVE 0 // Type of emissive. 0 - Disabled. 1 - Blue channel (old) emissives. 2 - Alpha channel (labPBR) emissives. [0 1 2]
 
 
@@ -55,7 +58,7 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 #define CONT_MOD                     0.1         // [-1.0 -0.95 -0.9 -0.85 -0.8 -0.75 -0.7 -0.65 -0.6 -0.55 -0.5 -0.45 -0.4 -0.35 -0.3 -0.25 -0.2 -0.15 -0.1 -0.05 0.0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
 #define CONT_MIDPOINT                0.0         // [0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
 #define GAIN_MOD                     0.0         // [-1.0 -0.9 -0.8 -0.7 -0.6 -0.5 -0.4 -0.3 -0.2 -0.1 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
-#define LIFT_MOD                     2.0         // [-10.0 -9.0 -8.0 -7.0 -6.0 -5.0 -4.0 -3.0 -2.0 -1.0 0.0 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0]
+#define LIFT_MOD                     0.0         // [-10.0 -9.0 -8.0 -7.0 -6.0 -5.0 -4.0 -3.0 -2.0 -1.0 0.0 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0]
 #define WHITE_BALANCE                7200        // [4000 4100 4200 4300 4400 4500 4600 4700 4800 4900 5000 5100 5200 5300 5400 5500 5600 5700 5800 5900 6000 6100 6200 6300 6400 6500 6600 6700 6800 6900 7000 7100 7200 7300 7400 7500 7600 7700 7800 7900 8000 8100 8200 8300 8400 8500 8600 8700 8800 8900 9000 9100 9200 9300 9400 9500 9600 9700 9800 9900 10000 10100 10200 10300 10400 10500 10600 10700 10800 10900 11000 11100 11200 11300 11400 11500 11600 11700 11800 11900 12000]
 #define NIGHT_DESATURATION 0.65 // Adjusts night desaturation. Not affected by ACES being off. [0 0.2 0.3 0.45 0.5 0.65 0.8 1]
 

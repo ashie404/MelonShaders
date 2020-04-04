@@ -37,6 +37,7 @@ const mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
 #include "/lib/util.glsl"
 #include "/lib/labpbr.glsl"
 #include "/lib/framebuffer.glsl"
+#include "/lib/directionalLM.glsl"
 
 vec4 getTangentNormals(vec2 coord) {
     vec4 normal = texture2D(normals,  coord) * 2.0 - 1.0;
@@ -54,9 +55,19 @@ void main() {
 
     vec4 specularData = texture2D(specular, texcoord.st);
 
+    vec2 lightmap = lmcoord.xy/16;
+
     #ifdef NORMAL_MAP
     vec4 normalTex = getTangentNormals(texcoord.st);
     normalData = normalize((normalTex.xyz) * viewTBN);
+
+    #ifdef DIRECTIONAL_LIGHTMAP
+    vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
+    vec3 viewPos = toNDC(screenPos);
+    mat3 lightmapTBN = getLightmapTBN(viewPos);
+    lightmap.x = directionalLightmap(lmcoord.x, normalData, lightmapTBN);
+    #endif
+
     #endif
 
     // floating point precision correction
@@ -65,26 +76,24 @@ void main() {
     if (idCorrected == 31 || idCorrected == 32) {
         // subsurf scattering
         blockColor.rgb *= tintColor;
-        colortex1Out = vec4(lmcoord.st / 16,0,0.3);
+        colortex1Out = vec4(lightmap.st,0,0.3);
     } else if (idCorrected == 21 && EMISSIVE == 0) {
         // emissives
         if (luma(blockColor.rgb) > 0.625) {
             blockColor.rgb *= 5*(luma(blockColor.rgb)+0.625);
         }
-        colortex1Out = vec4(lmcoord.st / 16,0,1);
+        colortex1Out = vec4(lightmap.st,0,1);
     } else if (EMISSIVE == 1 && specularData.b != 0.0) { // emissive format 1: blue channel
         // blue channel emissives
         blockColor.rgb *= 5*specularData.b;
-        colortex1Out = vec4(lmcoord.st / 16,0,1);
+        colortex1Out = vec4(lightmap.st,0,1);
     } else if (EMISSIVE == 2 && specularData.a != 1.0) { // emissive format 2: alpha channel (labPBR)
         // labpbr emissives
         blockColor.rgb *= 15*specularData.a;
-        colortex1Out = vec4(lmcoord.st / 16,0,1);
+        colortex1Out = vec4(lightmap.st,0,1);
     } else {
         blockColor.rgb *= tintColor;
-        // everything else
-        colortex0Out = blockColor;
-        colortex1Out = vec4(lmcoord.st / 16,0,0);
+        colortex1Out = vec4(lightmap.st,0,0);
     }
     colortex0Out = blockColor;
     colortex2Out = vec4(normalData * 0.5 + 0.5, 1.0);

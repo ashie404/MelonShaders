@@ -44,7 +44,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
 
 vec3 calculateLighting(in Fragment frag, in Lightmap lightmap, in vec4 shadowPos, in vec3 viewVec, in PBRData pbrData) {
     // blocklight
-    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.05;
+    vec3 blockLightColor = vec3(1.0, 0.9, 0.8) * 0.5;
     vec3 blockLight = blockLightColor * lightmap.blockLightStrength;
 
     // skylight
