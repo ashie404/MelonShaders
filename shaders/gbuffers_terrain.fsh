@@ -70,6 +70,11 @@ void main() {
 
     #endif
 
+    #ifndef DIRECTIONAL_LIGHTMAP
+    // fixes weird issues when directional lightmaps are off
+    lightmap.x *= 16;
+    #endif
+
     // floating point precision correction
     int idCorrected = int(id + 0.5);
     

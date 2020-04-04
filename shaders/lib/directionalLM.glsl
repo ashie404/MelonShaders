@@ -31,5 +31,5 @@ float directionalLightmap(float rawLightmap, vec3 normal, mat3 lightmapTBN){
     // mix directional lightmap with vanilla lightmap
     lightmap = mix(lightmap, rawLightmap, (2.0 - DIRECTIONAL_LIGHTMAP_STRENGTH) / 200);
 
-	return lightmap*32;
+	return lightmap*48;
 }
