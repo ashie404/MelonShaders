@@ -76,6 +76,7 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 // misc
 //#define WHITEWORLD // Returns white on albedo. Useful for debugging lighting.
 //#define ORTHOGRAPHIC // Removes all perspective projection. Mainly for fun purposes, breaks most lighting effects.
+//#define FIX115 // Fixes entity rendering on 1.15. This is a temporary patch until entity normal maps get fixed.
 
 // non-user-settable
 #define NIGHT_SKY_COLOR vec3(0.001, 0.004, 0.01)

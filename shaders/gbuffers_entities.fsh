@@ -42,8 +42,10 @@ void main() {
     vec3 normalData = normal;
 
     #ifdef NORMAL_MAP
+    #ifndef FIX115
     vec4 normalTex = getTangentNormals(texcoord.st);
     normalData = normalize((normalTex.xyz) * viewTBN);
+    #endif
     #endif
 
     // output
