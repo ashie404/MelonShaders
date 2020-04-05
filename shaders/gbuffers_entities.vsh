@@ -31,7 +31,7 @@ void main()
     lmcoord = gl_MultiTexCoord1;
     tintColor = gl_Color.rgb;
     #ifdef NORMAL_MAP
-
+    #ifndef FIX115
     vec3 normal   = normalize(gl_NormalMatrix * gl_Normal);
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
 
@@ -43,8 +43,7 @@ void main()
     vec3 binormal = normalize(cross(tangent, normal));
 
          worldTBN = transpose(mat3(tangent, binormal, normal));
-								  
-	//viewVector = tbnMatrix * (gl_ModelViewMatrix * gl_Vertex).xyz;
+	#endif					  
     #endif
     
     normal = normalize(gl_NormalMatrix * gl_Normal);
