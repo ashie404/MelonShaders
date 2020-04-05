@@ -89,6 +89,28 @@ void main() {
     pos /= pos.w;
     vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
+    #ifdef FOG
+    // calculate fog
+    if (isEyeInWater < 1) {
+        float depth = texture2D(depthtex1, texcoord.st).r;
+        float linearDepth = linear(depth)/128;
+        linearDepth *= FOG_DENSITY;
+        linearDepth = clamp01(linearDepth);
+        vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
+        if (depth != 1) {
+            finalColor = mix(finalColor, fogColor, linearDepth);
+        }
+    } else {
+        float depth = linear(texture2D(depthtex1, texcoord.st).r);
+
+        vec3 transmittance = exp(-attenuationCoefficient * depth);
+
+        finalColor *= vec4(transmittance,1.0);
+    }
+    #endif
+
+    frag.albedo = finalColor.rgb;
+
     // 0.1 emission marks translucent lighting
     if (frag.emission == 0.1) {
         float lightDot = dot(normalize(shadowLightPosition), normal);
@@ -183,26 +205,6 @@ void main() {
             finalColor /= 7.5;
         }
         bloomSample = finalColor;
-    }
-    #endif
-
-    #ifdef FOG
-    // calculate fog
-    if (isEyeInWater < 1) {
-        float depth = texture2D(depthtex0, texcoord.st).r;
-        float linearDepth = linear(depth)/128;
-        linearDepth *= FOG_DENSITY;
-        linearDepth = clamp01(linearDepth);
-        vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
-        if (depth != 1) {
-            finalColor = mix(finalColor, fogColor, linearDepth);
-        }
-    } else {
-        float depth = linear(texture2D(depthtex1, texcoord.st).r);
-
-        vec3 transmittance = exp(-attenuationCoefficient * depth);
-
-        finalColor *= vec4(transmittance,1.0);
     }
     #endif
 
