@@ -68,8 +68,6 @@ float luma(vec3 color) {
 }
 
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
-const vec3 groundAttenuationCoefficient = vec3(1.0, 0.89, 0.65);
-const vec3 scatteringCoefficient = vec3(0.538, 0.693, 0.268);
 
 void main() {
 
@@ -101,10 +99,6 @@ void main() {
         vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
         fogColor = mix(finalColor, fogColor, density);
         finalColor = mix(finalColor, fogColor, 1.0-clamp01(worldPos.y/256));
-    } else {
-        float depth = length(viewPos.xyz);
-        vec3 transmittance = exp(-attenuationCoefficient * depth);
-        finalColor *= vec4(transmittance,1.0);
     }
     #endif
 
@@ -168,8 +162,6 @@ void main() {
             {
                 // mix generic underwater color and ssr based on ssr alpha
                 finalColor = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, reflection.a), 1);
-            } else {
-                
             }
         }
         // eye isn't in water, use sky for reflections and no snell's window
@@ -193,6 +185,13 @@ void main() {
         finalColor = mix(finalColor, waterColor, 0.075);
 
         #endif
+    }
+
+    // calculate underwater fog if underwater
+    if (isEyeInWater > 0) {
+        float depth = length(viewPos.xyz);
+        vec3 transmittance = exp(-attenuationCoefficient * depth);
+        finalColor *= vec4(transmittance,1.0);
     }
 
     #ifdef BLOOM

@@ -79,9 +79,7 @@ void main() {
             float dither = bayer64(gl_FragCoord.xy);
             // calculate ssr color
             vec4 reflection = roughReflection(viewPos.xyz, frag.normal, dither, colortex5, pbrData.smoothness);
-            //reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-            //reflection.rgb /= 16;
-            finalColor *= mix(vec3(1), reflection.rgb, reflection.a-roughness);
+            finalColor *= mix(vec3(1), reflection.rgb, reflection.a);
         }
     }
     #endif
