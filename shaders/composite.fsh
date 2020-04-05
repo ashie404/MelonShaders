@@ -61,9 +61,13 @@ uniform sampler2D noisetex;
 #include "/lib/shadow.glsl"
 #include "/lib/sky.glsl"
 
+#define linear(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
+
 float luma(vec3 color) {
   return dot(color, vec3(0.299, 0.587, 0.114));
 }
+
+const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
 
 void main() {
 
@@ -102,12 +106,6 @@ void main() {
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {
-
-        // calculate water fog
-        float linearDepth = (2.0 * near) / (far + near - texture2D(depthtex0, texcoord.st).r * (far - near));
-        float linearDepth1 = (2.0 * near) / (far + near - texture2D(depthtex1, texcoord.st).r * (far - near));
-        float depth = clamp01((linearDepth-linearDepth1)*24);
-        finalColor = mix(finalColor, vec4(0,0.01,0.05,1), depth);
 
         // calculate water reflections
         // calculate reflections
@@ -166,6 +164,16 @@ void main() {
         finalColor = mix(finalColor, waterColor, 0.075);
 
         #endif
+        // calculate water fog
+        if (isEyeInWater < 1) {
+            float linearDepth = linear(texture2D(depthtex0, texcoord.st).r);
+            float linearDepth1 = linear(texture2D(depthtex1, texcoord.st).r);
+            float depth = (linearDepth1-linearDepth);
+            vec3 transmittance = exp(-attenuationCoefficient * depth);
+            //finalColor = vec4(depth,depth,depth,1);
+            vec3 wFogColor = mix(vec3(0.01, 0.03, 0.07)*depth, vec3(0.001, 0.003, 0.007)*depth, isNight);
+            finalColor *= vec4(transmittance,1);
+        }
     }
 
     #ifdef BLOOM

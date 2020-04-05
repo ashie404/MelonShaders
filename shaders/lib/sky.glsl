@@ -108,6 +108,38 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
     return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
 }
 
+vec3 _SunHaloColor = vec3(0.4900519, 0.5582597, 0.75735295);
+float _SunHaloExponent = 25;
+float _SunHaloContribution = 0.25;
+
+vec3 _HorizonLineColor = vec3(0,0,0);
+float _HorizonLineExponent = 4;
+float _HorizonLineContribution = 0;
+
+vec3 _SkyGradientTop =    vec3(0.1137255, 0.17647064, 0.26666668);
+vec3 _SkyGradientBottom = vec3(0.3803922, 0.47450984, 0.6156863);
+float _SkyGradientExponent = 2.5;
+
+
+// less accurate but more stylized atmosphere function
+vec3 stylizedAtmosphere(vec3 worldPos, vec3 sunPos) {
+    // Masks.
+    float maskHorizon = dot(normalize(worldPos), vec3(0, 1, 0));
+    float maskSunDir = dot(normalize(worldPos), normalize(sunPos));
+    // Sun halo.
+    vec3 sunHaloColor = _SunHaloColor * _SunHaloContribution;
+    float bellCurve = pow(clamp01(maskSunDir), _SunHaloExponent * clamp01(abs(maskHorizon)));
+    float horizonSoften = 1 - pow(1 - clamp01(maskHorizon), 50);
+    sunHaloColor *= clamp01(bellCurve * horizonSoften);
+    // Horizon line.
+    vec3 horizonLineColor = _HorizonLineColor * clamp01(pow(1 - abs(maskHorizon), _HorizonLineExponent));
+    horizonLineColor = mix(vec3(0), horizonLineColor, _HorizonLineContribution);
+    // Sky gradient.
+    vec3 skyGradientColor = mix(_SkyGradientTop, _SkyGradientBottom, pow(1 - clamp01(maskHorizon), _SkyGradientExponent));
+    vec3 finalColor = clamp01(sunHaloColor + horizonLineColor + skyGradientColor);
+    return finalColor;
+}
+
 vec3 DrawStars(vec3 worldPos) {
     // get noise with multiplied world positon (so that the noise is small enough for stars)
     float noise = cellular(worldPos * 32);
@@ -151,6 +183,8 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
         0.758                           // Mie preferred scattering direction
     );
 
+    //stylizedAtmosphere(worldPos, sunPos);
+
     // Apply exposure.
     color = 1.0 - exp(-1 * color);
 
@@ -160,7 +194,7 @@ vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
     vec4 sunSpot = calculateSunSpot(normalize(worldPos), mat3(gbufferModelViewInverse) * normalize(lightVector));
     color = mix(color, sunSpot.rgb, sunSpot.r);
 
-    // cloud
+    // clouds
 
     #ifdef CLOUDS
 
