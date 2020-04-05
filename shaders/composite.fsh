@@ -68,6 +68,7 @@ float luma(vec3 color) {
 }
 
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
+const vec3 groundAttenuationCoefficient = vec3(1.0, 0.89, 0.65);
 const vec3 scatteringCoefficient = vec3(0.538, 0.693, 0.268);
 
 void main() {
@@ -189,12 +190,12 @@ void main() {
     // calculate fog
     if (isEyeInWater < 1) {
         float depth = texture2D(depthtex0, texcoord.st).r;
-        float ldepth = (2.0 * near) / (far + near - depth * (far - near));
-        ldepth *= FOG_DENSITY;
-        ldepth = clamp01(ldepth);
+        float linearDepth = linear(depth)/128;
+        linearDepth *= FOG_DENSITY;
+        linearDepth = clamp01(linearDepth);
         vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
         if (depth != 1) {
-            finalColor = mix(finalColor, fogColor, ldepth);
+            finalColor = mix(finalColor, fogColor, linearDepth);
         }
     } else {
         float depth = linear(texture2D(depthtex1, texcoord.st).r);
