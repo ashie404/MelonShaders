@@ -1,6 +1,6 @@
 #define PI 3.141592
-#define iSteps 16
-#define jSteps 8
+#define iSteps 12
+#define jSteps 1
 
 #include "/lib/noise.glsl"
 
@@ -45,10 +45,8 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 
     // Calculate the Rayleigh and Mie phases.
     float mu = dot(r, pSun);
-    float mumu = mu * mu;
-    float gg = g * g;
-    float pRlh = 3.0 / (16.0 * PI) * (1.0 + mumu);
-    float pMie = 3.0 / (8.0 * PI) * ((1.0 - gg) * (mumu + 1.0)) / (pow(1.0 + gg - 2.0 * mu * g, 1.5) * (2.0 + gg));
+    float pRlh = 3.0 / (16.0 * PI) * (1.0 + (mu*mu));
+    float pMie = 3.0 / (8.0 * PI) * ((1.0 - (g*g)) * ((mu*mu) + 1.0)) / (pow(1.0 + (g*g) - 2.0 * mu * g, 1.5) * (2.0 + (g*g)));
 
     // Sample the primary ray.
     for (int i = 0; i < iSteps; i++) {
@@ -77,8 +75,8 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
         float jOdRlh = 0.0;
         float jOdMie = 0.0;
 
-        // Sample the secondary ray.
-        for (int j = 0; j < jSteps; j++) {
+        // Sample the secondary ray. (commented out because i only do 1 secondary sample for performance reasons)
+        //for (int j = 0; j < jSteps; j++) {
 
             // Calculate the secondary ray sample position.
             vec3 jPos = iPos + pSun * (jTime + jStepSize * 0.5);
@@ -92,7 +90,7 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 
             // Increment the secondary ray time.
             jTime += jStepSize;
-        }
+        //}
 
         // Calculate attenuation.
         vec3 attn = exp(-(kMie * (iOdMie + jOdMie) + kRlh * (iOdRlh + jOdRlh)));
