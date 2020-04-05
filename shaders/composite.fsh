@@ -68,6 +68,7 @@ float luma(vec3 color) {
 }
 
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
+const vec3 scatteringCoefficient = vec3(0.538, 0.693, 0.268);
 
 void main() {
 
@@ -79,18 +80,16 @@ void main() {
 
     vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
     vec3 viewPos = toNDC(screenPos);
+    vec4 pos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
+    pos = gbufferProjectionInverse * pos;
+    pos = gbufferModelViewInverse * pos;
+    pos = shadowModelView * pos;
+    pos = shadowProjection * pos;
+    pos /= pos.w;
+    vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
     // 0.1 emission marks translucent lighting
     if (frag.emission == 0.1) {
-        // calculate distorted shadow coordinate
-        vec4 pos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
-        pos = gbufferProjectionInverse * pos;
-        pos = gbufferModelViewInverse * pos;
-        pos = shadowModelView * pos;
-        pos = shadowProjection * pos;
-        pos /= pos.w;
-        vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
-
         float lightDot = dot(normalize(shadowLightPosition), normal);
         vec4 fShadowPos = vec4(shadowPos, 0);
         if (lightDot > 0.0) {
@@ -106,6 +105,15 @@ void main() {
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {
+        // calculate water fog
+        if (isEyeInWater < 1) {
+            float linearDepth = linear(texture2D(depthtex0, texcoord.st).r);
+            float linearDepth1 = linear(texture2D(depthtex1, texcoord.st).r);
+            float depth = (linearDepth1-linearDepth);
+            vec3 transmittance = exp(-attenuationCoefficient * depth);
+
+            finalColor *= vec4(transmittance,1);
+        }
 
         // calculate water reflections
         // calculate reflections
@@ -164,16 +172,6 @@ void main() {
         finalColor = mix(finalColor, waterColor, 0.075);
 
         #endif
-        // calculate water fog
-        if (isEyeInWater < 1) {
-            float linearDepth = linear(texture2D(depthtex0, texcoord.st).r);
-            float linearDepth1 = linear(texture2D(depthtex1, texcoord.st).r);
-            float depth = (linearDepth1-linearDepth);
-            vec3 transmittance = exp(-attenuationCoefficient * depth);
-            //finalColor = vec4(depth,depth,depth,1);
-            vec3 wFogColor = mix(vec3(0.01, 0.03, 0.07)*depth, vec3(0.001, 0.003, 0.007)*depth, isNight);
-            finalColor *= vec4(transmittance,1);
-        }
     }
 
     #ifdef BLOOM
@@ -189,13 +187,21 @@ void main() {
 
     #ifdef FOG
     // calculate fog
-    float depth = texture2D(depthtex0, texcoord.st).r;
-    float ldepth = (2.0 * near) / (far + near - depth * (far - near));
-    ldepth *= FOG_DENSITY;
-    ldepth = clamp01(ldepth);
-    vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
-    if (depth != 1) {
-        finalColor = mix(finalColor, fogColor, ldepth);
+    if (isEyeInWater < 1) {
+        float depth = texture2D(depthtex0, texcoord.st).r;
+        float ldepth = (2.0 * near) / (far + near - depth * (far - near));
+        ldepth *= FOG_DENSITY;
+        ldepth = clamp01(ldepth);
+        vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
+        if (depth != 1) {
+            finalColor = mix(finalColor, fogColor, ldepth);
+        }
+    } else {
+        float depth = linear(texture2D(depthtex1, texcoord.st).r);
+
+        vec3 transmittance = exp(-attenuationCoefficient * depth);
+
+        finalColor *= vec4(transmittance,1.0);
     }
     #endif
 
