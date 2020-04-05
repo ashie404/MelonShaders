@@ -37,6 +37,7 @@ uniform mat4 gbufferProjection;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex3;
+uniform sampler2D colortex5;
 uniform sampler2D depthtex0;
 uniform sampler2D gaux2;
 uniform sampler2D shadowtex0;
@@ -60,11 +61,11 @@ void main() {
     
     vec3 finalColor = texture2D(colortex0, texcoord.st).rgb;
 
-    vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
-	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
+    vec4 screenPos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
+    vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
 
-    vec3 worldPos = toWorld(viewPos.xyz);
+    vec4 worldPos = gbufferModelViewInverse * viewPos;
 
     #ifdef SPECULAR
     #ifdef SCREENSPACE_REFLECTIONS
@@ -77,7 +78,7 @@ void main() {
             // bayer64 dither
             float dither = bayer64(gl_FragCoord.xy);
             // calculate ssr color
-            vec4 reflection = Reflection(viewPos.xyz, frag.normal, dither, colortex0, roughness);
+            vec4 reflection = roughReflection(viewPos.xyz, frag.normal, dither, colortex5, pbrData.smoothness);
             //reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
             //reflection.rgb /= 16;
             finalColor *= mix(vec3(1), reflection.rgb, reflection.a-roughness);

@@ -79,31 +79,31 @@ void main() {
     vec4 newPosition = position;
     newPosition /= position.w;
 
-    vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
-    vec3 viewPos = toNDC(screenPos);
-    vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
-    vec4 pos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
-    pos = gbufferProjectionInverse * pos;
-    pos = gbufferModelViewInverse * pos;
-    pos = shadowModelView * pos;
-    pos = shadowProjection * pos;
-    pos /= pos.w;
-    vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
+    vec4 screenPos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
+    vec4 viewPos = gbufferProjectionInverse * screenPos;
+    viewPos /= viewPos.w;
+    vec4 worldPos = gbufferModelViewInverse * viewPos;
+    vec4 npos = shadowModelView * worldPos;
+    npos = shadowProjection * npos;
+    npos /= npos.w;
+    vec3 shadowPos = distort(npos.xyz) * 0.5 + 0.5;
+
+    // snells window refraction indexes
+    vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
+    vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);
+    vec3 normal = getNormal(texcoord.st);
+    vec3 rayDir = refract(normalize(viewPos.xyz), normal, n1.r/n2.r); // calculate snell's window
 
     #ifdef FOG
     // calculate fog
     if (isEyeInWater < 1) {
-        float depth = texture2D(depthtex1, texcoord.st).r;
-        float linearDepth = linear(depth)/128;
-        linearDepth *= FOG_DENSITY;
-        linearDepth = clamp01(linearDepth);
+        float density = clamp01((length(viewPos.xyz)/256) * FOG_DENSITY);
         vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
-        finalColor = mix(finalColor, fogColor, linearDepth);
+        fogColor = mix(finalColor, fogColor, density);
+        finalColor = mix(finalColor, fogColor, 1.0-clamp01(worldPos.y/256));
     } else {
-        float depth = linear(texture2D(depthtex1, texcoord.st).r);
-
+        float depth = length(viewPos.xyz);
         vec3 transmittance = exp(-attenuationCoefficient * depth);
-
         finalColor *= vec4(transmittance,1.0);
     }
     #endif
@@ -159,18 +159,17 @@ void main() {
         // bayer64 dither
         float dither = bayer64(gl_FragCoord.xy);
         // calculate ssr color
-        vec4 reflection = reflection(viewPos,normal,dither,gaux2);
+        vec4 reflection = reflection(viewPos.xyz,normal,dither,gaux2);
         reflection.rgb = pow(reflection.rgb * 2.0, vec3(8.0));
-        // snells window refraction indexes
-        vec3 n1 = isEyeInWater > 0 ? vec3(1.333) : vec3(1.00029);
-        vec3 n2 = isEyeInWater > 0 ? vec3(1.00029) : vec3(1.333);
+        
         // eye is in water, calculate snell's window and use generic underwater color for reflections
         if (isEyeInWater > 0) {
-            vec3 rayDir = refract(normalize(viewPos), normal, n1.r/n2.r); // calculate snell's window
             if (rayDir == vec3(0))
             {
                 // mix generic underwater color and ssr based on ssr alpha
                 finalColor = vec4(mix(vec3(0.01, 0.02, 0.05), reflection.rgb, reflection.a), 1);
+            } else {
+                
             }
         }
         // eye isn't in water, use sky for reflections and no snell's window
