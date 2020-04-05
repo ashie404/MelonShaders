@@ -19,6 +19,7 @@ uniform float viewHeight;
 uniform float viewWidth;
 uniform sampler2D colortex3;
 uniform sampler2D colortex7;
+uniform sampler2D colortex0;
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 uniform sampler2D gcolor;
@@ -30,7 +31,7 @@ uniform sampler2D shadowcolor0;
 
 // constants
 
-const bool gcolorMipmapEnabled = true;
+const bool colortex0MipmapEnabled = true;
 
 // includes
 
@@ -92,14 +93,17 @@ float luma(vec3 color) {
 void autoExposure(inout vec3 color){
 	float exposureLod = log2(max(viewWidth, viewHeight));
 
-	float exposure = luma(texture2DLod(gcolor, vec2(0.5), exposureLod).rgb);
-	exposure = clamp(exposure, 0.001, 0.15);
+	float exposure = luma(texture2DLod(colortex0, texcoord.st, exposureLod).rgb);
+	exposure = clamp(exposure, 0.15, 1);
 	
 	color /= 2.5 * exposure;
 }
 
 void main() {
-    vec3 color = texture2D(gcolor, texcoord.st).rgb;
+    vec3 color = texture2D(colortex0, texcoord.st).rgb;
+
+    // auto expose yourself
+    //autoExposure(color); this is broken
 
     // create new night desaturation value based on how lit an area is
     //float nightDesat = mix(nightDesaturation, 0.0, texture2D(gdepth, texcoord.st).r/16);

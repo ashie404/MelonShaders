@@ -81,6 +81,7 @@ void main() {
 
     vec3 screenPos = vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z);
     vec3 viewPos = toNDC(screenPos);
+    vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
     vec4 pos = vec4(vec3(texcoord.st, texture2D(depthtex0, texcoord.st).r) * 2.0 - 1.0, 1.0);
     pos = gbufferProjectionInverse * pos;
     pos = gbufferModelViewInverse * pos;
@@ -97,9 +98,7 @@ void main() {
         linearDepth *= FOG_DENSITY;
         linearDepth = clamp01(linearDepth);
         vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
-        if (depth != 1) {
-            finalColor = mix(finalColor, fogColor, linearDepth);
-        }
+        finalColor = mix(finalColor, fogColor, linearDepth);
     } else {
         float depth = linear(texture2D(depthtex1, texcoord.st).r);
 

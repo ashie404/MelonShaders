@@ -1,5 +1,5 @@
 #define PI 3.141592
-#define iSteps 12
+#define iSteps 8
 #define jSteps 1
 
 #include "/lib/noise.glsl"
@@ -169,8 +169,13 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector) {
 }
 
 vec3 GetSkyColor(vec3 worldPos, vec3 sunPos, float isNight){
+    vec3 skyPos = worldPos;
+    // black void prevention
+    if (skyPos.y < 0)
+        skyPos.y = 0;
+
     vec3 color = atmosphere(
-        normalize(worldPos),           // normalized ray direction
+        normalize(skyPos),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
         sunPos,                        // position of the sun
         22.0,                           // intensity of the sun
