@@ -66,6 +66,7 @@ void main() {
     vec3 viewPos = toNDC(screenPos);
     mat3 lightmapTBN = getLightmapTBN(viewPos);
     lightmap.x = directionalLightmap(lmcoord.x, normalData, lightmapTBN);
+    lightmap.y = directionalLightmap(lmcoord.y, normalData, lightmapTBN)/4;
     #endif
 
     #endif
