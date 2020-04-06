@@ -94,7 +94,7 @@ void autoExposure(inout vec3 color){
 	float exposureLod = log2(max(viewWidth, viewHeight));
 
 	float exposure = luma(texture2DLod(colortex0, texcoord.st, exposureLod).rgb);
-	exposure = clamp(exposure, 0.15, 1);
+	exposure = clamp(exposure, 0.15, 1.0);
 	
 	color /= 2.5 * exposure;
 }
