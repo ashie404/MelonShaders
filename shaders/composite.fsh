@@ -95,7 +95,11 @@ void main() {
     #ifdef FOG
     // calculate fog
     if (isEyeInWater < 1) {
-        float density = clamp01((length(viewPos.xyz)/128) * FOG_DENSITY-(fbm(worldPos.xyz/16+(frameTimeCounter/16))/2));
+        #ifdef VARIABLE_FOG_DENSITY
+        float density = clamp01((length(viewPos.xyz)/128) * FOG_DENSITY-(fbm(worldPos.xyz/16+(frameTimeCounter/16))*VARIABILITY));
+        #else
+        float density = clamp01((length(viewPos.xyz)/128) * FOG_DENSITY);
+        #endif
         vec4 fogColor = mix(vec4(0.43, 0.6, 0.62, 1), vec4(0.043, 0.06, 0.062, 1), isNight);
         fogColor = mix(finalColor, fogColor, density);
         finalColor = mix(finalColor, fogColor, 1.0-clamp01(worldPos.y/256));

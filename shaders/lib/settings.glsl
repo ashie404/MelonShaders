@@ -39,6 +39,10 @@ const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.
 #define FOG // Whether to enable fog or not.
 #define FOG_DENSITY 1 // Density of fog. [0.25 0.3 0.4 0.5 0.6 0.75 0.8 0.9 1 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2 2.25 2.5 2.75 3]
 
+#define VARIABLE_FOG_DENSITY // Adds variability to fog density.
+#define VARIABILITY 0.5 // Variability of fog density. [0.1 0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1]
+
+
 // cloud settings
 #define CLOUDS // Whether to enable clouds or not.
 #define CUMULUS_LAYERS 5 // How many iterations should be done on cumulus clouds. More iterations causes more lag, but looks fluffier. [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]
