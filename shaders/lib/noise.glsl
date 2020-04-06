@@ -175,7 +175,25 @@ float fbm(vec3 p)
   f += noise(p) / 2; p = m * p * 1.1;
   f += noise(p) / 4; p = m * p * 1.2;
   f += noise(p) / 6; p = m * p * 1.3;
-  //f += noise(p) / 12; p = m * p * 1.4;
-  //f += noise(p) / 24;
+  f += noise(p) / 12; p = m * p * 1.4;
+  f += noise(p) / 24;
+  return f;
+}
+
+float fbm2(vec3 p)
+{
+  float f = 0.0;
+  f += noise(p) / 2; p = m * p * 1.1;
+  f += noise(p) / 4; p = m * p * 1.2;
+  f -= noise(p) / 12; p = m * p * 1.4;
+  f -= noise(p) / 6; p = m * p * 1.3;
+  f -= noise(p) / 16; p = m * p * 1.4;
+  f -= noise(p) / 24;
+  f += noise(p) / 11; p = m * p * 1.1;
+  f += noise(p) / 13; p = m * p * 1.5;
+  f += noise(p) / 24;
+  f -= noise(p) / 2; p = m * p * 1.7;
+  f += noise(p) / 16; p = m * p * 1.7;
+  f += noise(p) / 24; p = m * p * 0.6;
   return f;
 }

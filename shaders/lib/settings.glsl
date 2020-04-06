@@ -33,6 +33,7 @@ const int shadowDistance = 128; //[128 256 512 1024]
 // sky settings
 #define CELESTIAL_RADIUS 0.75 // Radius of celestial bodies (sun and moon). [0.5 0.75 1.25 1.5]
 const float sunPathRotation = -40.0; //[-60.0 -55.0 -50.0 -45.0 -40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 -5.0 0.0 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0 55.0 60.0]
+#define STAR_BRIGHTNESS 1 //[0.25 0.5 0.75 1 1.25 1.5 1.75 2 2.5 3 3.5 4 4.5 5 6 7 8]
 
 // fog settings
 #define FOG // Whether to enable fog or not.

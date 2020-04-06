@@ -184,12 +184,12 @@ vec3 DrawStars(vec3 worldPos) {
     // get noise with multiplied world positon (so that the noise is small enough for stars)
     float noise = cellular(worldPos * 32);
     if (noise < 0.15) {
-        vec3 starColor = colorFromTemp(texture2D(noisetex, worldPos.xz/16).g*128);
-        return mix(starColor*4, NIGHT_SKY_COLOR, noise + 0.85);
+        // get star color from random temperature
+        vec3 starColor = colorFromTemp(clamp(fbm2(worldPos.xyz*2)*8000, 7.5, 8000.0));
+        return mix(starColor*(STAR_BRIGHTNESS*4), NIGHT_SKY_COLOR, noise + 0.85);
     } else {
         return NIGHT_SKY_COLOR;
     }
-    //return vec3(noise);
 }
 
 vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector) {
