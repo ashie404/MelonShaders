@@ -13,9 +13,13 @@ float directionalLightmap(float rawLightmap, vec3 normal, mat3 lightmapTBN){
     vec2 deriv = vec2(dFdx(rawLightmap), dFdy(rawLightmap)) * 256.0;
 
     // calculate light direction using lightmap tbn matrix
-    vec3 dir = normalize(vec3(deriv.x * lightmapTBN[0] +
-                              0.0005  * lightmapTBN[2] +
-                              deriv.y * lightmapTBN[1]));
+    vec3 dir = vec3(deriv.x * lightmapTBN[0] +
+                              deriv.y * lightmapTBN[1]);
+    if (length(dir) == 0.0) {
+        dir = normalize(vec3(0.0005  * lightmapTBN[2]));
+    } else {
+        dir = normalize(dir);
+    }
 
     // lambertian diffuse \o/
     float pwr = dot(normal, dir);
