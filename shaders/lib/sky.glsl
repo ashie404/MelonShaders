@@ -151,27 +151,18 @@ vec3 colorFromTemp(float temp) {
     } else {
         outColor.r = temp - 60;
         outColor.r = 329.698727446 * (pow(outColor.r, -0.1332047592));
-        if (outColor.r < 0.0)
-            outColor.r = 0.0;
-        if (outColor.r > 255.0)
-            outColor.r = 255.0;
+        outColor.r = clamp(outColor.r, 0, 255);
     }
 
     // calculate green channel
     if (temp <= 66) {
         outColor.g = temp;
         outColor.g = 99.4708025861 * log(outColor.g) - 161.1195681661;
-        if (outColor.g < 0.0)
-            outColor.g = 0.0;
-        if (outColor.g > 255.0)
-            outColor.g = 255;
+        outColor.g = clamp(outColor.g, 0, 255);
     } else {
         outColor.g = temp - 60;
         outColor.g = 288.1221695283 * (pow(outColor.g, -0.0755148492));
-        if (outColor.g < 0.0)
-            outColor.g = 0.0;
-        if (outColor.g > 255.0)
-            outColor.g = 255.0;
+        outColor.g = clamp(outColor.g, 0, 255);
     }
 
     // calculate blue channel
@@ -182,10 +173,7 @@ vec3 colorFromTemp(float temp) {
     } else {
         outColor.b = temp - 10;
         outColor.b = 138.5177312231 * log(outColor.b) - 305.0447927307;
-        if (outColor.b < 0.0)
-            outColor.b = 0.0;
-        if (outColor.b > 255.0)
-            outColor.b = 255.0;
+        outColor.b = clamp(outColor.b, 0, 255);
     }
 
     // return output color divided by 255 to bring to 0-1 space
