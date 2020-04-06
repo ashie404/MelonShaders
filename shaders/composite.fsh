@@ -50,6 +50,8 @@ uniform sampler2D noisetex;
 
 // includes
 
+#define linear(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
+
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
@@ -60,8 +62,6 @@ uniform sampler2D noisetex;
 #include "/lib/reflection.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/sky.glsl"
-
-#define linear(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
 
 float luma(vec3 color) {
   return dot(color, vec3(0.299, 0.587, 0.114));

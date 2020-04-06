@@ -44,6 +44,8 @@ uniform sampler2D shadowtex0;
 uniform sampler2D shadowcolor0;
 uniform sampler2D noisetex;
 
+// includes
+
 #include "/lib/settings.glsl"
 #include "/lib/framebuffer.glsl"
 #include "/lib/common.glsl"
