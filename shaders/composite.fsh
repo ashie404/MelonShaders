@@ -96,7 +96,7 @@ void main() {
     // calculate fog
     if (isEyeInWater < 1) {
         #ifdef VARIABLE_FOG_DENSITY
-        float density = clamp01((length(viewPos.xyz)/128) * FOG_DENSITY-(fbm(worldPos.xyz/16+(frameTimeCounter/16))*VARIABILITY));
+        float density = clamp01((length(viewPos.xyz)/128) * FOG_DENSITY-(fbm((worldPos.xyz)/16+(frameTimeCounter/16))*VARIABILITY));
         #else
         float density = clamp01((length(viewPos.xyz)/128) * FOG_DENSITY);
         #endif
