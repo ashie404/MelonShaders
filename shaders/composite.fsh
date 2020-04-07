@@ -92,6 +92,19 @@ void main() {
     vec3 normal = getNormal(texcoord.st);
     vec3 rayDir = refract(normalize(viewPos.xyz), normal, n1.r/n2.r); // calculate snell's window
 
+    // calculate water fog
+    if (frag.emission == 0.5) {
+        // calculate water fog
+        if (isEyeInWater < 1) {
+            float linearDepth = linear(texture2D(depthtex0, texcoord.st).r);
+            float linearDepth1 = linear(texture2D(depthtex1, texcoord.st).r);
+            float depth = (linearDepth1-linearDepth);
+            vec3 transmittance = exp(-attenuationCoefficient * depth);
+
+            finalColor *= vec4(transmittance,1);
+        }
+    }
+
     #ifdef FOG
     // calculate fog
     if (isEyeInWater < 1) {
@@ -125,15 +138,6 @@ void main() {
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {
-        // calculate water fog
-        if (isEyeInWater < 1) {
-            float linearDepth = linear(texture2D(depthtex0, texcoord.st).r);
-            float linearDepth1 = linear(texture2D(depthtex1, texcoord.st).r);
-            float depth = (linearDepth1-linearDepth);
-            vec3 transmittance = exp(-attenuationCoefficient * depth);
-
-            finalColor *= vec4(transmittance,1);
-        }
 
         // calculate water reflections
         // calculate reflections

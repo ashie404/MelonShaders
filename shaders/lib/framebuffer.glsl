@@ -1,10 +1,9 @@
-const int RGBA = 0;
-const int RGBA16 = 1;
-const int RGBA16F = 5;
 
-const int gcolorFormat = RGBA16F;
-const int gdepthFormat = RGBA;
-const int gnormalFormat = RGBA16;
+/*
+const int colortex0Format = RGBA16F;
+const int colortex1Format = RGBA;
+const int colortex2Format = RGBA16;
+*/
 
 const bool gaux2MipmapEnabled = true;
 
