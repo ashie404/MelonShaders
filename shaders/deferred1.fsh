@@ -33,11 +33,15 @@ uniform float near;
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;
 
+uniform mat4 shadowModelViewInverse;
+uniform mat4 shadowProjectionInverse;
+
 uniform mat4 gbufferProjection;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex3;
 uniform sampler2D colortex5;
+uniform sampler2D colortex6;
 uniform sampler2D depthtex0;
 uniform sampler2D gaux2;
 uniform sampler2D shadowtex0;
@@ -53,8 +57,8 @@ uniform sampler2D noisetex;
 #include "/lib/labpbr.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
-#include "/lib/shadow.glsl"
 #include "/lib/distort.glsl"
+#include "/lib/shadow.glsl"
 
 void main() {
     float z = texture2D(depthtex0, texcoord.st).r;

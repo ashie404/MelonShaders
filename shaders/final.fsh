@@ -5,7 +5,7 @@
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colortex0Out;
 
-#define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor specDebug normal]
+#define DEBUG finalColor // Debug output. If not debugging, finalColor should be used. [finalColor compColor shadow0 shadow1 shadowColor shadowNormal specDebug normal]
 #define INFO 0 //[0 1]
 
 // inputs from vertex shader
@@ -28,6 +28,7 @@ uniform sampler2D gdepth;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
 uniform sampler2D shadowcolor0;
+uniform sampler2D shadowcolor1;
 
 // constants
 
@@ -160,6 +161,7 @@ void main() {
     vec4 shadow0 = texture2D(shadowtex0, texcoord.st);
     vec4 shadow1 = texture2D(shadowtex1, texcoord.st);
     vec4 shadowColor = texture2D(shadowcolor0, texcoord.st);
+    vec4 shadowNormal = texture2D(shadowcolor1, texcoord.st);
     vec4 compColor = texture2D(gcolor, texcoord.st);
     vec4 specDebug = texture2D(colortex3, texcoord.st);
     vec4 normal = texture2D(gnormal, texcoord.st);

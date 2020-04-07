@@ -36,12 +36,15 @@ uniform float far;
 uniform float near;
 
 uniform vec3 shadowLightPosition;
+uniform mat4 shadowModelViewInverse;
+uniform mat4 shadowProjectionInverse;
 uniform vec3 sunPosition;
 
 uniform mat4 gbufferProjection;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex3;
+uniform sampler2D colortex6;
 uniform sampler2D depthtex0;
 uniform sampler2D gaux2;
 uniform sampler2D shadowtex0;
@@ -134,7 +137,7 @@ void main() {
 
         PBRData pbrData = getPBRData(texture2D(colortex3, texcoord.st));
 
-        finalColor = vec4(calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData), 1);
+        finalColor = vec4(calculateLighting(frag, lightmap, fShadowPos, npos.xyz, screenPos.xyz, normalize(viewPos.xyz), pbrData), 1);
     }
     // 0.5 emission marks water, calculate reflectins
     else if (frag.emission == 0.5) {

@@ -4,11 +4,16 @@
 
 // deferred pass 0: lighting
 
-/* DRAWBUFFERS:0352 */
+/*
+const bool colortex6Clear = false;
+*/
+
+/* DRAWBUFFERS:03526 */
 layout (location = 0) out vec4 colortex0Out;
 layout (location = 1) out vec4 colortex3Out;
 layout (location = 2) out vec4 colortex5Out;
 layout (location = 3) out vec4 colortex2Out;
+layout (location = 4) out vec4 giOut;
 
 // inputs from vertex shader
 
@@ -34,10 +39,13 @@ uniform float frameTimeCounter;
 uniform float rainStrength;
 
 uniform mat4 gbufferProjection;
+uniform mat4 shadowModelViewInverse;
+uniform mat4 shadowProjectionInverse;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex3;
 uniform sampler2D depthtex0;
+uniform sampler2D colortex6;
 uniform sampler2D gaux2;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowcolor0;
@@ -52,8 +60,8 @@ uniform sampler2D noisetex;
 #include "/lib/labpbr.glsl"
 #include "/lib/dither.glsl"
 #include "/lib/reflection.glsl"
-#include "/lib/shadow.glsl"
 #include "/lib/distort.glsl"
+#include "/lib/shadow.glsl"
 #include "/lib/sky.glsl"
 
 void main() {
@@ -97,7 +105,7 @@ void main() {
     } else {
         // if is not hand calculate lighting
         if (frag.emission != 0.7) {
-            finalColor = calculateLighting(frag, lightmap, fShadowPos, normalize(viewPos.xyz), pbrData);
+            finalColor = calculateLighting(frag, lightmap, fShadowPos, pos.xyz, screenPos.xyz, normalize(viewPos.xyz), pbrData);
         } else {
             finalColor = texture2D(colortex0, texcoord.st).rgb;
         }
@@ -111,5 +119,9 @@ void main() {
 
     #ifdef SCREENSPACE_REFLECTIONS
 	colortex5Out = vec4(pow(finalColor, vec3(0.125)) * 0.5, float(z < 1.0)); //gaux2
+    #endif
+
+    #ifdef GI
+    giOut = vec4(texture2D(colortex6, frag.coord).rgb + getGI(fShadowPos.xyz, pos.xyz, viewPos.xyz, screenPos.xyz, frag, texture2D(shadowtex0, fShadowPos.xy).r) - texture2D(colortex6, frag.coord).rgb/2,1);
     #endif
 }
