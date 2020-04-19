@@ -1,16 +1,12 @@
-#version 450 compatibility
+#version 120
 
-// outputs to fragment shader
-
-out vec3 tintColor;
-out vec3 normal;
-out vec4 texcoord;
-out vec4 lmcoord;
+varying vec2 lmcoord;
+varying vec2 texcoord;
+varying vec4 glcolor;
 
 void main() {
-    gl_Position = ftransform();
-    normal = normalize(gl_NormalMatrix * gl_Normal);
-    texcoord = gl_MultiTexCoord0;
-    lmcoord = gl_MultiTexCoord1;
-    tintColor = gl_Color.rgb;
+	gl_Position = ftransform();
+	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+	lmcoord  = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
+	glcolor = gl_Color;
 }

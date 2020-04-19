@@ -1,29 +1,13 @@
-#version 450 compatibility
-
-/* DRAWBUFFERS:012 */
-layout (location = 0) out vec4 colortex0Out;
-layout (location = 1) out vec4 colortex1Out;
-layout (location = 2) out vec4 colortex2Out;
-
-// inputs from vertex shader
-
-in vec3 normal;
-in vec4 texcoord;
-in vec4 lmcoord;
-
-// uniforms
+#version 120
 
 uniform sampler2D texture;
 
-// includes
-
-#include "/lib/settings.glsl"
-#include "/lib/framebuffer.glsl"
+varying vec2 texcoord;
+varying vec4 glcolor;
 
 void main() {
-    vec4 eyeColor = texture2D(texture, texcoord.st);
+	vec4 color = texture2D(texture, texcoord) * glcolor;
 
-    colortex0Out = eyeColor * 5;
-    colortex1Out = vec4(lmcoord.st / 16, 0, 1);
-    colortex2Out = vec4(normal * 0.5 + 0.5, 1.0);
+/* DRAWBUFFERS:0 */
+	gl_FragData[0] = color; //gcolor
 }
