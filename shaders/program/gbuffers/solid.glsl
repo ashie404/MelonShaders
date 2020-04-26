@@ -16,10 +16,6 @@ layout (location = 1) out vec4 lmMatOut; // lightmap and material mask output
 layout (location = 2) out vec4 normalOut; // normal output
 layout (location = 3) out vec4 specularOut; // specular output
 
-/*
-const int colortex0Format = RGBA16F;
-*/
-
 // uniforms
 uniform sampler2D texture;
 uniform sampler2D normals;
@@ -56,8 +52,11 @@ void main() {
 
     // correct floating point precision errors
     int correctedId = int(id + 0.5);
-    // TODO: handle materials
     float matMask = 0.0;
+    // subsurf scattering id is 20
+    if (correctedId == 20) {
+        matMask = 1.0;
+    }
     
     // get normals
 

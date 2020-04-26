@@ -44,7 +44,76 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     return vec4(shadowCol / 4096, visibility);
 }
 
-// shading calculation
-vec3 calculateShading(in vec3 color, in vec2 texcoord, in vec3 shadowPos) {
+// diffuse shading
+float OrenNayar(vec3 viewVec, vec3 lightVec, vec3 normal, float roughness) {
+    
+    roughness *= roughness;
+    
+    float NdotL = dot(normal,lightVec);
+    float NdotV = dot(normal,viewVec);
+    
+    float t = max(NdotL,NdotV);
+    float g = max(.0, dot(viewVec - normal * NdotV, lightVec - normal * NdotL));
+    float c = g/t - g*t;
+    
+    float a = .285 / (roughness+.57) + .5;
+    float b = .45 * roughness / (roughness+.09);
 
+    return max(0., NdotL) * (b * c + a);
+
+}
+
+// shading calculation
+vec3 calculateShading(in Fragment fragment, in vec3 viewVec, in vec3 shadowPos) {
+    // calculate skylight
+    vec3 skyLight = ambientColor * fragment.lightmap.y;
+
+    // calculate blocklight
+    vec3 blockLightColor = vec3(1.0, 0.5, 0.25)*0.35;
+    vec3 blockLight = blockLightColor * fragment.lightmap.x;
+
+    // calculate diffuse lighting
+    float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal.xyz), 0.7);
+    vec3 diffuseLight = diffuseStrength * lightColor;
+
+    // calculate shadows
+    vec4 shadowLight = getShadows(fragment.coord, shadowPos);
+
+    // combine lighting
+    vec3 color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
+
+    // 1 on matmask is hardcoded SSS
+    if (fragment.matMask == 1) {
+        float depth = length(normalize(viewVec));
+        float strength = 1.0-(depth-(shadowLight.a/16));
+        vec3 subsurfColor = mix(vec3(0), lightColor/4, clamp01(strength));
+        color += subsurfColor;
+    }
+
+    // multiply by albedo to get final color
+    color *= fragment.albedo.rgb;
+
+    return color;
+}
+
+// basic shading (diffuse, blocklight, skylight, no shadows or subsurface scattering) used for translucents
+vec3 calculateBasicShading(in Fragment fragment, in vec3 viewVec) {
+    // calculate skylight
+    vec3 skyLight = ambientColor * fragment.lightmap.y;
+
+    // calculate blocklight
+    vec3 blockLightColor = vec3(1.0, 0.5, 0.25)*0.35;
+    vec3 blockLight = blockLightColor * fragment.lightmap.x;
+
+    // calculate diffuse lighting
+    float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal.xyz), 0.7);
+    vec3 diffuseLight = diffuseStrength * lightColor;
+
+    // combine lighting
+    vec3 color = diffuseLight+skyLight+blockLight;
+
+    // multiply by albedo to get final color
+    color *= fragment.albedo.rgb;
+
+    return color;
 }

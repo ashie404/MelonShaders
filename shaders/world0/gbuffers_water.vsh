@@ -6,4 +6,4 @@
 */
 
 #define VERT
-#include "/program/gbuffers/solid.glsl"
+#include "/program/gbuffers/translucent.glsl"
