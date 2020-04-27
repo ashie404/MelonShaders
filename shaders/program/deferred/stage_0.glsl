@@ -43,6 +43,7 @@ in vec3 lightColor;
 
 #include "/lib/distort.glsl"
 #include "/lib/fragmentUtil.glsl"
+#include "/lib/labpbr.glsl"
 #include "/lib/shading.glsl"
 #include "/lib/atmosphere.glsl"
 
@@ -59,6 +60,8 @@ void main() {
         color = getSkyColor(worldPos, normalize(worldPos), mat3(gbufferModelViewInverse) * normalize(shadowLightPosition), sunAngle);
     } else {
         Fragment frag = getFragment(texcoord);
+        PBRData pbr = getPBRData(frag.specular);
+
         vec4 pos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
         pos = gbufferProjectionInverse * pos;
         pos = gbufferModelViewInverse * pos;
@@ -67,7 +70,7 @@ void main() {
         pos /= pos.w;
         vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
-        color = calculateShading(frag, viewPos.xyz, shadowPos);
+        color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
     }
     colorOut = vec4(color, 1.0);
 }

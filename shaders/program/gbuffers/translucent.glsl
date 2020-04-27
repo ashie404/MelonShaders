@@ -53,6 +53,9 @@ void main() {
     // correct floating point precision errors
     int correctedId = int(id + 0.5);
     float matMask = 2.0;
+    if (correctedId == 8) {
+        matMask = 3.0;
+    }
     
     // get normals
 
@@ -67,7 +70,7 @@ void main() {
 
     albedoOut = albedo;
     lmMatOut = vec4(lmcoord.xy, 0.0, matMask);
-    normalOut = normalData;
+    normalOut = vec4(normalData.xyz * 0.5 + 0.5, 1.0);
     specularOut = specularData;
 
 }

@@ -30,6 +30,9 @@
 // sky settings
 #define CELESTIAL_RADIUS 0.5
 
+// lighting settings
+#define SPECULAR
+
 const vec3 celestialTint = vec3(1.0, 0.95, 0.86);
 
 const float noiseTextureResolution = 256;

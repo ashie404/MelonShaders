@@ -60,8 +60,8 @@ void main() {
     
     // get normals
 
-    vec4 normalData = getTangentNormals(texcoord);
-    normalData.xyz = normalize(normalData.xyz * tbn);
+    vec3 normalData = getTangentNormals(texcoord).xyz;
+    normalData = normalize(normalData * tbn);
     
     // get specular
 
@@ -71,7 +71,7 @@ void main() {
 
     albedoOut = albedo;
     lmMatOut = vec4(lmcoord.xy, 0.0, matMask);
-    normalOut = normalData;
+    normalOut = vec4(normalData * 0.5 + 0.5, 1.0);
     specularOut = specularData;
 
 }
@@ -93,6 +93,8 @@ out float id;
 attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
 
+uniform mat4 gbufferModelViewInverse;
+
 void main() {
 	gl_Position = ftransform();
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
@@ -100,9 +102,8 @@ void main() {
 	glcolor = gl_Color;
     id = mc_Entity.x;
 
-    vec3 normal = normalize(gl_NormalMatrix * gl_Normal);
-    vec3 tangent = normalize(gl_NormalMatrix * (at_tangent.xyz));
-
+    vec3 normal   = normalize(gl_NormalMatrix * gl_Normal);
+    vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
 }
 

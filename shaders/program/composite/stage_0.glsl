@@ -19,6 +19,7 @@ uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 
 uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
@@ -33,6 +34,8 @@ uniform mat4 shadowProjection;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float far;
+uniform float near;
 uniform float sunAngle;
 
 uniform vec3 shadowLightPosition;
@@ -41,8 +44,11 @@ in vec2 texcoord;
 in vec3 ambientColor;
 in vec3 lightColor;
 
+#define linear(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
+
 #include "/lib/distort.glsl"
 #include "/lib/fragmentUtil.glsl"
+#include "/lib/labpbr.glsl"
 #include "/lib/shading.glsl"
 #include "/lib/atmosphere.glsl"
 
@@ -60,6 +66,18 @@ void main() {
         // 2 is translucents tag
         if (frag.matMask == 2) {
             color = calculateBasicShading(frag, viewPos.xyz);
+        }
+        // 3 is water tag
+        else if (frag.matMask == 3) {
+            color = calculateBasicShading(frag, viewPos.xyz);
+            float depth0 = linear(texture2D(depthtex0, texcoord).r);
+            float depth1 = linear(texture2D(depthtex1, texcoord).r);
+            
+            float depthcomp = clamp01((depth1-depth0));
+
+		    if (depthcomp <= 0.15) {
+		    	color = mix(vec3(1.0), color, 0.75);
+		    } 
         }
     }
     colorOut = vec4(color, 1.0);
