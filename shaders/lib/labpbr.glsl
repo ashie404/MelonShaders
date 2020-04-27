@@ -1,3 +1,8 @@
+/*
+    Melon Shaders by J0SH
+    https://j0sh.cf
+*/
+
 struct PBRData {
     float smoothness;
     float F0;

@@ -46,17 +46,19 @@ void main() {
 
     int correctedId = int(id + 0.5);
 
-    vec4 albedo = texture2D(texture, texcoord) * glcolor;
+    vec4 albedo = texture2D(texture, texcoord);
+    float luminance = luma(albedo);
+    albedo *= glcolor;
     albedo.rgb = toLinear(albedo.rgb);
     // emissive handling
-    if      (correctedId == 50) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
-    else if (correctedId == 51) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
-    else if (correctedId == 52) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
-    else if (correctedId == 53) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
-    else if (correctedId == 54) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
-    else if (correctedId == 55) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
-    else if (correctedId == 56) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
-    else if (correctedId == 57) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
+    if (correctedId == 60)  if (luminance >= 0.35)  albedo.rgb *= 100;
+    if (correctedId == 70)  if (luminance >= 0.45)  albedo.rgb *= 75;
+    if (correctedId == 80)  if (luminance >= 0.50)  albedo.rgb *= 60;
+    if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
+    if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
+    if (correctedId == 110) if (luminance >= 0.65)  albedo.rgb *= 75;
+    if (correctedId == 120) albedo.rgb *= 50;
 
     // get lightmap
 

@@ -15,7 +15,7 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius) {
     float sunAngularRadius = radius / 10;
 
     float x = clamp(1.0 - ((sunAngularRadius * 0.6) - acos(cosTheta)) / (sunAngularRadius * 0.6), 0.0, 1.0);
-    vec3 sunDisk = lightColor * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;// * lightColors[0];
+    vec3 sunDisk = (lightColor*8) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;// * lightColors[0];
 
     //return cosTheta > cos(sunAngularRadius) ? sunDisk : background;
     return vec4(sunDisk, float(cosTheta > cos(sunAngularRadius)));
@@ -47,24 +47,27 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
     float night    = ((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03);
 
     vec3 skyBSunrise = vec3(0.91, 0.36, 0.07);
+    vec3 skyBTSunrise = vec3(0.17, 0.18, 0.29)*0.75;
     vec3 skyTSunrise = vec3(0.27, 0.28, 0.39);
 
     vec3 skyBNoon    = vec3(0.57, 0.6, 0.77);
     vec3 skyTNoon    = vec3(0.39, 0.51, 0.9);
 
     vec3 skyBSunset  = vec3(0.91, 0.36, 0.07);
+    vec3 skyBTSunset = vec3(0.17, 0.18, 0.29)*0.75;
     vec3 skyTSunset  = vec3(0.27, 0.28, 0.39);
 
     vec3 skyBNight   = vec3(0.1, 0.15, 0.19)*0.025;
     vec3 skyTNight  = vec3(0.14, 0.2, 0.24)*0.025;
 
     vec3 skyBottom = (sunrise * skyBSunrise) + (noon * skyBNoon) + (sunset * skyBSunset) + (night * skyBNight);
+    vec3 skyBottomNS = (sunrise * skyBTSunrise) + (noon * skyBNoon) + (sunset * skyBTSunset) + (night * skyBNight);
     vec3 skyTop = (sunrise * skyTSunrise) + (noon * skyTNoon) + (sunset * skyTSunset) + (night * skyTNight);
 
     vec3 skyColor = mix(skyBottom, skyTop, clamp01(worldPos.y*64));
 
     float sunHalo = 1.0-clamp01(calculateSunHalo(viewVec, sunVec, 16.0).r);
-    skyColor = mix(skyColor, skyTop, sunHalo);
+    skyColor = mix(skyColor, mix(skyBottomNS, skyTop, clamp01(worldPos.y*64)), sunHalo);
 
     skyColor += calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS).rgb;
 

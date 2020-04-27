@@ -1,7 +1,12 @@
+/*
+    Melon Shaders by J0SH
+    https://j0sh.cf
+*/
 
 /*
 const int colortex0Format = RGBA16F;
 const int colortex1Format = RGBA16F;
+const int colortex4Format = RGBA16F;
 */
 
 #define clamp01(p) (clamp(p, 0.0, 1.0))
@@ -32,4 +37,8 @@ void calcLightingColor(in float angle, out vec3 ambient, out vec3 light) {
 
 float luma(vec3 color) {
   return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+float luma(vec4 color) {
+  return dot(color.rgb, vec3(0.299, 0.587, 0.114));
 }

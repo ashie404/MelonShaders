@@ -33,7 +33,9 @@
 // lighting settings
 #define SPECULAR
 
-const vec3 celestialTint = vec3(1.0, 0.95, 0.86);
+// post processing settings
+#define BLOOM
+#define BLOOM_STRENGTH 1.0
 
 const float noiseTextureResolution = 256;
 const float shadowMapResolution = 4096;

@@ -10,8 +10,9 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:04 */
 layout (location = 0) out vec4 colorOut;
+layout (location = 1) out vec4 bloomOut;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
@@ -80,7 +81,19 @@ void main() {
 		    } 
         }
     }
+
+    #ifdef BLOOM
+    // output bloom if pixel is bright enough
+    vec3 bloomSample = vec3(0.0);
+    if (luma(color) > 7.5) {
+        bloomSample = color;
+    }
+    #endif
+
     colorOut = vec4(color, 1.0);
+    #ifdef BLOOM
+    bloomOut = vec4(bloomSample, 1.0);
+    #endif
 }
 
 #endif
