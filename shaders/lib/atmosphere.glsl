@@ -50,7 +50,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
     vec3 skyTSunrise = vec3(0.27, 0.28, 0.39);
 
     vec3 skyBNoon    = vec3(0.57, 0.6, 0.77);
-    vec3 skyTNoon    = vec3(0.69, 0.81, 0.9);
+    vec3 skyTNoon    = vec3(0.39, 0.51, 0.9);
 
     vec3 skyBSunset  = vec3(0.91, 0.36, 0.07);
     vec3 skyTSunset  = vec3(0.27, 0.28, 0.39);
