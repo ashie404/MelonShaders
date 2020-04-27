@@ -64,15 +64,15 @@ float OrenNayar(vec3 v, vec3 l, vec3 n, float r) {
 }
 
 // specular shading
-float ggx(vec3 normal, vec3 svec, PBRData pbrData) {
+float ggx(vec3 normal, vec3 svec, vec3 lvec, PBRData pbrData) {
     float f0  = pbrData.F0;
     float roughness = pow(1.0 - pbrData.smoothness, 2.0);
 
-    vec3 h      = shadowLightPosition - svec;
+    vec3 h      = lvec - svec;
     float hn    = inversesqrt(dot(h, h));
-    float hDotL = clamp01(dot(h, shadowLightPosition)*hn);
+    float hDotL = clamp01(dot(h, lvec)*hn);
     float hDotN = clamp01(dot(h, normal)*hn);
-    float nDotL = clamp01(dot(normal, shadowLightPosition));
+    float nDotL = clamp01(dot(normal, lvec));
     float denom = (hDotN * roughness - hDotN) * hDotN + 1.0;
     float D     = roughness / (PI * denom * denom);
     float F     = f0 + (1.0-f0) * exp2((-5.55473*hDotL-6.98316)*hDotL);
@@ -87,7 +87,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
     // calculate blocklight
-    vec3 blockLightColor = vec3(1.0, 0.5, 0.25)*0.35;
+    vec3 blockLightColor = vec3(1.0, 0.5, 0.25)*0.75;
     vec3 blockLight = blockLightColor * fragment.lightmap.x;
 
     // calculate diffuse lighting
@@ -110,10 +110,11 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
 
     #ifdef SPECULAR
     // calculate specular highlights if non-shadowed
-    if (shadowLight.a > 0.3) {
-        float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), pbrData);
+    
+    if (shadowLight.a > 0.1) {
+        float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
         vec3 specularHighlight = specularStrength * lightColor;
-        color += specularHighlight;
+        color += mix(vec3(0.0), specularHighlight, clamp01(shadowLight.a));
     }
     #endif
 

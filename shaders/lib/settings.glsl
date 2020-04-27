@@ -37,4 +37,4 @@ const vec3 celestialTint = vec3(1.0, 0.95, 0.86);
 
 const float noiseTextureResolution = 256;
 const float shadowMapResolution = 4096;
-const float sunPathRotation = -40.0;
+const float sunPathRotation = -30.0;

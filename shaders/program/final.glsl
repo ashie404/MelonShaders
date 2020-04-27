@@ -18,8 +18,8 @@ layout (location = 0) out vec4 screenOut;
 in vec2 texcoord;
 
 uniform sampler2D colortex0;
-uniform sampler2D colortex2;
 uniform sampler2D colortex1;
+uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 
 void main() {

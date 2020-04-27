@@ -44,14 +44,24 @@ vec4 getTangentNormals(vec2 coord) {
 void main() {
     // get albedo
 
+    int correctedId = int(id + 0.5);
+
     vec4 albedo = texture2D(texture, texcoord) * glcolor;
     albedo.rgb = toLinear(albedo.rgb);
-    // TODO: make emissives brighter
+    // emissive handling
+    if      (correctedId == 50) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    else if (correctedId == 51) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    else if (correctedId == 52) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    else if (correctedId == 53) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    else if (correctedId == 54) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    else if (correctedId == 55) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    else if (correctedId == 56) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
+    else if (correctedId == 57) if (luma(albedo.rgb) >= 0.7) albedo.rgb *= 10;
 
     // get lightmap
 
     // correct floating point precision errors
-    int correctedId = int(id + 0.5);
+    
     float matMask = 0.0;
     // subsurf scattering id is 20
     if (correctedId == 20) {

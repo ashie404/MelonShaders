@@ -29,3 +29,7 @@ void calcLightingColor(in float angle, out vec3 ambient, out vec3 light) {
     ambient = (sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor) + (night * nightAmbColor);
     light = (sunrise * sunriseLightColor) + (noon * noonLightColor) + (sunset * sunsetLightColor) + (night * nightLightColor);
 }
+
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
