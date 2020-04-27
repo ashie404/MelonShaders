@@ -38,6 +38,8 @@ uniform float viewHeight;
 uniform float far;
 uniform float near;
 uniform float sunAngle;
+uniform float frameTimeCounter;
+uniform int isEyeInWater;
 
 uniform vec3 shadowLightPosition;
 
@@ -49,15 +51,22 @@ in vec3 lightColor;
 
 #include "/lib/distort.glsl"
 #include "/lib/fragmentUtil.glsl"
+#include "/lib/noise.glsl"
 #include "/lib/labpbr.glsl"
 #include "/lib/shading.glsl"
 #include "/lib/atmosphere.glsl"
 
+const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
+
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
-    vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
+    /*vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
 	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
+    viewPos /= viewPos.w;
+    vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;*/
+    vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
+    vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
 
@@ -70,16 +79,29 @@ void main() {
         }
         // 3 is water tag
         else if (frag.matMask == 3) {
-            color = calculateBasicShading(frag, viewPos.xyz);
             float depth0 = linear(texture2D(depthtex0, texcoord).r);
             float depth1 = linear(texture2D(depthtex1, texcoord).r);
-            
-            float depthcomp = clamp01((depth1-depth0));
+    
+            float depthcomp = (depth1-depth0);
+
+            // if eye is not in water, render above-water fog and render sky reflection
+            if (isEyeInWater == 0) {
+                color *= exp(-attenuationCoefficient * depthcomp);
+                vec3 reflectedPos = reflect(worldPos, frag.normal);
+                color += mix(vec3(0.0), getSkyColor(reflectedPos, normalize(reflectedPos), normalize(mat3(gbufferModelViewInverse) * shadowLightPosition), sunAngle), 0.05);
+            }
 
 		    if (depthcomp <= 0.15) {
-		    	color = mix(vec3(1.0), color, 0.75);
+		    	color += vec3(0.5);
 		    } 
         }
+
+    }
+
+    // if eye in water, render underwater fog
+    if (isEyeInWater == 1) {
+        float depth = length(viewPos.xyz);
+        color *= exp(-attenuationCoefficient * depth);
     }
 
     #ifdef BLOOM

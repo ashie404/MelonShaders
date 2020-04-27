@@ -54,7 +54,7 @@ void main() {
     if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
     if (correctedId == 60)  if (luminance >= 0.35)  albedo.rgb *= 100;
     if (correctedId == 70)  if (luminance >= 0.45)  albedo.rgb *= 75;
-    if (correctedId == 80)  if (luminance >= 0.50)  albedo.rgb *= 60;
+    if (correctedId == 80)  if (luminance >= 0.50)  albedo.rgb *= 200;
     if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
     if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
     if (correctedId == 110) if (luminance >= 0.65)  albedo.rgb *= 75;
