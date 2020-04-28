@@ -22,6 +22,7 @@ uniform sampler2D normals;
 uniform sampler2D specular;
 
 uniform float rainStrength;
+uniform float sunAngle;
 
 // inputs from vertex
 in float id;
@@ -51,8 +52,11 @@ void main() {
     vec4 albedo = texture2D(texture, texcoord);
     float luminance = luma(albedo);
     #ifdef WEATHER
-    albedo.rgb = vec3(0.15);
-    albedo.a -= 0.75;
+    float night  = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03   - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
+
+    albedo.rgb = vec3(0.75)*clamp(1.0-night, 0.5, 1);
+    
+    albedo.a -= 0.5;
     #endif
     albedo *= glcolor;
     albedo.rgb = toLinear(albedo.rgb);
