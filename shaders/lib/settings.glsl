@@ -30,16 +30,23 @@
 // sky settings
 #define CELESTIAL_RADIUS 0.5
 
+// cloud settings
+#define CLOUDS // Whether to have clouds or not
+#define CLOUD_LIGHTING_STEPS 5 // How many steps to do when raymarching cloud lighting. Has a massive impact on performance. [1 2 3 4 5 6 7 8 9 10]
+#define CLOUD_COVERAGE 0.85 // Coverage of clouds in sky. [0.5 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
+
 // lighting settings
 #define SPECULAR
 
 // post processing settings
 #define BLOOM
 #define BLOOM_STRENGTH 1.0
+#define LUT
 
 // water settings
 #define WAVE_AMPLITUDE 1
 
-const float noiseTextureResolution = 256;
-const float shadowMapResolution = 4096;
+const int noiseTextureResolution = 256;
+const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
+const int shadowDistance = 128; //[128 256 512 1024]
 const float sunPathRotation = -30.0;

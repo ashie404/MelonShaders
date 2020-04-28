@@ -39,7 +39,7 @@ void main() {
     bloomTiles += calcBloomTile(vec2(0.25,0.25), 4.0);
     bloomTiles += calcBloomTile(vec2(0.5,0.25), 5.0);
     bloomTiles += calcBloomTile(vec2(0.5,0.5), 6.0);
-    bloomTileOut = vec4(bloomTiles,1.0);
+    bloomTileOut = vec4(bloomTiles/5,1.0);
     #endif
 
     colorOut = color;

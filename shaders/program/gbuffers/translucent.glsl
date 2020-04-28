@@ -27,7 +27,6 @@ in vec2 texcoord;
 in vec2 lmcoord;
 in vec4 glcolor;
 in mat3 tbn;
-in float waterWaves;
 
 vec3 toLinear(vec3 srgb) {
     return mix(
@@ -62,7 +61,6 @@ void main() {
     // get normals
 
     vec4 normalData = getTangentNormals(texcoord);
-    //normalData.y -= waterWaves;
     normalData.xyz = normalize(normalData.xyz * tbn);
     
     // get specular
@@ -90,7 +88,6 @@ out vec2 texcoord;
 out vec4 glcolor;
 out mat3 tbn;
 out float id;
-out float waterWaves;
 
 // uniforms
 uniform float frameTimeCounter;
@@ -130,26 +127,19 @@ void main() {
 
     vec3 normal = normalize(gl_NormalMatrix * gl_Normal);
     vec3 tangent = normalize(gl_NormalMatrix * (at_tangent.xyz));
-    waterWaves = 0.0;
-    // if water do fancy stuff for waves
-    /*if (id == 8.0) {
-        vec3 worldPos = (gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex).xyz + cameraPosition;
-
-        waterWaves = waves(worldPos.xz, 48, 4);
-        //normal.y -= waves;
-        gl_Position.y -= waterWaves;
-    }*/
 
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
 
+    float waterWaves = 0.0;
+    // if water do fancy stuff for waves
     if (id == 8.0) {
         vec3 worldPos = (gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex).xyz + cameraPosition;
 
         waterWaves = waves(worldPos.xz, 48, 4);
-        normal.y -= waterWaves;
-        tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
         gl_Position.y -= waterWaves;
     }
+
+    
 }
 
 #endif

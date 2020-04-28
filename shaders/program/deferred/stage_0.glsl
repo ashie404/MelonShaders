@@ -34,6 +34,7 @@ uniform mat4 shadowProjection;
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float sunAngle;
+uniform float frameTimeCounter;
 
 uniform vec3 shadowLightPosition;
 
@@ -45,6 +46,7 @@ in vec3 lightColor;
 #include "/lib/fragmentUtil.glsl"
 #include "/lib/labpbr.glsl"
 #include "/lib/shading.glsl"
+#include "/lib/noise.glsl"
 #include "/lib/atmosphere.glsl"
 
 void main() {

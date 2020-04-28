@@ -30,6 +30,7 @@ uniform sampler2D noisetex;
 
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 
@@ -57,7 +58,7 @@ in vec3 lightColor;
 #include "/lib/atmosphere.glsl"
 
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
-
+const vec3 scatteringCoefficient = vec3(250);
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
@@ -86,23 +87,40 @@ void main() {
 
             // if eye is not in water, render above-water fog and render sky reflection
             if (isEyeInWater == 0) {
-                color *= exp(-attenuationCoefficient * depthcomp);
-                vec3 reflectedPos = reflect(worldPos, frag.normal);
-                color += mix(vec3(0.0), getSkyColor(reflectedPos, normalize(reflectedPos), normalize(mat3(gbufferModelViewInverse) * shadowLightPosition), sunAngle), 0.05);
-            }
+                // calculate transmittance
+                vec3 transmittance = exp(-attenuationCoefficient * depthcomp);
+                // calculate scattering
+                vec3 scattering = vec3(242 / 255, 242 / 255, 242 / 255);
+                scattering *= scatteringCoefficient;
+                scattering *= (1.0 - transmittance) / attenuationCoefficient;
 
-		    if (depthcomp <= 0.15) {
-		    	color += vec3(0.5);
-		    } 
+                color = color * transmittance + scattering;
+
+                // sky reflection
+                vec3 reflectedPos = mat3(gbufferModelViewInverse) * reflect(normalize(viewPos.xyz), frag.normal);
+                vec3 reflectedLightPos = mat3(gbufferModelViewInverse) * reflect(shadowLightPosition, frag.normal);
+                color += mix(vec3(0.0), getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle), 0.005);
+
+                // water foam
+                if (depthcomp <= 0.15) {
+		    	    color += vec3(0.5);
+		        } 
+
+            }
         }
 
     }
 
     // if eye in water, render underwater fog
+    float depth = length(viewPos.xyz);
     if (isEyeInWater == 1) {
-        float depth = length(viewPos.xyz);
         color *= exp(-attenuationCoefficient * depth);
+    } else {
+        // apply actual fog if not underwater
+
     }
+
+    
 
     #ifdef BLOOM
     // output bloom if pixel is bright enough
