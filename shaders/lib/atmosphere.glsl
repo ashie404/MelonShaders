@@ -117,7 +117,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
         }
         cloudColor += 0.05-(night*0.035); // cloud "ambient" brightness
         // beer's law + powder sugar
-        if (night != 0.0)
+        if (night > 0.25)
             cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * (8.0/(night*4));
         else
             cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 8.0;
