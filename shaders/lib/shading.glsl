@@ -104,8 +104,8 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     #ifdef SSS
     if (fragment.matMask == 1) {
         float depth = length(viewVec);
-        float strength = 1.0-(depth-(shadowLight.a/16))*SSS_STRENGTH;
-        vec3 subsurfColor = mix(vec3(0), lightColor/8, clamp01(strength));
+        float strength = 1.0-(depth-(shadowLight.a/16));
+        vec3 subsurfColor = mix(vec3(0), lightColor/4, clamp01(strength))*SSS_STRENGTH;
         color += subsurfColor;
     }
     #endif
