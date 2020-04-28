@@ -115,9 +115,9 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
    	    	float c = clouds(marchUv, time);
             cloudColor *= clamp(1.0 - c, 0.0, 1.0);
         }
-        cloudColor += 0.025; // cloud "ambient" brightness
+        cloudColor += 0.025-(night*0.02); // cloud "ambient" brightness
         // beer's law + powder sugar
-        cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 8.0;
+        cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * (8.0/(night*4));
         cloudColor *= cloudShape;
         // if this is the sun, darken based on how much cloud there is
         if (luma(skyColor) >= 1.5) {
