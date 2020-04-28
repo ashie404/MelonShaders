@@ -40,7 +40,7 @@ vec4 calculateSunHalo(vec3 viewVector, vec3 sunVector, float radius) {
 
 float clouds(vec2 coord, float time)
 {
-    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + CLOUD_COVERAGE; // cloud coverage value
+    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp(CLOUD_COVERAGE + rainStrength*2, 0.0, 2.0); // cloud coverage value
 
     // base noises
  	float perlinFbm = perlinFbm(coord, 2.0, time); // perlin fbm noise
@@ -126,7 +126,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
         if (luma(skyColor) >= 1.5) {
             skyColor *= clamp01(1.0 / (1.0-clamp01(cloudShape)));
         }
-        skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*lightColor, cloudColor), clamp01(worldPos.y*24));
+        skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*lightColor, cloudShape), clamp01(worldPos.y*24));
     }
     #endif
 

@@ -35,6 +35,7 @@ uniform float viewWidth;
 uniform float viewHeight;
 uniform float sunAngle;
 uniform float frameTimeCounter;
+uniform float rainStrength;
 
 uniform vec3 shadowLightPosition;
 
@@ -88,11 +89,12 @@ out vec3 ambientColor;
 out vec3 lightColor;
 
 uniform float sunAngle;
+uniform float rainStrength;
 
 void main() {
 	gl_Position = ftransform();
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-    calcLightingColor(sunAngle, ambientColor, lightColor);
+    calcLightingColor(sunAngle, rainStrength, ambientColor, lightColor);
 }
 
 #endif

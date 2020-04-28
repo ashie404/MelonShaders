@@ -21,6 +21,8 @@ uniform sampler2D texture;
 uniform sampler2D normals;
 uniform sampler2D specular;
 
+uniform float rainStrength;
+
 // inputs from vertex
 in float id;
 in vec2 texcoord;
@@ -48,6 +50,10 @@ void main() {
 
     vec4 albedo = texture2D(texture, texcoord);
     float luminance = luma(albedo);
+    #ifdef WEATHER
+    albedo.rgb = vec3(0.15);
+    albedo.a -= 0.75;
+    #endif
     albedo *= glcolor;
     albedo.rgb = toLinear(albedo.rgb);
     // emissive handling
@@ -57,7 +63,7 @@ void main() {
     if (correctedId == 80)  if (luminance >= 0.50)  albedo.rgb *= 200;
     if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
     if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
-    if (correctedId == 110) if (luminance >= 0.65)  albedo.rgb *= 75;
+    if (correctedId == 110) if (luminance >= 0.57)  albedo.rgb *= 75;
     if (correctedId == 120) albedo.rgb *= 50;
 
     // get lightmap

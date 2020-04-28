@@ -6,4 +6,5 @@
 */
 
 #define FRAG
+#define WEATHER
 #include "/program/gbuffers/solid.glsl"
