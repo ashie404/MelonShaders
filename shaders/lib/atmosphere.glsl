@@ -108,6 +108,8 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
         vec2 marchUv = uv;
         float cloudColor = 1.0;
         float cloudShape = clouds(uv, time);
+
+        #ifdef CLOUD_LIGHTING
         // 2D ray march lighting loop based on uncharted 4
         for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
         {
@@ -115,6 +117,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
    	    	float c = clouds(marchUv, time);
             cloudColor *= clamp(1.0 - c, 0.0, 1.0);
         }
+        #endif
         cloudColor += 0.05-(night*0.035); // cloud "ambient" brightness
         // beer's law + powder sugar
         if (night > 0.25)
