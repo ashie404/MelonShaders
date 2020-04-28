@@ -103,7 +103,7 @@ void main() {
 
                 // water foam
                 if (depthcomp <= 0.15) {
-		    	    color += vec3(0.5);
+		    	    color += vec3(0.75) * ambientColor;
 		        } 
 
             }
