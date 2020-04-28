@@ -126,7 +126,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
         if (luma(skyColor) >= 1.5) {
             skyColor *= clamp01(1.0 / (1.0-clamp01(cloudShape)));
         }
-        skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor), cloudColor), clamp01(worldPos.y*24));
+        skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*lightColor, cloudColor), clamp01(worldPos.y*24));
     }
     #endif
 
