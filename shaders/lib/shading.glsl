@@ -35,7 +35,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
             // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
             if (texture2D(shadowtex0, shadowPos.xy + offset).r < texture2D(shadowtex1, shadowPos.xy + offset).r ) {
                 vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
-                shadowCol += mix (colorSample, lightColor, visibility) * 1.2;
+                shadowCol += colorSample*64;
             } else {
                 shadowCol += mix(vec3(shadowMapSample), lightColor, visibility) * 1.2;
             }
