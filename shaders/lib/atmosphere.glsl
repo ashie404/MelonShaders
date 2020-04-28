@@ -97,7 +97,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
     // draw clouds if y is greater than 0
     #ifdef CLOUDS
     if (worldPos.y >= 0) {
-        float time = frameTimeCounter/32;
+        float time = frameTimeCounter*CLOUD_SPEED/32;
         vec2 uv = (worldPos.xz / worldPos.y)/2;
         vec2 sunUv = (sunVec.xz / sunVec.y)/2;
 

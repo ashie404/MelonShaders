@@ -31,9 +31,10 @@
 #define CELESTIAL_RADIUS 0.5
 
 // cloud settings
-#define CLOUDS // Whether to have clouds or not
-#define CLOUD_LIGHTING_STEPS 5 // How many steps to do when raymarching cloud lighting. Has a massive impact on performance. [1 2 3 4 5 6 7 8 9 10]
-#define CLOUD_COVERAGE 0.85 // Coverage of clouds in sky. [0.5 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
+#define CLOUDS // Whether to have clouds or not.
+#define CLOUD_SPEED 0.3 // How fast clouds move. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
+#define CLOUD_LIGHTING_STEPS 5 // How many steps to do when raymarching cloud lighting. Has a massive impact on performance. Not recommended to go past 5 unless you have a really good GPU. [1 2 3 4 5 6 7 8 9 10]
+#define CLOUD_COVERAGE 1.0 // Coverage of clouds in sky. [0.5 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2]
 
 // lighting settings
 #define SPECULAR
