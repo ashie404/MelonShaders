@@ -99,7 +99,7 @@ void main() {
                 // sky reflection
                 vec3 reflectedPos = mat3(gbufferModelViewInverse) * reflect(normalize(viewPos.xyz), frag.normal);
                 vec3 reflectedLightPos = mat3(gbufferModelViewInverse) * reflect(shadowLightPosition, frag.normal);
-                color += mix(vec3(0.0), getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle), 0.005);
+                color += mix(vec3(0.0), getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle), 0.0125);
 
                 // water foam
                 if (depthcomp <= 0.15) {
