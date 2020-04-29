@@ -25,7 +25,7 @@
 #define Out_Match                    0.14        //[0.0 0.02 0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.18 0.20 0.22 0.24 0.26 0.28 0.30 0.40]
 
 // shadow settings
-#define SHADOW_BIAS 0.00025
+#define SHADOW_BIAS 0.0001 //0.00025
 
 // sky settings
 #define CELESTIAL_RADIUS 0.5
@@ -39,6 +39,7 @@
 
 // lighting settings
 #define SPECULAR
+#define SSR // Screenspace reflections.
 #define SSS // Subsurface scattering. Improves lighting vastly on leaves, grass, and flowers.
 #define SSS_STRENGTH 1.0 // Strength of subsurface scattering. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.7 1.75 1.8 1.9 2]
 

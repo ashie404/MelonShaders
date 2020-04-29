@@ -61,22 +61,22 @@ void main() {
     albedo *= glcolor;
     albedo.rgb = toLinear(albedo.rgb);
     // emissive handling
-    if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
-    if (correctedId == 60)  if (luminance >= 0.35)  albedo.rgb *= 100;
-    if (correctedId == 70)  if (luminance >= 0.45)  albedo.rgb *= 75;
-    if (correctedId == 80)  if (luminance >= 0.50)  albedo.rgb *= 200;
-    if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
-    if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
-    if (correctedId == 110) if (luminance >= 0.57)  albedo.rgb *= 75;
-    if (correctedId == 120) albedo.rgb *= 50;
+         if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
+    else if (correctedId == 60)  if (luminance >= 0.35)  albedo.rgb *= 100;
+    else if (correctedId == 70)  if (luminance >= 0.45)  albedo.rgb *= 75;
+    else if (correctedId == 80)  if (luminance >= 0.50)  albedo.rgb *= 200;
+    else if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
+    else if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
+    else if (correctedId == 110) if (luminance >= 0.57)  albedo.rgb *= 75;
+    else if (correctedId == 120) albedo.rgb *= 50;
 
     // get lightmap
 
     // correct floating point precision errors
     
     float matMask = 0.0;
-    // subsurf scattering id is 20
-    if (correctedId == 20) {
+    // subsurf scattering id is 20 and 21
+    if (correctedId == 20 || correctedId == 21) {
         matMask = 1.0;
     }
     
@@ -116,6 +116,9 @@ attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
 
 uniform mat4 gbufferModelViewInverse;
+uniform float frameTimeCounter;
+
+#include "/lib/noise.glsl"
 
 void main() {
 	gl_Position = ftransform();
@@ -123,6 +126,10 @@ void main() {
 	lmcoord  = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
 	glcolor = gl_Color;
     id = mc_Entity.x;
+
+    if (mc_Entity.x == 20.0) {
+        gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/16;
+    }
 
     vec3 normal   = normalize(gl_NormalMatrix * gl_Normal);
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));

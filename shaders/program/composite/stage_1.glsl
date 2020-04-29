@@ -35,10 +35,10 @@ void main() {
     // calculate all bloom tiles
     vec3 bloomTiles = vec3(0.0);
     bloomTiles += calcBloomTile(vec2(0.0,0.0), 2.0);
-    bloomTiles += calcBloomTile(vec2(0.25,0.0), 3.0);
-    bloomTiles += calcBloomTile(vec2(0.25,0.25), 4.0);
-    bloomTiles += calcBloomTile(vec2(0.5,0.25), 5.0);
-    bloomTiles += calcBloomTile(vec2(0.5,0.5), 6.0);
+    bloomTiles += calcBloomTile(vec2(0.3,0.0), 3.0);
+    bloomTiles += calcBloomTile(vec2(0.3,0.3), 4.0);
+    bloomTiles += calcBloomTile(vec2(0.6,0.3), 5.0);
+    bloomTiles += calcBloomTile(vec2(0.6,0.6), 6.0);
     bloomTileOut = vec4(bloomTiles/5,1.0);
     #endif
 

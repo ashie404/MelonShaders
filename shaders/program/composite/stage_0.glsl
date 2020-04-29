@@ -18,6 +18,7 @@ uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D colortex3;
+uniform sampler2D colortex5;
 
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
@@ -29,6 +30,7 @@ uniform sampler2D shadowcolor0;
 uniform sampler2D noisetex;
 
 uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferProjection;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
 uniform mat4 shadowModelView;
@@ -57,16 +59,17 @@ in vec3 lightColor;
 #include "/lib/labpbr.glsl"
 #include "/lib/shading.glsl"
 #include "/lib/atmosphere.glsl"
+#ifdef SSR
+#include "/lib/dither.glsl"
+#include "/lib/raytrace.glsl"
+#include "/lib/reflection.glsl"
+#endif
 
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
 const vec3 scatteringCoefficient = vec3(250);
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
-    /*vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
-	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
-    viewPos /= viewPos.w;
-    vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;*/
     vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
@@ -77,7 +80,8 @@ void main() {
         Fragment frag = getFragment(texcoord);
         // 2 is translucents tag
         if (frag.matMask == 2) {
-            color = calculateBasicShading(frag, viewPos.xyz);
+            PBRData pbr = getPBRData(frag.specular);
+            color = calculateBasicShading(frag, pbr, viewPos.xyz);
         }
         // 3 is water tag
         else if (frag.matMask == 3) {
@@ -99,14 +103,18 @@ void main() {
 
                 // sky reflection
                 vec3 reflectedPos = mat3(gbufferModelViewInverse) * reflect(normalize(viewPos.xyz), frag.normal);
-                vec3 reflectedLightPos = mat3(gbufferModelViewInverse) * reflect(shadowLightPosition, frag.normal);
-                color += mix(vec3(0.0), getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle), 0.0125);
-
+                vec3 reflectedLightPos = mat3(gbufferModelViewInverse) * reflect(normalize(shadowLightPosition), frag.normal);
+                color += mix(vec3(0.0), getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle), 0.05);
+            }
+            #ifdef SSR
+            vec4 waterReflection = reflection(viewPos.xyz, frag.normal, bayer64(texcoord), colortex5);
+            color += mix(vec3(0.0), waterReflection.rgb, clamp01(waterReflection.a-0.75));
+            #endif
+            if (isEyeInWater == 0) {
                 // water foam
                 if (depthcomp <= 0.15) {
 		    	    color += vec3(0.75) * ambientColor;
 		        } 
-
             }
         }
 

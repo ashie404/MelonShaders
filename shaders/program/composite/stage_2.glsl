@@ -34,10 +34,10 @@ void main() {
     // get all bloom tiles and calculate them with final color
     vec3 bloom = vec3(0.0);
     bloom += getBloomTile(vec2(0.0,0.0), 2.0, texcoord);
-    bloom += getBloomTile(vec2(0.25,0.0), 3.0, texcoord);
-    bloom += getBloomTile(vec2(0.25,0.25), 4.0, texcoord);
-    bloom += getBloomTile(vec2(0.5,0.25), 5.0, texcoord);
-    bloom += getBloomTile(vec2(0.5,0.5), 6.0, texcoord);
+    bloom += getBloomTile(vec2(0.3,0.0), 3.0, texcoord);
+    bloom += getBloomTile(vec2(0.3,0.3), 4.0, texcoord);
+    bloom += getBloomTile(vec2(0.6,0.3), 5.0, texcoord);
+    bloom += getBloomTile(vec2(0.6,0.6), 6.0, texcoord);
     color = mix(color, vec4(bloom, 1.0), BLOOM_STRENGTH-0.75);
     #endif
 

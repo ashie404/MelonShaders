@@ -126,8 +126,8 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     return color;
 }
 
-// basic shading (diffuse, blocklight, skylight, no shadows or subsurface scattering) used for translucents
-vec3 calculateBasicShading(in Fragment fragment, in vec3 viewVec) {
+// basic shading (diffuse, specular, blocklight, skylight, no shadows or subsurface scattering) used for translucents
+vec3 calculateBasicShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec) {
     // calculate skylight
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
@@ -141,6 +141,13 @@ vec3 calculateBasicShading(in Fragment fragment, in vec3 viewVec) {
 
     // combine lighting
     vec3 color = diffuseLight+skyLight+blockLight;
+
+    #ifdef SPECULAR
+    // calculate specular highlights
+    float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
+    vec3 specularHighlight = specularStrength * lightColor;
+    color += specularHighlight;
+    #endif
 
     // multiply by albedo to get final color
     color *= fragment.albedo.rgb;
