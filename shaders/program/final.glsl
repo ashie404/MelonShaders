@@ -11,6 +11,7 @@
 #ifdef FRAG
 
 #include "/lib/aces/ACES.glsl"
+#include "/lib/dither.glsl"
 
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 screenOut;
@@ -22,6 +23,9 @@ uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 uniform sampler2D colortex7;
+
+uniform float viewWidth;
+uniform float viewHeight;
 
 vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     #ifndef LUT
@@ -55,12 +59,26 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
 }
 
 void main() {
+    #ifdef RETRO
+    float dx = PIXEL_WIDTH*(1.0/viewWidth);
+    float dy = PIXEL_HEIGHT*(1.0/viewHeight);
+    vec2 steppedCoord = vec2(dx*floor(texcoord.x/dx), dy*floor(texcoord.y/dy));
+    // dithering
+    float dither = bayer8(steppedCoord);
+    vec3 color = texture2D(colortex0, steppedCoord).rgb + vec3(dither);
+    #else
     vec3 color = texture2D(colortex0, texcoord).rgb;
+    #endif
 
     // ACES color grading (from Raspberry Shaders https://rutherin.netlify.app)
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
+    #ifndef RETRO
 	m.saturation = 0.95 + SAT_MOD; // TODO: night desaturation
+    #else
+    // more desaturating with retro filter gives more character to the colors i think.
+    m.saturation = 0.95 + SAT_MOD - COLOR_DESATURATION;
+    #endif
 	m.vibrance = VIB_MOD;
 	m.contrast = 1.0 - CONT_MOD;
 	m.contrastMidpoint = CONT_MIDPOINT;
@@ -84,7 +102,15 @@ void main() {
     color = lookup(color, colortex7);
     #endif
 
+    #ifdef RETRO
+    // posterization
+    float r = float(int(color.r*R_POSTERIZATION))/R_POSTERIZATION;
+    float g = float(int(color.g*G_POSTERIZATION))/G_POSTERIZATION;
+    float b = float(int(color.b*B_POSTERIZATION))/B_POSTERIZATION;
+    screenOut = vec4(r, g, b, 1.0);
+    #else
     screenOut = vec4(color, 1.0);
+    #endif
 }
 
 #endif
