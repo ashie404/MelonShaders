@@ -56,7 +56,7 @@
 #define R_POSTERIZATION 8.0 // [ 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 32.0 48.0 64.0 128.0 256.0 ] Posterization factor of red channel. 1.0 disables the color channel.
 #define G_POSTERIZATION 8.0 // [ 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 32.0 48.0 64.0 128.0 256.0 ] Posterization factor of green channel. 1.0 disables the color channel.
 #define B_POSTERIZATION 4.0 // [ 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 32.0 48.0 64.0 128.0 256.0 ] Posterization factor of blue channel. 1.0 disables the color channel.
-#define COLOR_DESATURATION 0.5 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.25 1.5 ] Desaturation of colors with retro filter enabled. 0.0 is no desaturation.
+#define RETRO_DESATURATION 0.2 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 ] Desaturation of colors with retro filter enabled. 0.0 is no desaturation.
 
 // water settings
 #define WAVE_AMPLITUDE 1

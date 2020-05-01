@@ -58,6 +58,13 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     return vec3(newColor.rgb);
 }
 
+vec3 desaturate(vec3 color, float desaturationFac)
+{
+	vec3 grayXfer = vec3(0.3, 0.59, 0.11);
+	vec3 gray = vec3(dot(grayXfer, color));
+	return mix(color, gray, desaturationFac);
+}
+
 void main() {
     #ifdef RETRO
     float dx = PIXEL_WIDTH*(1.0/viewWidth);
@@ -77,7 +84,7 @@ void main() {
 	m.saturation = 0.95 + SAT_MOD; // TODO: night desaturation
     #else
     // more desaturating with retro filter gives more character to the colors i think.
-    m.saturation = 0.95 + SAT_MOD - COLOR_DESATURATION;
+    m.saturation = 0.95 + SAT_MOD;
     #endif
 	m.vibrance = VIB_MOD;
 	m.contrast = 1.0 - CONT_MOD;
@@ -107,10 +114,10 @@ void main() {
     float r = float(int(color.r*R_POSTERIZATION))/R_POSTERIZATION;
     float g = float(int(color.g*G_POSTERIZATION))/G_POSTERIZATION;
     float b = float(int(color.b*B_POSTERIZATION))/B_POSTERIZATION;
-    screenOut = vec4(r, g, b, 1.0);
-    #else
-    screenOut = vec4(color, 1.0);
+    color = desaturate(vec3(r, g, b), RETRO_DESATURATION);
     #endif
+
+    screenOut = vec4(color, 1.0);
 }
 
 #endif
