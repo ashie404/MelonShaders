@@ -80,12 +80,7 @@ void main() {
     // ACES color grading (from Raspberry Shaders https://rutherin.netlify.app)
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
-    #ifndef RETRO
 	m.saturation = 0.95 + SAT_MOD; // TODO: night desaturation
-    #else
-    // more desaturating with retro filter gives more character to the colors i think.
-    m.saturation = 0.95 + SAT_MOD;
-    #endif
 	m.vibrance = VIB_MOD;
 	m.contrast = 1.0 - CONT_MOD;
 	m.contrastMidpoint = CONT_MIDPOINT;
