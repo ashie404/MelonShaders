@@ -27,6 +27,18 @@ uniform sampler2D colortex7;
 uniform float viewWidth;
 uniform float viewHeight;
 
+const mat4x4 ditherMat = mat4x4(
+    0.0, 0.533, 0.133, 0.667, 
+    0.8, 0.267, 0.933, 0.4,
+    0.2, 0.733, 0.67,  0.6,
+    1.0, 0.467, 0.867, 0.333
+);
+
+vec3 getDither(vec2 tc) {
+    ivec2 coord = ivec2(round(mod(tc * vec2(viewWidth,viewHeight), 4.0)));
+    return vec3(ditherMat[coord.x][coord.y]);
+}
+
 vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     #ifndef LUT
     return textureColor;
@@ -71,8 +83,8 @@ void main() {
     float dy = PIXEL_HEIGHT*(1.0/viewHeight);
     vec2 steppedCoord = vec2(dx*floor(texcoord.x/dx), dy*floor(texcoord.y/dy));
     // dithering
-    float dither = bayer8(steppedCoord);
-    vec3 color = texture2D(colortex0, steppedCoord).rgb + vec3(dither);
+    vec3 dither = getDither(steppedCoord);
+    vec3 color = texture2D(colortex0, steppedCoord).rgb + vec3(dither) * vec3(1.0/12.0, 1.0/12.0, 1.0/6.0);
     #else
     vec3 color = texture2D(colortex0, texcoord).rgb;
     #endif

@@ -12,6 +12,7 @@ const int colortex4Format = RGBA16F;
 #define clamp01(p) (clamp(p, 0.0, 1.0))
 #define log10(x) log(x) / log(10.0)
 
+uniform float screenBrightness;
 const float PI = 3.1415926535897;
 
 void calcLightingColor(in float angle, in float rain, out vec3 ambient, out vec3 light) {

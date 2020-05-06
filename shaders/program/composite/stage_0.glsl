@@ -66,7 +66,6 @@ in vec3 lightColor;
 #endif
 
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
-const vec3 scatteringCoefficient = vec3(250);
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
@@ -74,7 +73,7 @@ void main() {
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
-
+    
     // if not sky check for translucents
     if (texture2D(depthtex0, texcoord).r != 1.0) {
         Fragment frag = getFragment(texcoord);
@@ -90,32 +89,40 @@ void main() {
     
             float depthcomp = (depth1-depth0);
 
+            // set color to color without water in it
+            vec3 oldcolor = color;
+            color = texture2D(colortex5, texcoord).rgb;
+
             // if eye is not in water, render above-water fog and render sky reflection
             if (isEyeInWater == 0) {
                 // calculate transmittance
                 vec3 transmittance = exp(-attenuationCoefficient * depthcomp);
-                // calculate scattering
-                vec3 scattering = vec3(242 / 255, 242 / 255, 242 / 255);
-                scattering *= scatteringCoefficient;
-                scattering *= (1.0 - transmittance) / attenuationCoefficient;
 
-                color = color * transmittance + scattering;
+                color = color * transmittance;
+
+                // colorize water fog based on biome color
+                color *= oldcolor;
 
                 // sky reflection
                 vec3 reflectedPos = mat3(gbufferModelViewInverse) * reflect(normalize(viewPos.xyz), frag.normal);
                 vec3 reflectedLightPos = mat3(gbufferModelViewInverse) * reflect(normalize(shadowLightPosition), frag.normal);
-                color += mix(vec3(0.0), getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle), 0.05);
+                vec3 reflectedSkyColor = getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle);
+                vec3 reflectionColor = reflectedSkyColor;
+                #ifdef SSR
+                vec4 waterReflection = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
+                reflectionColor = mix(reflectedSkyColor, waterReflection.rgb, clamp01(waterReflection.a));
+                #endif
+
+                color += mix(vec3(0.0), reflectionColor, 0.025);
             }
-            #ifdef SSR
-            vec4 waterReflection = reflection(viewPos.xyz, frag.normal, bayer64(texcoord), colortex5);
-            color += mix(vec3(0.0), waterReflection.rgb, clamp01(waterReflection.a-0.75));
-            #endif
+            
             if (isEyeInWater == 0) {
                 // water foam
                 if (depthcomp <= 0.15) {
 		    	    color += vec3(0.75) * ambientColor;
 		        } 
             }
+            
         }
 
     }

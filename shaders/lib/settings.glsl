@@ -25,7 +25,7 @@
 #define Out_Match                    0.14        //[0.0 0.02 0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.18 0.20 0.22 0.24 0.26 0.28 0.30 0.40]
 
 // shadow settings
-#define SHADOW_BIAS 0.0001 //0.00025
+#define SHADOW_BIAS 0.0005 //0.00025
 
 // sky settings
 #define CELESTIAL_RADIUS 0.5

@@ -55,7 +55,8 @@ void main() {
     float matMask = 2.0;
     if (correctedId == 8) {
         matMask = 3.0;
-        albedo = vec4(0.0, 0.0, 0.0, 0.25);
+        // return biome coloration in albedo
+        albedo = vec4(glcolor.rgb, 1.0);
     }
     
     // get normals

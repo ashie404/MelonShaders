@@ -75,9 +75,9 @@ void main() {
         vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
         color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
+        reflectionsOut = vec4(color, 1.0);
     }
     colorOut = vec4(color, 1.0);
-    reflectionsOut = vec4(color, 1.0);
 }
 
 #endif
