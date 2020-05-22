@@ -75,7 +75,7 @@ void main() {
             for (int y = -4; y <= 4; y++) {
                 vec2 offset = vec2(x, y) * texelSize;
                 float currentDepth = texture2D(depthtex0, texcoord + offset).r;
-                if (currentDepth >= baseDepth-0.0005 && currentDepth <= baseDepth+0.0005) {
+                if (currentDepth >= baseDepth-0.00075 && currentDepth <= baseDepth+0.00075 && currentDepth != 1.0) {
                     lightmap += texture2D(colortex1, texcoord + offset).xy;
                 } else {
                     lightmap += texture2D(colortex1, texcoord).xy;
