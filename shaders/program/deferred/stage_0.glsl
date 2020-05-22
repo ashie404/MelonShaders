@@ -71,10 +71,8 @@ void main() {
         vec2 texelSize = 1.0 / vec2(viewWidth, viewHeight)*2;
         vec2 lightmap = vec2(0, 0);
         float baseDepth = texture2D(depthtex0, texcoord).r;
-        float totalSampleWeight = 0.0;
         for (int x = -8; x <= 8; x++) {
             for (int y = -8; y <= 8; y++) {
-                float sampleWeight = 1.0 / (x * y + 1.0);
                 vec2 offset = vec2(x, y) * texelSize;
                 float currentDepth = texture2D(depthtex0, texcoord + offset).r;
                 if (currentDepth >= baseDepth-0.0005 && currentDepth <= baseDepth+0.0005) {
@@ -82,7 +80,6 @@ void main() {
                 } else {
                     lightmap += texture2D(colortex1, texcoord).xy;
                 }
-                totalSampleWeight += sampleWeight;
             }
         }
         frag.lightmap = lightmap / 256;
