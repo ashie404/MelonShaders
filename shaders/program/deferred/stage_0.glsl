@@ -66,6 +66,28 @@ void main() {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
 
+        // lightmap filtering
+        #ifdef FILTER_LIGHTMAP
+        vec2 texelSize = 1.0 / vec2(viewWidth, viewHeight)*2;
+        vec2 lightmap = vec2(0, 0);
+        float baseDepth = texture2D(depthtex0, texcoord).r;
+        float totalSampleWeight = 0.0;
+        for (int x = -8; x <= 8; x++) {
+            for (int y = -8; y <= 8; y++) {
+                float sampleWeight = 1.0 / (x * y + 1.0);
+                vec2 offset = vec2(x, y) * texelSize;
+                float currentDepth = texture2D(depthtex0, texcoord + offset).r;
+                if (currentDepth >= baseDepth-0.0005 && currentDepth <= baseDepth+0.0005) {
+                    lightmap += texture2D(colortex1, texcoord + offset).xy;
+                } else {
+                    lightmap += texture2D(colortex1, texcoord).xy;
+                }
+                totalSampleWeight += sampleWeight;
+            }
+        }
+        frag.lightmap = lightmap / 256;
+        #endif
+
         vec4 pos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
         pos = gbufferProjectionInverse * pos;
         pos = gbufferModelViewInverse * pos;
@@ -75,6 +97,9 @@ void main() {
         vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
         color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
+        #ifdef LIGHTMAP_DEBUG
+        color = vec3(frag.lightmap, 0.0);
+        #endif
         reflectionsOut = vec4(color, 1.0);
     }
     colorOut = vec4(color, 1.0);

@@ -23,6 +23,8 @@ uniform sampler2D specular;
 
 uniform float rainStrength;
 uniform float sunAngle;
+uniform float viewWidth;
+uniform float viewHeight;
 
 // inputs from vertex
 in float id;
@@ -69,8 +71,6 @@ void main() {
     else if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
     else if (correctedId == 110) if (luminance >= 0.57)  albedo.rgb *= 75;
     else if (correctedId == 120) albedo.rgb *= 50;
-
-    // get lightmap
 
     // correct floating point precision errors
     
