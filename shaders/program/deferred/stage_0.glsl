@@ -68,11 +68,11 @@ void main() {
 
         // lightmap filtering
         #ifdef FILTER_LIGHTMAP
-        vec2 texelSize = 1.0 / vec2(viewWidth, viewHeight)*2;
+        vec2 texelSize = 1.0 / vec2(viewWidth, viewHeight)*8;
         vec2 lightmap = vec2(0, 0);
         float baseDepth = texture2D(depthtex0, texcoord).r;
-        for (int x = -8; x <= 8; x++) {
-            for (int y = -8; y <= 8; y++) {
+        for (int x = -4; x <= 4; x++) {
+            for (int y = -4; y <= 4; y++) {
                 vec2 offset = vec2(x, y) * texelSize;
                 float currentDepth = texture2D(depthtex0, texcoord + offset).r;
                 if (currentDepth >= baseDepth-0.0005 && currentDepth <= baseDepth+0.0005) {
@@ -82,7 +82,7 @@ void main() {
                 }
             }
         }
-        frag.lightmap = lightmap / 256;
+        frag.lightmap = lightmap / 64;
         #endif
 
         vec4 pos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
