@@ -50,6 +50,7 @@
 #define BLOOM
 #define BLOOM_STRENGTH 1.0
 #define LUT
+#define TAA
 
 const int noiseTextureResolution = 256;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]

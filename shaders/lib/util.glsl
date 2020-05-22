@@ -7,6 +7,8 @@
 const int colortex0Format = RGBA16F;
 const int colortex1Format = RGBA16F;
 const int colortex4Format = RGBA16F;
+const int colortex6Format = RGBA16F;
+const bool colortex6Clear = false;
 */
 
 #define clamp01(p) (clamp(p, 0.0, 1.0))
