@@ -104,7 +104,18 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     #ifdef SSS
     if (fragment.matMask == 1) {
         float depth = length(viewVec);
-        float strength = 1.0-(depth-(shadowLight.a/16));
+        float visibility = shadowLight.a;
+        mat2 rotMat = getRotationMatrix(fragment.coord);
+        // sample shadowmap
+        for (int x = -8; x <= 8; x++) {
+            for (int y = -8; y <= 8; y++) {
+                vec2 offset = vec2(x, y) / shadowMapResolution;
+                offset = rotMat * offset;
+                float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r; // sample shadowmap
+                visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
+            }
+        }
+        float strength = 1.0-(depth-(visibility/16));
         vec3 subsurfColor = mix(vec3(0), lightColor/4, clamp01(strength))*SSS_STRENGTH;
         color += subsurfColor;
     }

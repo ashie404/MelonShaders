@@ -94,6 +94,16 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
 
     skyColor += calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS).rgb;
 
+    #ifdef STARS
+
+    float starNoise = cellular(normalize(worldPos)*32);
+    if (starNoise <= 0.05) {
+        skyColor += mix(vec3(0.0), vec3(cellular(normalize(worldPos)*16)), clamp01(1.0-starNoise));
+    }
+    
+
+    #endif
+
     // draw clouds if y is greater than 0
     #ifdef CLOUDS
     if (worldPos.y >= 0) {

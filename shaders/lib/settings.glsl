@@ -29,6 +29,7 @@
 
 // sky settings
 #define CELESTIAL_RADIUS 0.5
+#define STARS
 
 // cloud settings
 #define CLOUDS // Whether to have clouds or not.
