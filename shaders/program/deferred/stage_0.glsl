@@ -32,6 +32,13 @@ uniform mat4 gbufferModelViewInverse;
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 
+uniform int frameCounter;
+
+uniform vec3 cameraPosition;
+uniform vec3 previousCameraPosition;
+uniform mat4 gbufferPreviousModelView;
+uniform mat4 gbufferPreviousProjection;
+
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float sunAngle;
@@ -50,6 +57,7 @@ in vec3 lightColor;
 #include "/lib/shading.glsl"
 #include "/lib/noise.glsl"
 #include "/lib/atmosphere.glsl"
+//#include "/lib/temporalUtil.glsl"
 
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
