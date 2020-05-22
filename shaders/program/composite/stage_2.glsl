@@ -61,7 +61,7 @@ void main() {
     colorOut = color;
     #ifdef TAA
     vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord)));
-    taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/1.5)+(texture2D(colortex6, reprojectedCoord).rgb/1.5), 1.0);
+    taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/2.0)+(texture2D(colortex6, reprojectedCoord).rgb/2.0), 1.0);
     #endif
 }
 
