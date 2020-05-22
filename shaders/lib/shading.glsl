@@ -37,7 +37,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
                 vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
                 shadowCol += colorSample*64;
             } else {
-                shadowCol += mix(vec3(shadowMapSample), lightColor, visibility) * 1.2;
+                shadowCol += mix(vec3(shadowMapSample), vec3(1.0), visibility);
             }
         }
     }

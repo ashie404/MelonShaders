@@ -103,27 +103,6 @@ uniform mat4 gbufferProjectionInverse;
 attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
 
-//#include "/lib/noise.glsl"
-#include "/lib/gerstnerWaves.glsl"
-
-/*float waves(vec2 pos, int iterations, int detail) {
-    // this is just totally random code to create fancy waves
-    float iter = 0.0;
-    float finalWave = 0.0;
-    float time = frameTimeCounter/8;
-    vec2 position = pos/detail;
-    for (int i=0; i<=iterations; i++) {
-        float w1 = sin((pos.y+time)/-1.2+time)/WAVE_AMPLITUDE;
-        float w2 = -abs(cos(pos.x+time)/-1.2)/WAVE_AMPLITUDE;
-        float w3 = abs(sin(pos.y+time)/-1.2+time)/WAVE_AMPLITUDE;
-        float w4 = -abs(sin(pos.x+time)/-1.2)/WAVE_AMPLITUDE+fbm2(pos.xyx);
-
-        finalWave += w1+w2+w3+w4;
-    }
-
-    return abs(finalWave/(iterations/detail)/256);
-}*/
-
 void main() {
 	gl_Position = ftransform();
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
@@ -139,27 +118,8 @@ void main() {
     float waterWaves = 0.0;
     // if water do fancy stuff for waves
     if (id == 8.0) {
-        /*vec3 worldPos = mat3(gbufferProjectionInverse) * gl_Position.xyz;//(gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex).xyz + cameraPosition;
-        worldPos = mat3(gbufferModelViewInverse) * worldPos;
-
-        vec3 oldNormal = normal;
-
-        vec3 gerstner = gerstner_wave(worldPos.xz, frameTimeCounter, normal);
-
-        vec3 normalDifference = normal - oldNormal;
-
-        normal = oldNormal - (normalDifference/4);
-
-        float waveDifference = gerstner.y - worldPos.y;
-        //worldPos.y += waveDifference;
-        //gl_Position.y += waveDifference;
-        //gl_Position.xyz = mat3(gbufferModelView) * worldPos;
-        //gl_Position.y += waveDifference;
-        //normal.y -= waterWaves;
-        tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));*/
+        // unimplemented for now
     }
-
-    
 }
 
 #endif
