@@ -75,8 +75,8 @@ void main() {
     // correct floating point precision errors
     
     float matMask = 0.0;
-    // subsurf scattering id is 20 and 21
-    if (correctedId == 20 || correctedId == 21) {
+    // subsurf scattering id is 20, 21 and 23
+    if (correctedId == 20 || correctedId == 21 || correctedId == 23) {
         matMask = 1.0;
     }
     
@@ -114,6 +114,7 @@ out float id;
 // uniforms
 attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
+attribute vec3 mc_midTexCoord;
 
 uniform mat4 gbufferModelViewInverse;
 uniform float frameTimeCounter;
@@ -127,9 +128,15 @@ void main() {
 	glcolor = gl_Color;
     id = mc_Entity.x;
 
-    if (mc_Entity.x == 20.0) {
+    #ifdef WIND
+    if (mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) {
+        // fixed bottom vertex waving plants
+        gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/16;
+    } else if (mc_Entity.x == 23.0) {
+        // unfixed bottom vertex waving plants
         gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/16;
     }
+    #endif
 
     vec3 normal   = normalize(gl_NormalMatrix * gl_Normal);
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));

@@ -60,6 +60,8 @@
 #define BLOCKLIGHT_B 0.25 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
 
+#define WIND
+
 const int noiseTextureResolution = 256;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
