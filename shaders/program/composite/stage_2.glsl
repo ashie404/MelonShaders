@@ -42,7 +42,7 @@ uniform mat4 gbufferPreviousProjection;
 
 void main() {
     #ifdef TAA
-    vec4 color = texture2D(colortex0, texcoord)+(texture2D(colortex6, texcoord)-texture2D(colortex0, texcoord));
+    vec4 color = texture2D(colortex6, texcoord);//texture2D(colortex0, texcoord)/2.0+texture2D(colortex6, texcoord)/2.0;
     #else
     vec4 color = texture2D(colortex0, texcoord);
     #endif
@@ -60,7 +60,7 @@ void main() {
 
     colorOut = color;
     #ifdef TAA
-    vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord)));
+    vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
     taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/2.0)+(texture2D(colortex6, reprojectedCoord).rgb/2.0), 1.0);
     #endif
 }
