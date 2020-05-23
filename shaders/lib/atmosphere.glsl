@@ -92,19 +92,8 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
     float sunHalo = 1.0-clamp01(calculateSunHalo(viewVec, sunVec, 16.0).r);
     skyColor = mix(skyColor, mix(skyBottomNS, skyTop, clamp01(worldPos.y*64)), sunHalo);
 
-    skyColor += calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS).rgb;
-
-    #ifdef STARS
-
-    float starNoise = cellular(normalize(worldPos)*32);
-    if (starNoise <= 0.05) {
-        skyColor += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos)*16)), clamp01(1.0-starNoise)), night);
-    }
-    
-
-    #endif
-
     // draw clouds if y is greater than 0
+    float cloudShape = 0.0;
     #ifdef CLOUDS
     if (worldPos.y >= 0) {
         float time = frameTimeCounter*CLOUD_SPEED/32;
@@ -117,7 +106,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
         vec2 sunDir = normalize(sunUv - uv) * marchDist * stepsInv;
         vec2 marchUv = uv;
         float cloudColor = 1.0;
-        float cloudShape = clouds(uv, time);
+        cloudShape = clouds(uv, time);
 
         #ifdef CLOUD_LIGHTING
         // 2D ray march lighting loop based on uncharted 4
@@ -135,12 +124,23 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
         else
             cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 8.0;
         cloudColor *= cloudShape;
-        // if this is the sun, darken based on how much cloud there is
-        if (luma(skyColor) >= 1.5) {
-            skyColor *= clamp01(1.0 / (1.0-clamp01(cloudShape)));
-        }
+        
         skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*lightColor, clamp01(cloudShape)), clamp01(worldPos.y*24));
     }
+    #endif
+
+    cloudShape *= 4;
+
+    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS).rgb, clamp01(1.0-cloudShape));
+
+    #ifdef STARS
+
+    float starNoise = cellular(normalize(worldPos)*32);
+    if (starNoise <= 0.05) {
+        skyColor += mix(vec3(0.0), mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos)*16)), clamp01(1.0-starNoise)), night), clamp01(1.0-cloudShape));
+    }
+    
+
     #endif
 
     return skyColor;
