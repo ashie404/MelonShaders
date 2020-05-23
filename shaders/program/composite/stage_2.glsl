@@ -61,7 +61,29 @@ void main() {
     colorOut = color;
     #ifdef TAA
     vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
-    taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/2.0)+(texture2D(colortex6, reprojectedCoord).rgb/2.0), 1.0);
+    vec3 current = RGBToYCoCg(texture2D(colortex0, texcoord).rgb);
+    vec3 history = RGBToYCoCg(texture2D(colortex6, reprojectedCoord).rgb);
+
+    vec3 colorAvg = current;
+    vec3 colorVar = current*current;
+
+    // neighborhood clamping to reject invalid temporal history (fixes ghosting)
+    for(int i = 0; i < 8; i++)
+    {
+        vec3 ycocg = RGBToYCoCg(texture2D(colortex0, texcoord+(offsets[i]/vec2(viewWidth, viewHeight)), 0).xyz);
+        colorAvg += ycocg;
+        colorVar += ycocg*ycocg;
+    }
+    colorAvg /= 9.0;
+    colorVar /= 9.0;
+    float gColorBoxSigma = 0.75;
+	vec3 sigma = sqrt(max(vec3(0.0), colorVar - colorAvg*colorAvg));
+	vec3 colorMin = colorAvg - gColorBoxSigma * sigma;
+	vec3 colorMax = colorAvg + gColorBoxSigma * sigma;
+    
+    history = clamp(history, colorMin, colorMax);
+
+    taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/2.0)+(YCoCgToRGB(history)/2.0), 1.0);
     #endif
 }
 
