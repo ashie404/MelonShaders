@@ -57,6 +57,7 @@ in vec3 lightColor;
 #include "/lib/fragmentUtil.glsl"
 #include "/lib/noise.glsl"
 #include "/lib/labpbr.glsl"
+#include "/lib/poisson.glsl"
 #include "/lib/shading.glsl"
 #include "/lib/atmosphere.glsl"
 #ifdef SSR
@@ -80,7 +81,7 @@ void main() {
         // 2 is translucents tag
         if (frag.matMask == 2) {
             PBRData pbr = getPBRData(frag.specular);
-            color = calculateBasicShading(frag, pbr, viewPos.xyz);
+            color = frag.albedo.rgb;//calculateBasicShading(frag, pbr, viewPos.xyz);
         }
         // 3 is water tag
         else if (frag.matMask == 3) {

@@ -54,6 +54,7 @@ in vec3 lightColor;
 #include "/lib/distort.glsl"
 #include "/lib/fragmentUtil.glsl"
 #include "/lib/labpbr.glsl"
+#include "/lib/poisson.glsl"
 #include "/lib/shading.glsl"
 #include "/lib/noise.glsl"
 #include "/lib/atmosphere.glsl"

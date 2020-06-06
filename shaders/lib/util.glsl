@@ -30,9 +30,9 @@ void calcLightingColor(in float angle, in float rain, out vec3 ambient, out vec3
     vec3 nightAmbColor   = vec3(0.19, 0.21, 0.29)*0.025;
 
     vec3 sunriseLightColor = vec3(1.5, 1.25, 0.75)*2.5;
-    vec3 noonLightColor    = vec3(1.9, 1.88, 1.86)*3.0;
+    vec3 noonLightColor    = vec3(1.0, 0.99, 0.96)*5.0;
     vec3 sunsetLightColor  = vec3(1.5, 1.25, 0.75)*2.5;
-    vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.45;
+    vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.5;
 
     ambient = ((sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor)) + (night * nightAmbColor)*clamp(1.0-rain, 0.15, 1.0);
     light = ((sunrise * sunriseLightColor) + (noon * noonLightColor) + (sunset * sunsetLightColor))+ (night * nightLightColor)*clamp(1.0-rain, 0.35, 1.0) ;
