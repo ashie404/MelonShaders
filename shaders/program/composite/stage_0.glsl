@@ -60,11 +60,10 @@ in vec3 lightColor;
 #include "/lib/poisson.glsl"
 #include "/lib/shading.glsl"
 #include "/lib/atmosphere.glsl"
-#ifdef SSR
+
 #include "/lib/dither.glsl"
 #include "/lib/raytrace.glsl"
 #include "/lib/reflection.glsl"
-#endif
 
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
 void main() {
@@ -81,7 +80,7 @@ void main() {
         // 2 is translucents tag
         if (frag.matMask == 2) {
             PBRData pbr = getPBRData(frag.specular);
-            color = frag.albedo.rgb;//calculateBasicShading(frag, pbr, viewPos.xyz);
+            color = calculateBasicShading(frag, pbr, viewPos.xyz);
         }
         // 3 is water tag
         else if (frag.matMask == 3) {
@@ -103,6 +102,11 @@ void main() {
 
                 // colorize water fog based on biome color
                 color *= oldcolor;
+
+                #ifdef SSR
+                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
+                color += mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a);
+                #endif
 
                 // water foam
                 if (depthcomp <= 0.15) {
