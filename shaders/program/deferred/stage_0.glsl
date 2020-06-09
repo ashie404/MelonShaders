@@ -106,9 +106,9 @@ void main() {
         #ifdef LIGHTMAP_DEBUG
         color = vec3(frag.lightmap, 0.0);
         #endif
-        reflectionsOut = vec4(color, 1.0);
     }
     colorOut = vec4(color, 1.0);
+    reflectionsOut = vec4(color, 1.0);
 }
 
 #endif

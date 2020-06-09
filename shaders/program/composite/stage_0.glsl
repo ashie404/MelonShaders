@@ -104,30 +104,13 @@ void main() {
                 // colorize water fog based on biome color
                 color *= oldcolor;
 
-                // sky reflection
-                vec3 reflectedPos = mat3(gbufferModelViewInverse) * reflect(normalize(viewPos.xyz), frag.normal);
-                vec3 reflectedLightPos = mat3(gbufferModelViewInverse) * reflect(normalize(shadowLightPosition), frag.normal);
-                vec3 reflectedSkyColor = getSkyColor(normalize(reflectedPos), normalize(reflectedPos), normalize(reflectedLightPos), sunAngle);
-                vec3 reflectionColor = reflectedSkyColor;
-                #ifdef SSR
-                vec4 waterReflection = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
-                reflectionColor = mix(reflectedSkyColor, waterReflection.rgb, clamp01(waterReflection.a));
-                #endif
-
-                color += mix(vec3(0.0), reflectionColor, 0.025);
-            }
-            
-            if (isEyeInWater == 0) {
                 // water foam
                 if (depthcomp <= 0.15) {
 		    	    color += vec3(0.75) * ambientColor;
 		        } 
             }
-            
         }
-
     }
-
     // if eye in water, render underwater fog
     float depth = length(viewPos.xyz);
     if (isEyeInWater == 1) {
