@@ -103,9 +103,16 @@ void main() {
                 // colorize water fog based on biome color
                 color *= oldcolor;
 
+                vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
+                vec3 reflectedPosWorld = mat3(gbufferModelViewInverse) * reflectedPos;
+
+                vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(shadowLightPosition), sunAngle);
+
                 #ifdef SSR
                 vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
-                color += mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a);
+                color += mix(vec3(0.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), 0.65);
+                #else
+                color += skyReflection;
                 #endif
 
                 // water foam
