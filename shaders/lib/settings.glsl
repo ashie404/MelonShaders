@@ -28,7 +28,7 @@
 #define SHADOW_BIAS 0.00025
 
 // sky settings
-#define CELESTIAL_RADIUS 0.5
+#define CELESTIAL_RADIUS 0.25 // Radius of the sun & moon. [ 0.1 0.25 0.3 0.4 0.5 0.6 0.7 ]
 #define STARS
 
 // cloud settings
