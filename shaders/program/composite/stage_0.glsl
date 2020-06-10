@@ -72,7 +72,7 @@ void main() {
     vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
-    vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
+    vec3 worldPos = (gbufferModelViewInverse * vec4(viewPos.xyz, 1.0)).xyz;
     
     // if not sky check for translucents
     if (texture2D(depthtex0, texcoord).r != 1.0) {
@@ -104,13 +104,13 @@ void main() {
                 color *= oldcolor;
 
                 vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
-                vec3 reflectedPosWorld = mat3(gbufferModelViewInverse) * reflectedPos;
+                vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
 
                 vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(shadowLightPosition), sunAngle);
 
                 #ifdef SSR
                 vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
-                color += mix(vec3(0.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), 0.65);
+                color += mix(vec3(0.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), 0.35);
                 #else
                 color += skyReflection;
                 #endif

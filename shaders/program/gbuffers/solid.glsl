@@ -32,6 +32,7 @@ in vec2 texcoord;
 in vec2 lmcoord;
 in vec4 glcolor;
 in mat3 tbn;
+in vec3 normal;
 
 vec3 toLinear(vec3 srgb) {
     return mix(
@@ -82,8 +83,12 @@ void main() {
     
     // get normals
 
+    #ifdef NO_NORMALMAP
+    vec3 normalData = normal;
+    #else
     vec3 normalData = getTangentNormals(texcoord).xyz;
     normalData = normalize(normalData * tbn);
+    #endif
     
     // get specular
 
@@ -119,6 +124,8 @@ attribute vec3 mc_midTexCoord;
 uniform mat4 gbufferModelViewInverse;
 uniform float frameTimeCounter;
 
+out vec3 normal;
+
 #include "/lib/noise.glsl"
 
 void main() {
@@ -138,7 +145,7 @@ void main() {
     }
     #endif
 
-    vec3 normal   = normalize(gl_NormalMatrix * gl_Normal);
+    normal   = normalize(gl_NormalMatrix * gl_Normal);
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
 }
