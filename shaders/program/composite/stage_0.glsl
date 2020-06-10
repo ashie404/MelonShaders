@@ -110,9 +110,9 @@ void main() {
 
                 #ifdef SSR
                 vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
-                color += mix(vec3(0.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), 0.35);
+                color += mix(vec3(0.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), 0.35)*frag.lightmap.y;
                 #else
-                color += skyReflection;
+                color += skyReflection*frag.lightmap.y;
                 #endif
 
                 // water foam
