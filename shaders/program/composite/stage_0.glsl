@@ -46,6 +46,8 @@ uniform int isEyeInWater;
 uniform float rainStrength;
 
 uniform vec3 shadowLightPosition;
+uniform vec3 sunPosition;
+uniform vec3 moonPosition;
 
 in vec2 texcoord;
 in vec3 ambientColor;
@@ -106,7 +108,7 @@ void main() {
                 vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
                 vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
 
-                vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(shadowLightPosition), sunAngle);
+                vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle);
 
                 #ifdef SSR
                 vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
@@ -136,15 +138,13 @@ void main() {
     #ifdef BLOOM
     // output bloom if pixel is bright enough
     vec3 bloomSample = vec3(0.0);
-    if (luma(color) > 7.5) {
+    if (luma(color) > 6.5) {
         bloomSample = color;
     }
+    bloomOut = vec4(bloomSample, 1.0);
     #endif
 
     colorOut = vec4(color, 1.0);
-    #ifdef BLOOM
-    bloomOut = vec4(bloomSample, 1.0);
-    #endif
 }
 
 #endif

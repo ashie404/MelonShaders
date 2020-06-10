@@ -63,7 +63,7 @@ float clouds(vec2 coord, float time)
 
 // basic gradient atmosphere
 
-vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
+vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle) {
     float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
     float noon     = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
     float sunset   = ((clamp(angle, 0.35, 0.48)-0.35) / 0.13   - (clamp(angle, 0.50, 0.53)-0.50) / 0.03);
@@ -132,6 +132,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, float angle) {
     cloudShape *= 4;
 
     skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS).rgb, clamp01(1.0-cloudShape));
+    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS).rgb, clamp01(1.0-cloudShape));
 
     #ifdef STARS
 

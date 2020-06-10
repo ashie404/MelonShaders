@@ -20,10 +20,10 @@ vec3 calcBloomTile(vec2 offset, float lod) {
     float totalWeight = 0.0;
 
     // calculate blurred tile
-    for (int x=-2; x<=2; x++) { 
-        for (int y=-2; y<=2; y++) {
-            float weight = (PI-(x*x)-(y*y))/sqrt(4*PI)+5;
-            totalBloom += texture2DLod(colortex4, coord + vec2(x,y) * scale, lod).rgb * weight;
+    for (int x=-3; x<=3; x++) { 
+        for (int y=-3; y<=3; y++) {
+            float weight = (PI-(x*x)-(y*y))/sqrt(2*PI)+5;
+            totalBloom += texture2DLod(colortex4, coord + vec2(x, y) * scale, lod).rgb * weight;
 
             totalWeight += weight;
         }

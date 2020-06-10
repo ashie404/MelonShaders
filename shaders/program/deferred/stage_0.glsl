@@ -46,6 +46,8 @@ uniform float frameTimeCounter;
 uniform float rainStrength;
 
 uniform vec3 shadowLightPosition;
+uniform vec3 sunPosition;
+uniform vec3 moonPosition;
 
 in vec2 texcoord;
 in vec3 ambientColor;
@@ -70,7 +72,7 @@ void main() {
 
     // if sky, draw sky. else, calculate shading.
     if (texture2D(depthtex0, texcoord).r == 1.0) {
-        color = getSkyColor(worldPos, normalize(worldPos), mat3(gbufferModelViewInverse) * normalize(shadowLightPosition), sunAngle);
+        color = getSkyColor(worldPos, normalize(worldPos), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle);
     } else {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
