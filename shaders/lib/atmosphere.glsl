@@ -4,7 +4,7 @@
 */
 
 // sun spot calculation
-vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius) {
+vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius, bool isMoon) {
     float cosTheta = dot(viewVector, sunVector);
 
     // limb darkening approximation
@@ -15,26 +15,10 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius) {
     float sunAngularRadius = radius / 10;
 
     float x = clamp(1.0 - ((sunAngularRadius * 0.6) - acos(cosTheta)) / (sunAngularRadius * 0.6), 0.0, 1.0);
-    vec3 sunDisk = (lightColor*8) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;// * lightColors[0];
+    vec3 sunDisk = vec3(0.0);
+    if (!isMoon) sunDisk = (vec3(1.0, 0.99, 0.96)*5.0*8.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
+    else sunDisk = (vec3(0.6, 0.6, 0.6)*0.15*8.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
 
-    //return cosTheta > cos(sunAngularRadius) ? sunDisk : background;
-    return vec4(sunDisk, float(cosTheta > cos(sunAngularRadius)));
-}
-
-vec4 calculateSunHalo(vec3 viewVector, vec3 sunVector, float radius) {
-    float cosTheta = dot(viewVector, sunVector);
-
-    // limb darkening approximation
-    const vec3 a = vec3(0.397, 0.503, 0.652);
-    const vec3 halfa = a * 7.5;
-    const vec3 normalizationConst = vec3(0.896, 0.873, 0.844);
-
-    float sunAngularRadius = radius / 10;
-
-    float x = clamp(1.0 - ((sunAngularRadius * 0.6) - acos(cosTheta)) / (sunAngularRadius * 0.6), 0.0, 1.0);
-    vec3 sunDisk = lightColor * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;// * lightColors[0];
-
-    //return cosTheta > cos(sunAngularRadius) ? sunDisk : background;
     return vec4(sunDisk, float(cosTheta > cos(sunAngularRadius)));
 }
 
@@ -256,8 +240,8 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
     cloudShape *= 4;
 
-    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS).rgb, clamp01(1.0-cloudShape));
-    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS).rgb, clamp01(1.0-cloudShape));
+    skyColor += mix(vec3(0.0), mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS, false).rgb, clamp01(1.0-cloudShape)), clamp01(worldPos.y*64.0))*skyColor;
+    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS, true).rgb, clamp01(1.0-cloudShape));
 
     #ifdef STARS
 
