@@ -6,4 +6,4 @@
 */
 
 #define FRAG
-#include "/program/gbuffers/solid.glsl"
+#include "/program/gbuffers/basic.glsl"
