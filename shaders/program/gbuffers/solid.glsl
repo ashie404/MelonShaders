@@ -120,6 +120,8 @@ attribute vec4 at_tangent;
 attribute vec3 mc_midTexCoord;
 
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
+uniform vec3 cameraPosition;
 uniform float frameTimeCounter;
 
 out vec3 normal;
@@ -134,12 +136,8 @@ void main() {
     id = mc_Entity.x;
 
     #ifdef WIND
-    if (mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) {
-        // fixed bottom vertex waving plants
-        gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/16;
-    } else if (mc_Entity.x == 23.0) {
-        // unfixed bottom vertex waving plants
-        gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/16;
+    if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
+        gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/32;
     }
     #endif
 
