@@ -14,7 +14,7 @@ PBRData getPBRData(vec4 specularData) {
 
     pbrData.smoothness = specularData.r;
     
-    if (specularData.g <= 229) {
+    if (specularData.g <= 229/255) {
         pbrData.F0 = specularData.g;
     } else {
         pbrData.F0 = 0;

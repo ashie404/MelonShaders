@@ -67,6 +67,10 @@ in vec3 lightColor;
 #include "/lib/raytrace.glsl"
 #include "/lib/reflection.glsl"
 
+/*
+const bool colortex5MipmapEnabled = true;
+*/
+
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
@@ -79,9 +83,9 @@ void main() {
     // if not sky check for translucents
     if (texture2D(depthtex0, texcoord).r != 1.0) {
         Fragment frag = getFragment(texcoord);
+        PBRData pbr = getPBRData(frag.specular);
         // 2 is translucents tag
         if (frag.matMask == 2) {
-            PBRData pbr = getPBRData(frag.specular);
             color = calculateBasicShading(frag, pbr, viewPos.xyz);
         }
         // 3 is water tag
@@ -123,6 +127,17 @@ void main() {
 		        } 
             }
         }
+        #ifdef SSR
+        #ifdef SPECULAR
+        else {
+            float roughness = pow(1.0 - pbr.smoothness, 2.0);
+            if (roughness <= 0.15) {
+                vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*6.6, colortex5);
+                color *= mix(vec3(1.0), mix(vec3(1.0), reflectionColor.rgb, reflectionColor.a), 1.0-roughness*6.6);
+            }
+        }
+        #endif
+        #endif
     }
     // if eye in water, render underwater fog
     float depth = length(viewPos.xyz);
