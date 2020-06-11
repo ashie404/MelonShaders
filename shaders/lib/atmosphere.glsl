@@ -61,36 +61,159 @@ float clouds(vec2 coord, float time)
     return max(0.0, finalClouds);
 }
 
-// basic gradient atmosphere
+// atmospheric scattering from wwwtyro https://github.com/wwwtyro/glsl-atmosphere
+
+#define iSteps 8
+#define jSteps 2
+
+vec2 rsi(vec3 r0, vec3 rd, float sr) {
+    // ray-sphere intersection that assumes
+    // the sphere is centered at the origin.
+    // No intersection when result.x > result.y
+    float a = dot(rd, rd);
+    float b = 2.0 * dot(rd, r0);
+    float c = dot(r0, r0) - (sr * sr);
+    float d = (b*b) - 4.0*a*c;
+    if (d < 0.0) return vec2(1e5,-1e5);
+    return vec2(
+        (-b - sqrt(d))/(2.0*a),
+        (-b + sqrt(d))/(2.0*a)
+    );
+}
+
+vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAtmos, vec3 kRlh, float kMie, float shRlh, float shMie, float g) {
+    // Normalize the sun and view directions.
+    pSun = normalize(pSun);
+    r = normalize(r);
+
+    // Calculate the step size of the primary ray.
+    vec2 p = rsi(r0, r, rAtmos);
+    if (p.x > p.y) return vec3(0,0,0);
+    p.y = min(p.y, rsi(r0, r, rPlanet).x);
+    float iStepSize = (p.y - p.x) / float(iSteps);
+
+    // Initialize the primary ray time.
+    float iTime = 0.0;
+
+    // Initialize accumulators for Rayleigh and Mie scattering.
+    vec3 totalRlh = vec3(0,0,0);
+    vec3 totalMie = vec3(0,0,0);
+
+    // Initialize optical depth accumulators for the primary ray.
+    float iOdRlh = 0.0;
+    float iOdMie = 0.0;
+
+    // Calculate the Rayleigh and Mie phases.
+    float mu = dot(r, pSun);
+    float mumu = mu * mu;
+    float gg = g * g;
+    float pRlh = 3.0 / (16.0 * PI) * (1.0 + mumu);
+    float pMie = 3.0 / (8.0 * PI) * ((1.0 - gg) * (mumu + 1.0)) / (pow(1.0 + gg - 2.0 * mu * g, 1.5) * (2.0 + gg));
+
+    // Sample the primary ray.
+    for (int i = 0; i < iSteps; i++) {
+
+        // Calculate the primary ray sample position.
+        vec3 iPos = r0 + r * (iTime + iStepSize * 0.5);
+
+        // Calculate the height of the sample.
+        float iHeight = length(iPos) - rPlanet;
+
+        // Calculate the optical depth of the Rayleigh and Mie scattering for this step.
+        float odStepRlh = exp(-iHeight / shRlh) * iStepSize;
+        float odStepMie = exp(-iHeight / shMie) * iStepSize;
+
+        // Accumulate optical depth.
+        iOdRlh += odStepRlh;
+        iOdMie += odStepMie;
+
+        // Calculate the step size of the secondary ray.
+        float jStepSize = rsi(iPos, pSun, rAtmos).y / float(jSteps);
+
+        // Initialize the secondary ray time.
+        float jTime = 0.0;
+
+        // Initialize optical depth accumulators for the secondary ray.
+        float jOdRlh = 0.0;
+        float jOdMie = 0.0;
+
+        // Sample the secondary ray.
+        for (int j = 0; j < jSteps; j++) {
+
+            // Calculate the secondary ray sample position.
+            vec3 jPos = iPos + pSun * (jTime + jStepSize * 0.5);
+
+            // Calculate the height of the sample.
+            float jHeight = length(jPos) - rPlanet;
+
+            // Accumulate the optical depth.
+            jOdRlh += exp(-jHeight / shRlh) * jStepSize;
+            jOdMie += exp(-jHeight / shMie) * jStepSize;
+
+            // Increment the secondary ray time.
+            jTime += jStepSize;
+        }
+
+        // Calculate attenuation.
+        vec3 attn = exp(-(kMie * (iOdMie + jOdMie) + kRlh * (iOdRlh + jOdRlh)));
+
+        // Accumulate scattering.
+        totalRlh += odStepRlh * attn;
+        totalMie += odStepMie * attn;
+
+        // Increment the primary ray time.
+        iTime += iStepSize;
+
+    }
+
+    // Calculate and return the final color.
+    return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
+}
 
 vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle) {
-    float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
-    float noon     = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
-    float sunset   = ((clamp(angle, 0.35, 0.48)-0.35) / 0.13   - (clamp(angle, 0.50, 0.53)-0.50) / 0.03);
     float night    = ((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03);
 
-    vec3 skyBSunrise = vec3(0.91, 0.36, 0.07);
-    vec3 skyBTSunrise = vec3(0.17, 0.18, 0.29)*0.75;
-    vec3 skyTSunrise = vec3(0.27, 0.28, 0.39);
+    vec3 skyPos = worldPos;
+    skyPos.y = max(skyPos.y, 0.0);
 
-    vec3 skyBNoon    = vec3(0.57, 0.6, 0.77);
-    vec3 skyTNoon    = vec3(0.39, 0.51, 0.9);
+    vec3 skyColor = vec3(0.14, 0.2, 0.24)*0.025;
 
-    vec3 skyBSunset  = vec3(0.91, 0.36, 0.07);
-    vec3 skyBTSunset = vec3(0.17, 0.18, 0.29)*0.75;
-    vec3 skyTSunset  = vec3(0.27, 0.28, 0.39);
+    if (night < 0.1) {
+        skyColor = atmosphere(
+            normalize(skyPos),           // normalized ray direction
+            vec3(0,6372e3,0),               // ray origin
+            sunVec,                        // position of the sun
+            22.0,                           // intensity of the sun
+            6371e3,                         // radius of the planet in meters
+            6471e3,                         // radius of the atmosphere in meters
+            vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
+            21e-6,                          // Mie scattering coefficient
+            8e3,                            // Rayleigh scale height
+            1.2e3,                          // Mie scale height
+            0.758                           // Mie preferred scattering direction
+        );
 
-    vec3 skyBNight   = vec3(0.1, 0.15, 0.19)*0.025;
-    vec3 skyTNight  = vec3(0.14, 0.2, 0.24)*0.025;
+        skyColor = 1.1 - exp(-1.0 * skyColor);
+    } else if (night < 0.95) {
+        vec3 oldC = skyColor;
+        skyColor = atmosphere(
+            normalize(skyPos),           // normalized ray direction
+            vec3(0,6372e3,0),               // ray origin
+            sunVec,                        // position of the sun
+            22.0,                           // intensity of the sun
+            6371e3,                         // radius of the planet in meters
+            6471e3,                         // radius of the atmosphere in meters
+            vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
+            21e-6,                          // Mie scattering coefficient
+            8e3,                            // Rayleigh scale height
+            1.2e3,                          // Mie scale height
+            0.758                           // Mie preferred scattering direction
+        );
 
-    vec3 skyBottom = (sunrise * skyBSunrise) + (noon * skyBNoon) + (sunset * skyBSunset) + (night * skyBNight);
-    vec3 skyBottomNS = (sunrise * skyBTSunrise) + (noon * skyBNoon) + (sunset * skyBTSunset) + (night * skyBNight);
-    vec3 skyTop = (sunrise * skyTSunrise) + (noon * skyTNoon) + (sunset * skyTSunset) + (night * skyTNight);
+        skyColor = 1.1 - exp(-1.0 * skyColor);
+        skyColor = mix(skyColor, oldC, night);
+    }
 
-    vec3 skyColor = mix(skyBottom, skyTop, clamp01(worldPos.y*64));
-
-    float sunHalo = 1.0-clamp01(calculateSunHalo(viewVec, sunVec, 16.0).r);
-    skyColor = mix(skyColor, mix(skyBottomNS, skyTop, clamp01(worldPos.y*64)), sunHalo);
 
     // draw clouds if y is greater than 0
     float cloudShape = 0.0;
@@ -101,7 +224,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         vec2 sunUv = (sunVec.xz / sunVec.y)/2;
 
         // set up 2D ray march variables
-        vec2 marchDist = vec2(max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
+        vec2 marchDist = vec2(0.35 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
         float stepsInv = 1.0 / 3.0;
         vec2 sunDir = normalize(sunUv - uv) * marchDist * stepsInv;
         vec2 marchUv = uv;
@@ -110,11 +233,13 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
         #ifdef CLOUD_LIGHTING
         // 2D ray march lighting loop based on uncharted 4
-        for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
-        {
-            marchUv += sunDir * i;
-   	    	float c = clouds(marchUv, time);
-            cloudColor *= clamp(1.0 - c, 0.0, 1.0);
+        if (cloudShape >= 0.25) {
+            for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
+            {
+                marchUv += sunDir * i;
+   	        	float c = clouds(marchUv, time);
+                cloudColor *= clamp(1.0 - c, 0.0, 1.0);
+            }
         }
         #endif
         cloudColor += 0.05-(night*0.035); // cloud "ambient" brightness
