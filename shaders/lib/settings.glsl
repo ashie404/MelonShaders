@@ -42,6 +42,8 @@
 #define SSR // Screenspace reflections.
 #define SSS // Subsurface scattering. Improves lighting vastly on leaves, grass, and flowers.
 #define SSS_STRENGTH 1.0 // Strength of subsurface scattering. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.7 1.75 1.8 1.9 2]
+#define DIRECTIONAL_LIGHTMAP
+#define DIRECTIONAL_LIGHTMAP_STRENGTH 1.0 // Strength of directional lightmaps. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
 // post processing settings
 #define BLOOM

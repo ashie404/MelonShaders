@@ -32,7 +32,10 @@ in vec2 texcoord;
 in vec2 lmcoord;
 in vec4 glcolor;
 in mat3 tbn;
+in vec3 viewPos;
 in vec3 normal;
+
+#include "/lib/dirLightmap.glsl"
 
 vec3 toLinear(vec3 srgb) {
     return mix(
@@ -92,10 +95,22 @@ void main() {
 
     vec4 specularData = texture2D(specular, texcoord);
 
+    // lightmap
+    #ifdef DIRECTIONAL_LIGHTMAP
+    vec2 lm = lmcoord.xy;
+
+    mat3 lmtbn = getLightmapTBN(viewPos);
+
+    lm.x = directionalLightmap(lm.x, normalData, lmtbn);
+    lm.y = directionalLightmap(lm.y, normalData, lmtbn);
+    #else
+    vec2 lm = lmcoord.xy;
+    #endif
+
     // output everything
 
     albedoOut = albedo;
-    lmMatOut = vec4(lmcoord.xy, 0.0, matMask);
+    lmMatOut = vec4(lm, 0.0, matMask);
     normalOut = vec4(normalData * 0.5 + 0.5, 1.0);
     specularOut = specularData;
 
@@ -125,6 +140,7 @@ uniform vec3 cameraPosition;
 uniform float frameTimeCounter;
 
 out vec3 normal;
+out vec3 viewPos;
 
 #include "/lib/noise.glsl"
 
@@ -140,6 +156,8 @@ void main() {
         gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/32;
     }
     #endif
+
+    viewPos = (gl_ModelViewMatrix * gl_Vertex).xyz;
 
     normal   = normalize(gl_NormalMatrix * gl_Normal);
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
