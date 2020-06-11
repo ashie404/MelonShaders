@@ -85,7 +85,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
     // calculate blocklight
-    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*0.75;
+    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
     vec3 blockLight = blockLightColor * fragment.lightmap.x;
 
     // calculate diffuse lighting
@@ -148,7 +148,7 @@ vec3 calculateBasicShading(in Fragment fragment, in PBRData pbrData, in vec3 vie
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
     // calculate blocklight
-    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*0.65;
+    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
     vec3 blockLight = blockLightColor * (fragment.lightmap.x/4);
 
     // calculate diffuse lighting
