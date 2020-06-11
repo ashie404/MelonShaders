@@ -96,7 +96,13 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec4 shadowLight = getShadows(fragment.coord, shadowPos);
 
     // combine lighting
-    vec3 color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
+    vec3 color = vec3(0.0);
+    if (fragment.lightmap.y <= 0.05) {
+        color = blockLight;
+    } else {
+        color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
+    }
+    
 
     // 1 on matmask is hardcoded SSS
     #ifdef SSS
@@ -123,7 +129,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     #ifdef SPECULAR
     // calculate specular highlights if non-shadowed
     
-    if (shadowLight.a > 0.1) {
+    if (shadowLight.a > 0.1 && fragment.lightmap.y <= 0.05) {
         float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
         vec3 specularHighlight = specularStrength * lightColor;
         color += mix(vec3(0.0), specularHighlight, clamp01(shadowLight.a));
@@ -150,13 +156,20 @@ vec3 calculateBasicShading(in Fragment fragment, in PBRData pbrData, in vec3 vie
     vec3 diffuseLight = diffuseStrength * lightColor;
 
     // combine lighting
-    vec3 color = diffuseLight+skyLight+blockLight;
+    vec3 color = vec3(0.0);
+    if (fragment.lightmap.y <= 0.05) {
+        color = blockLight;
+    } else {
+        color = diffuseLight+skyLight+blockLight;
+    }
 
     #ifdef SPECULAR
     // calculate specular highlights
-    float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
-    vec3 specularHighlight = specularStrength * lightColor;
-    color += specularHighlight;
+    if (fragment.lightmap.y <= 0.05) {
+        float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
+        vec3 specularHighlight = specularStrength * lightColor;
+        color += specularHighlight;
+    }
     #endif
 
     // multiply by albedo to get final color
