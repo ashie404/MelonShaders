@@ -239,7 +239,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
     #endif
 
     skyColor += mix(vec3(0.0), mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS, false).rgb, clamp01(1.0-cloudShape)), clamp01(worldPos.y*64.0))*skyColor;
-    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS, true).rgb, clamp01(1.0-cloudShape));
+    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS+0.1, true).rgb, clamp01(1.0-cloudShape));
 
     #ifdef STARS
 
