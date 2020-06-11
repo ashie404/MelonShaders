@@ -67,12 +67,12 @@ void main() {
     albedo *= glcolor;
     albedo.rgb = toLinear(albedo.rgb);
     // emissive handling
-         if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
-    else if (correctedId == 60)  if (luminance >= 0.35)  albedo.rgb *= 100;
-    else if (correctedId == 80)  if (luminance >= 0.50)  albedo.rgb *= 200;
-    else if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
-    else if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
-    else if (correctedId == 120) albedo.rgb *= 50;
+    if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
+    if (correctedId == 51)  if (luminance >= 0.35)  albedo.rgb *= 50;
+    if (correctedId == 83)  if (luminance >= 0.50)  albedo.rgb *= 70;
+    if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
+    if (correctedId == 100) if (luminance >= 0.70)  albedo.rgb *= 25;
+    if (correctedId == 120) albedo.rgb *= 50;
 
     // correct floating point precision errors
     
