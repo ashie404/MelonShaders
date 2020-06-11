@@ -146,7 +146,7 @@ vec3 calculateBasicShading(in Fragment fragment, in PBRData pbrData, in vec3 vie
     vec3 blockLight = blockLightColor * (fragment.lightmap.x/4);
 
     // calculate diffuse lighting
-    float diffuseStrength = OrenNayar(viewVec, shadowLightPosition, fragment.normal, pbrData.smoothness);
+    float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal), pbrData.smoothness);
     vec3 diffuseLight = diffuseStrength * lightColor;
 
     // combine lighting
