@@ -81,6 +81,9 @@ void main() {
     // subsurf scattering id is 20, 21 and 23
     if (correctedId == 20 || correctedId == 21 || correctedId == 23) {
         matMask = 1.0;
+    } else if (correctedId == 50||correctedId == 51||correctedId == 83||correctedId == 90||correctedId == 100||correctedId == 120||correctedId == 123) {
+        // emissive material mask
+        matMask = 4.0;
     }
     
     // get normals
