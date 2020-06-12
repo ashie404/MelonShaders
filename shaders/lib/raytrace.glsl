@@ -1,5 +1,9 @@
-// raytracing code based on BSL shaders by capt tatsu
+/*
+    Melon Shaders by June
+    https://j0sh.cf
+*/
 
+// Raytracing code based on BSL
 
 vec3 nvec3(vec4 pos){
     return pos.xyz/pos.w;
@@ -14,7 +18,7 @@ float cdist(vec2 coord){
 }
 
 vec4 raytrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither,
-			  float maxf, float stp, float ref, float inc){
+			  float maxf, float stp, float ref, float inc) {
 	vec3 pos = vec3(0.0);
 	float dist = 0.0;
 

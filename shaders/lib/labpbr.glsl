@@ -1,3 +1,8 @@
+/*
+    Melon Shaders by June
+    https://j0sh.cf
+*/
+
 struct PBRData {
     float smoothness;
     float F0;
@@ -9,7 +14,7 @@ PBRData getPBRData(vec4 specularData) {
 
     pbrData.smoothness = specularData.r;
     
-    if (specularData.g <= 229) {
+    if (specularData.g <= 229/255) {
         pbrData.F0 = specularData.g;
     } else {
         pbrData.F0 = 0;
@@ -19,11 +24,3 @@ PBRData getPBRData(vec4 specularData) {
 
     return pbrData;
 }
-
-// todo: decode normal AO
-vec3 decodeLabNormal(in vec3 normalTex, in mat3x3 tbnMat) {
-    vec3 labNormal = normalTex * 2.0 - (254.0 * (1/255.0));
-    labNormal.z  = sqrt(clamp01(1.0 - dot(labNormal.xy, labNormal.xy)));
-    return normalize(labNormal * tbnMat);
-}
-

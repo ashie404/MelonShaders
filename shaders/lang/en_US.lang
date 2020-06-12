@@ -1,3 +1,66 @@
-option.INFO=§aMelon Shaders
-value.INFO.0=§6By Josh
-value.INFO.1=§6By Josh
+option.MELONINFO=§aMelon Shaders
+value.MELONINFO.0=§bBy June
+value.MELONINFO.1=§dV1.0
+
+screen.POST=Post Processing
+screen.SKY=Sky
+screen.LIGHTING=Lighting
+screen.TWEAKS=Tweaks
+
+option.BLOOM=Bloom
+option.BLOOM_STRENGTH=Bloom Strength
+
+option.TAA=Temporal Anti-Aliasing
+option.LUT=Color LUT
+
+screen.ACES_SETTINGS=ACES Settings
+
+option.CELESTIAL_RADIUS=Celestial Body Radius
+option.STARS=Stars
+
+screen.CLOUD_SETTINGS=Cloud Settings
+
+option.CLOUDS=Clouds
+option.CLOUD_SPEED=Cloud Speed
+option.CLOUD_COVERAGE=Cloud Coverage
+option.CLOUD_LIGHTING=Cloud Lighting
+
+option.SPECULAR=Specular
+option.SSR=Reflections
+
+option.SSS=Subsurface Scattering
+option.SSS_STRENGTH=SSS Strength
+option.DIRECTIONAL_LIGHTMAP=Directional Lightmap
+option.DIRECTIONAL_LIGHTMAP_STRENGTH=Directional Lightmap Strength
+
+screen.SHADOWS=Shadows
+option.shadowMapResolution=Shadow Resolution
+option.shadowDistance=Shadow Distance
+option.SHADOW_BIAS=Shadow Bias
+
+screen.BLOCKLIGHT=Blocklight
+option.BLOCKLIGHT_R=§4Red
+option.BLOCKLIGHT_G=§2Green
+option.BLOCKLIGHT_B=§1Blue
+option.BLOCKLIGHT_I=Intensity
+
+option.WIND=Wind
+
+#ACES
+option.SAT_MOD=Saturation
+option.VIB_MOD=Vibrance
+option.CONT_MOD=Contrast
+option.CONT_MIDPOINT=Contrast Midpoint
+option.GAIN_MOD=Gain
+option.LIFT_MOD=Lift
+option.WHITE_BALANCE=White Balance
+option.Film_Slope=Slope
+option.Film_Toe=Film Toe
+option.Film_Shoulder=Shoulder
+option.Black_Clip=Black Clip Range
+option.White_Clip=White Clip Range
+option.Blue_Correction=Blue Correction
+option.Gamut_Expansion=Gamut Expansion
+option.in_Match=IN Match
+option.Out_Match=OUT Match
+screen.COLOR=Color Adjustments

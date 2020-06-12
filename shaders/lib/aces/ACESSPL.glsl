@@ -1,7 +1,4 @@
-// from raspberry shaders https://rutherin.netlify.com
-
-#define log10(x) log(x) / log(10.0)
-
+// From Raspberry Shaders https://rutherin.netlify.app
 
 struct SegmentedSplineParams_c5 {
 	float coefsLow[6];    // coefs for B-spline between minPoint and midPoint (units of log luminance)

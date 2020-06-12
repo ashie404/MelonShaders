@@ -1,4 +1,4 @@
-// from raspberry shaders https://rutherin.netlify.com
+// From Raspberry Shaders https://rutherin.netlify.app
 
 const mat3 sRGB_2_XYZ_MAT = mat3( // Linear sRGB to XYZ color space
 	vec3(0.4124564, 0.3575761, 0.1804375),

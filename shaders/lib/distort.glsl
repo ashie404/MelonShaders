@@ -1,3 +1,8 @@
+/*
+    Melon Shaders by June
+    https://j0sh.cf
+*/
+
 float cubeLength(vec2 v) {
 	return pow(abs(v.x * v.x * v.x) + abs(v.y * v.y * v.y), 1.0 / 3.0);
 }

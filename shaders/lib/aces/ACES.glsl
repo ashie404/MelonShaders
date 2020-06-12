@@ -1,10 +1,9 @@
-// from raspberry shaders https://rutherin.netlify.com
+// From Raspberry Shaders https://rutherin.netlify.app
 
-const float PI = 3.1415926535897;
+#include "/lib/aces/ACESSPL.glsl"
+#include "/lib/aces/ACEST.glsl"
 
-#define log10(x) log(x) / log(10.0)
-
-    struct ColorCorrection {
+struct ColorCorrection {
 	float saturation;
 	float vibrance;
 	vec3 lum;
@@ -25,10 +24,6 @@ float min3(float x, float y, float z) {
 float max0(float x) {
 	return max(0, x);
 }
-
-#include "/lib/aces/ACESSPL.glsl"
-#include "/lib/aces/ACEST.glsl"
-#define clamp01(p) (clamp(p, 0.0, 1.0))
 
 float sigmoid_shaper(float x) { // Sigmoid function in the range 0 to 1 spanning -2 to +2.
 	float t = max(1.0 - abs(0.5 * x), 0.0);
