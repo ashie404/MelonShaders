@@ -18,7 +18,7 @@ const bool colortex6Clear = false;
 uniform float screenBrightness;
 const float PI = 3.1415926535897;
 
-void calcLightingColor(in float angle, in float rain, out vec3 ambient, out vec3 light) {
+void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpos, out vec3 ambient, out vec3 light) {
 
     float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
     float noon     = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
@@ -36,7 +36,12 @@ void calcLightingColor(in float angle, in float rain, out vec3 ambient, out vec3
     vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.15;
 
     ambient = ((sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor)) + (night * nightAmbColor)*clamp(1.0-rain, 0.15, 1.0);
-    light = ((sunrise * sunriseLightColor) + (noon * noonLightColor) + (sunset * sunsetLightColor))+ (night * nightLightColor)*clamp(1.0-rain, 0.35, 1.0) ;
+
+    if (all(equal(slpos, spos))) {
+      light = ((sunrise * sunriseLightColor) + (noon * noonLightColor) + (sunset * sunsetLightColor))+ (night * nightLightColor)*clamp(1.0-rain, 0.35, 1.0);
+    } else {
+      light = nightLightColor*clamp(1.0-rain, 0.35, 1.0);
+    }
 }
 
 float luma(vec3 color) {
