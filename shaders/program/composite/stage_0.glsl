@@ -133,7 +133,7 @@ void main() {
             float roughness = pow(1.0 - pbr.smoothness, 2.0);
             if (roughness <= 0.15 && frag.matMask != 4.0) {
                 vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*6.6, colortex5);
-                color *= mix(vec3(1.0), mix(vec3(1.0), reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*6.6)-0.25));
+                color *= mix(vec3(1.0), mix(vec3(1.0), reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*6.6)-0.45));
             }
         }
         #endif
