@@ -29,7 +29,7 @@ vec3 calcBloomTile(vec2 offset, float lod) {
         }
     }
 
-    return totalBloom / totalWeight;
+    return max(totalBloom / totalWeight, 0);
 }
 
 vec3 getBloomTile(vec2 offset, float lod, vec2 coord){
