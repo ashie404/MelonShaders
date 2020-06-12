@@ -144,6 +144,10 @@ void main() {
     if (isEyeInWater == 1) {
         float depth = length(viewPos.xyz);
         color *= exp(-attenuationCoefficient * depth);
+    } else if (isEyeInWater == 2) {
+        // render lava fog
+        float depth = length(viewPos.xyz);
+        color *= exp(-vec3(0.1, 0.7, 1.0) * depth);
     }
 
     #ifdef BLOOM
