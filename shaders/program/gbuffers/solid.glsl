@@ -51,9 +51,14 @@ vec4 getTangentNormals(vec2 coord) {
 }
 
 void main() {
-    // get albedo
 
     int correctedId = int(id + 0.5);
+
+    // get specular
+
+    vec4 specularData = texture2D(specular, texcoord);
+
+    // get albedo
 
     vec4 albedo = texture2D(texture, texcoord);
     float luminance = luma(albedo);
@@ -64,16 +69,24 @@ void main() {
     
     albedo.a -= 0.5;
     #endif
+
     albedo *= glcolor;
     albedo.rgb = toLinear(albedo.rgb);
     // emissive handling
-    if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
-    if (correctedId == 51)  if (luminance >= 0.35)  albedo.rgb *= 50;
-    if (correctedId == 83)  if (luminance >= 0.50)  albedo.rgb *= 70;
-    if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
-    if (correctedId == 100) if (luminance >= 0.65)  albedo.rgb *= 50;
-    if (correctedId == 120) albedo.rgb *= 50;
-    if (correctedId == 123) albedo.rgb *= 85;
+    if (EMISSIVE_MAP == 0) {
+        if (correctedId == 50)  if (luminance >= 0.65)  albedo.rgb *= 70;
+        if (correctedId == 51)  if (luminance >= 0.35)  albedo.rgb *= 50;
+        if (correctedId == 83)  if (luminance >= 0.50)  albedo.rgb *= 70;
+        if (correctedId == 90)  if (luminance >= 0.50)  albedo.rgb *= 100;
+        if (correctedId == 100) if (luminance >= 0.65)  albedo.rgb *= 50;
+        if (correctedId == 120) albedo.rgb *= 50;
+        if (correctedId == 123) albedo.rgb *= 85;
+    } else if (EMISSIVE_MAP == 1 && specularData.b > 0.0) {
+        albedo.rgb *= clamp(specularData.b * 100, 1.0, 100.0);
+    } else if (EMISSIVE_MAP == 2 && specularData.a < 1.0) {
+        albedo.rgb *= clamp(specularData.a * 100, 1.0, 100.0);
+    }
+
 
     // correct floating point precision errors
     
@@ -83,6 +96,8 @@ void main() {
         matMask = 1.0;
     } else if (correctedId == 50||correctedId == 51||correctedId == 83||correctedId == 90||correctedId == 100||correctedId == 120||correctedId == 123) {
         // emissive material mask
+        matMask = 4.0;
+    } else if ((EMISSIVE_MAP == 1 && specularData.b > 0.0) || (EMISSIVE_MAP == 2 && specularData.a < 1.0)) {
         matMask = 4.0;
     }
     
@@ -94,10 +109,6 @@ void main() {
     vec3 normalData = getTangentNormals(texcoord).xyz;
     normalData = normalize(normalData * tbn);
     #endif
-    
-    // get specular
-
-    vec4 specularData = texture2D(specular, texcoord);
 
     // lightmap
     #ifdef DIRECTIONAL_LIGHTMAP

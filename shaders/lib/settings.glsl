@@ -41,6 +41,7 @@
 // lighting settings
 #define SPECULAR // Specular highlights & reflections. Not recommended to have enabled unless your resourcepack is LabPBR compliant.
 #define SSR // Screenspace reflections.
+#define SPECULAR_REFLECTION_STRENGTH 0.5 // Strength of specular reflections. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define SSS // Subsurface scattering. Improves lighting vastly on leaves, grass, and flowers.
 #define SSS_STRENGTH 1.0 // Strength of subsurface scattering. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.7 1.75 1.8 1.9 2]
 #define DIRECTIONAL_LIGHTMAP // Whether to have blocklights and skylight affected by normal maps or not.
@@ -59,6 +60,8 @@
 #define BLOCKLIGHT_G 0.5 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_B 0.25 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_I 0.75 // Intensity of blocklight. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+
+#define EMISSIVE_MAP 0 // Emissive map setting. [0 1 2]
 
 
 #define WIND // Whether to have waving terrain (leaves, plants) or not.

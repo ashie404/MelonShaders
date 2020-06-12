@@ -27,6 +27,7 @@ option.CLOUD_LIGHTING=Cloud Lighting
 
 option.SPECULAR=Specular
 option.SSR=Reflections
+option.SPECULAR_REFLECTION_STRENGTH=Specular Reflection Strength
 
 option.SSS=Subsurface Scattering
 option.SSS_STRENGTH=SSS Strength
@@ -43,6 +44,11 @@ option.BLOCKLIGHT_R=§4Red
 option.BLOCKLIGHT_G=§2Green
 option.BLOCKLIGHT_B=§1Blue
 option.BLOCKLIGHT_I=Intensity
+
+option.EMISSIVE_MAP=Emissive Maps
+value.EMISSIVE_MAP.0=Off
+value.EMISSIVE_MAP.1=Blue Channel
+value.EMISSIVE_MAP.2=LabPBR (alpha channel)
 
 option.WIND=Wind
 

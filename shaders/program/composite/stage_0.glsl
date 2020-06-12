@@ -79,10 +79,11 @@ void main() {
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec3 worldPos = (gbufferModelViewInverse * vec4(viewPos.xyz, 1.0)).xyz;
+
+    Fragment frag = getFragment(texcoord);
     
     // if not sky check for translucents
     if (texture2D(depthtex0, texcoord).r != 1.0) {
-        Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
         // 2 is translucents tag
         if (frag.matMask == 2) {
@@ -131,9 +132,9 @@ void main() {
         #ifdef SPECULAR
         else {
             float roughness = pow(1.0 - pbr.smoothness, 2.0);
-            if (roughness <= 0.15 && frag.matMask != 4.0) {
-                vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*6.6, colortex5);
-                color *= mix(vec3(1.0), mix(vec3(1.0), reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*6.6)-0.45));
+            if (roughness <= 0.125 && frag.matMask != 4.0) {
+                vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*8, colortex5);
+                color *= mix(vec3(1.0), mix(vec3(1.0), reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*8)-(1.0-SPECULAR_REFLECTION_STRENGTH)));
             }
         }
         #endif
@@ -148,7 +149,7 @@ void main() {
     #ifdef BLOOM
     // output bloom if pixel is bright enough
     vec3 bloomSample = vec3(0.0);
-    if (luma(color) > 6.5) {
+    if (luma(color) > 6.5 || (frag.matMask == 4.0 && EMISSIVE_MAP != 0)) {
         bloomSample = color;
     }
     bloomOut = vec4(bloomSample, 1.0);
