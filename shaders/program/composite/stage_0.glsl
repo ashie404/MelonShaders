@@ -10,9 +10,8 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:04 */
+/* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 bloomOut;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
@@ -44,6 +43,7 @@ uniform float sunAngle;
 uniform float frameTimeCounter;
 uniform int isEyeInWater;
 uniform float rainStrength;
+uniform float centerDepthSmooth;
 
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;
@@ -67,10 +67,6 @@ in vec3 lightColor;
 #include "/lib/raytrace.glsl"
 #include "/lib/reflection.glsl"
 
-/*
-const bool colortex5MipmapEnabled = true;
-*/
-
 const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
@@ -79,12 +75,12 @@ void main() {
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec3 worldPos = (gbufferModelViewInverse * vec4(viewPos.xyz, 1.0)).xyz;
-
-    Fragment frag = getFragment(texcoord);
     
     // if not sky check for translucents
     if (texture2D(depthtex0, texcoord).r != 1.0) {
+        Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
+
         // 2 is translucents tag
         if (frag.matMask == 2) {
             color = calculateBasicShading(frag, pbr, viewPos.xyz);
@@ -134,8 +130,6 @@ void main() {
         #endif
         #endif
     }
-        
-    
 
     // if eye in water, render underwater fog
     if (isEyeInWater == 1) {
@@ -146,15 +140,6 @@ void main() {
         float depth = length(viewPos.xyz);
         color *= exp(-vec3(0.1, 0.7, 1.0) * depth);
     }
-
-    #ifdef BLOOM
-    // output bloom if pixel is bright enough
-    vec3 bloomSample = vec3(0.0);
-    if (luma(color) > 6.5 || (frag.matMask == 4.0 && EMISSIVE_MAP != 0)) {
-        bloomSample = color;
-    }
-    bloomOut = vec4(bloomSample, 1.0);
-    #endif
 
     colorOut = vec4(color, 1.0);
 }

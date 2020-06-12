@@ -12,6 +12,7 @@ option.BLOOM_STRENGTH=Bloom Strength
 
 option.TAA=Temporal Anti-Aliasing
 option.LUT=Color LUT
+option.DOF=Depth of Field
 
 screen.ACES_SETTINGS=ACES Settings
 

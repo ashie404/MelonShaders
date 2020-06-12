@@ -52,6 +52,7 @@
 #define BLOOM_STRENGTH 1.0
 #define LUT
 #define TAA
+#define DOF
 
 // tweaks
 
