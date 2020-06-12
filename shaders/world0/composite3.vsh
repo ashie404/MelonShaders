@@ -1,7 +1,7 @@
 #version 450 compatibility
 
 /* 
-    Melon Shaders by J0SH
+    Melon Shaders by June
     https://j0sh.cf
 */
 
