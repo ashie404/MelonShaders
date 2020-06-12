@@ -15,7 +15,7 @@ layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 bloomOut;
 
 /*
-const float centerDepthSmoothHalflife = 8.0;
+const float centerDepthSmoothHalflife = 4.0;
 */
 
 in vec2 texcoord;
@@ -38,13 +38,13 @@ void main() {
     vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
 
     // distance blur
-    if (currentDepth >= centerDepthSmooth+0.015) {
+    if (currentDepth >= centerDepthSmooth) {
         vec3 blurred = vec3(0.0);
         for (int i = 0; i <= 32; i++) {
                 vec2 offset = poissonDisk[i] * oneTexel * 12;
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
         }
-        color = mix(color, blurred / 32.0, clamp((currentDepth-(centerDepthSmooth+0.015))*35.0, 0.0, 1.0));
+        color = mix(color, blurred / 32.0, clamp01((currentDepth-centerDepthSmooth)*35.0));
     }
     
     // close up blur
@@ -54,7 +54,7 @@ void main() {
                 vec2 offset = poissonDisk[i] * oneTexel * 12;
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
         }
-        color = mix(color, blurred / 32.0, clamp((centerDepthSmooth-currentDepth)*35.0, 0.0, 1.0));
+        color = mix(color, blurred / 32.0, clamp01((centerDepthSmooth-currentDepth)*35.0));
     }
     #endif
 
