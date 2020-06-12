@@ -24,7 +24,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     float visibility = 0;
-    for (int i = 0; i <= 24; i++) {
+    for (int i = 0; i <= 12; i++) {
         vec2 offset = (poissonDisk[i]*2) / shadowMapResolution;
         offset = rotationMatrix * offset;
         // sample shadow map
@@ -39,7 +39,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
             shadowCol += mix(vec3(shadowMapSample), vec3(1.0), visibility);
         }
     }
-    return vec4(shadowCol / 192, visibility);
+    return vec4(shadowCol / 96, visibility);
 }
 
 // diffuse shading
@@ -112,8 +112,8 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
 
         mat2 rotationMatrix = getRotationMatrix(fragment.coord);
 
-        for (int i = 0; i <= 8; i++) {
-            vec2 offset = (poissonDisk[i]*16) / shadowMapResolution;
+        for (int i = 0; i <= 4; i++) {
+            vec2 offset = (poissonDisk[i]*32) / shadowMapResolution;
             offset = rotationMatrix * offset;
             // sample shadow map
             float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r;
