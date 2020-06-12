@@ -1,0 +1,42 @@
+option.MELONINFO=§aMelon Shaders
+value.MELONINFO.0=§bBy June
+value.MELONINFO.1=§bBy June
+
+screen.POST=Post Processing
+screen.SKY=Sky
+screen.LIGHTING=Lighting
+screen.TWEAKS=Tweaks
+
+option.BLOOM=Bloom
+option.BLOOM_STRENGTH=Bloom Strength
+
+screen.ACES_SETTINGS=ACES Settings
+
+option.CELESTIAL_RADIUS=Celestial Body Radius
+option.STARS=Stars
+
+screen.CLOUD_SETTINGS=Cloud Settings
+
+option.CLOUDS=Clouds
+option.CLOUD_SPEED=Cloud Speed
+option.CLOUD_COVERAGE=Cloud Coverage
+option.CLOUD_LIGHTING=Cloud Lighting
+
+option.SPECULAR=Specular
+option.SSR=Reflections
+
+option.SSS=Subsurface Scattering
+option.SSS_STRENGTH=SSS Strength
+option.DIRECTIONAL_LIGHTMAP=Directional Lightmap
+option.DIRECTIONAL_LIGHTMAP_STRENGTH=Directional Lightmap Strength
+
+screen.SHADOWS=Shadows
+option.shadowMapResolution=Shadow Resolution
+option.shadowDistance=Shadow Distance
+option.SHADOW_BIAS=Shadow Bias
+
+screen.BLOCKLIGHT=Blocklight
+option.BLOCKLIGHT_R=§4Red
+option.BLOCKLIGHT_G=§2Green
+option.BLOCKLIGHT_B=§1Blue
+option.BLOCKLIGHT_I=Intensity

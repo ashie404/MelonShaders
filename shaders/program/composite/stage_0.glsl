@@ -140,15 +140,10 @@ void main() {
         #endif
     }
     // if eye in water, render underwater fog
-    float depth = length(viewPos.xyz);
     if (isEyeInWater == 1) {
+        float depth = length(viewPos.xyz);
         color *= exp(-attenuationCoefficient * depth);
-    } else {
-        // apply actual fog if not underwater
-
     }
-
-    
 
     #ifdef BLOOM
     // output bloom if pixel is bright enough
