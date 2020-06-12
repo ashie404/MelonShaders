@@ -92,6 +92,9 @@ void main() {
     // convert back to srgb space
     color = linearToSrgb(color);
 
+    #ifdef COLOR_AP1
+    color = color * sRGB_2_AP1;
+    #endif
     // do lut
     #ifdef LUT
     color = lookup(color, colortex7);

@@ -61,4 +61,5 @@ const mat3 AP1_2_AP0_MAT = mat3( // ACEStoning to ACEScg Color Space
 );
 
 const vec3 AP1_RGB2Y = vec3(0.2722287168, 0.6740817658, 0.0536895174); // Desaturation Coeff
-const mat3 sRGB_2_AP0 = (sRGB_2_XYZ_MAT * D65_2_D60_CAT) * XYZ_2_AP0_MAT;
+
+const mat3 sRGB_2_AP1 = (sRGB_2_XYZ_MAT * D65_2_D60_CAT) * XYZ_2_AP1_MAT;
