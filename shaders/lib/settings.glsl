@@ -27,8 +27,8 @@
 #define SHADOW_BIAS 0.00025
 
 // sky settings
-#define CELESTIAL_RADIUS 0.25 // Radius of the sun & moon. [ 0.1 0.25 0.3 0.4 0.5 0.6 0.7 ]
-#define STARS
+#define CELESTIAL_RADIUS 0.25 // Radius of celestial bodies (the sun and moon). [ 0.1 0.25 0.3 0.4 0.5 0.6 0.7 ]
+#define STARS // Whether to have stars at night or not.
 
 // cloud settings
 #define CLOUDS // Whether to have clouds or not.
@@ -37,11 +37,11 @@
 #define CLOUD_COVERAGE 1.0 // Coverage of clouds in sky. [0.5 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2]
 
 // lighting settings
-#define SPECULAR
+#define SPECULAR // Specular highlights & reflections. Not recommended to have enabled unless your resourcepack is LabPBR compliant.
 #define SSR // Screenspace reflections.
 #define SSS // Subsurface scattering. Improves lighting vastly on leaves, grass, and flowers.
 #define SSS_STRENGTH 1.0 // Strength of subsurface scattering. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.7 1.75 1.8 1.9 2]
-#define DIRECTIONAL_LIGHTMAP
+#define DIRECTIONAL_LIGHTMAP // Whether to have blocklights and skylight affected by normal maps or not.
 #define DIRECTIONAL_LIGHTMAP_STRENGTH 1.0 // Strength of directional lightmaps. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
 // post processing settings
@@ -59,7 +59,7 @@
 #define BLOCKLIGHT_I 0.75 // Intensity of blocklight. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
 
-#define WIND
+#define WIND // Whether to have waving terrain (leaves, plants) or not.
 
 const int noiseTextureResolution = 256;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
