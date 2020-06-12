@@ -40,21 +40,23 @@ void main() {
     // distance blur
     if (currentDepth >= centerDepthSmooth) {
         vec3 blurred = vec3(0.0);
+        float blurSize = clamp((currentDepth-centerDepthSmooth)*256.0, 0.0, 12.0);
         for (int i = 0; i <= 32; i++) {
-                vec2 offset = poissonDisk[i] * oneTexel * 12;
+                vec2 offset = poissonDisk[i] * oneTexel * blurSize;
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
         }
-        color = mix(color, blurred / 32.0, clamp01((currentDepth-centerDepthSmooth)*35.0));
+        color = blurred / 32.0;
     }
     
     // close up blur
     else if (currentDepth <= centerDepthSmooth) {
         vec3 blurred = vec3(0.0);
+        float blurSize = clamp((centerDepthSmooth-currentDepth)*256.0, 0.0, 12.0);
         for (int i = 0; i <= 32; i++) {
-                vec2 offset = poissonDisk[i] * oneTexel * 12;
+                vec2 offset = poissonDisk[i] * oneTexel * blurSize;
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
         }
-        color = mix(color, blurred / 32.0, clamp01((centerDepthSmooth-currentDepth)*35.0));
+        color = blurred / 32.0;
     }
     #endif
 
