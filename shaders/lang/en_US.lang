@@ -49,6 +49,7 @@ option.EMISSIVE_MAP=Emissive Maps
 value.EMISSIVE_MAP.0=Off
 value.EMISSIVE_MAP.1=Blue Channel
 value.EMISSIVE_MAP.2=LabPBR (alpha channel)
+option.EMISSIVE_MAP_STRENGTH=Emissive Map Strength
 
 option.WIND=Wind
 

@@ -82,9 +82,9 @@ void main() {
         if (correctedId == 120) albedo.rgb *= 50;
         if (correctedId == 123) albedo.rgb *= 85;
     } else if (EMISSIVE_MAP == 1 && specularData.b > 0.0) {
-        albedo.rgb *= clamp(specularData.b * 400, 1.0, 400.0);
+        albedo.rgb *= clamp(specularData.b * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
     } else if (EMISSIVE_MAP == 2 && specularData.a < 1.0) {
-        albedo.rgb *= clamp(specularData.a * 400, 1.0, 400.0);
+        albedo.rgb *= clamp(specularData.a * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
     }
 
 
