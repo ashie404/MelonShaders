@@ -88,40 +88,31 @@ void main() {
         // 2 is translucents tag
         if (frag.matMask == 2) {
             color = calculateBasicShading(frag, pbr, viewPos.xyz);
-        }
-        // 3 is water tag
-        else if (frag.matMask == 3) {
+        } else if (frag.matMask == 3) {
+            // render water fog
             float depth0 = linear(texture2D(depthtex0, texcoord).r);
             float depth1 = linear(texture2D(depthtex1, texcoord).r);
-    
-            float depthcomp = (depth1-depth0);
 
+            float depthcomp = (depth1-depth0);
             // set color to color without water in it
             vec3 oldcolor = color;
             color = texture2D(colortex5, texcoord).rgb;
-
             // if eye is not in water, render above-water fog and render sky reflection
             if (isEyeInWater == 0) {
                 // calculate transmittance
                 vec3 transmittance = exp(-attenuationCoefficient * depthcomp);
-
                 color = color * transmittance;
-
                 // colorize water fog based on biome color
                 color *= oldcolor;
-
                 vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
                 vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
-
                 vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle);
-
                 #ifdef SSR
                 vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
-                color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.35)*frag.lightmap.y;
+                color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.35);
                 #else
-                color += mix(vec3(0.0), skyReflection, 0.05)*frag.lightmap.y;
+                color += mix(vec3(0.0), skyReflection, 0.05);
                 #endif
-
                 // water foam
                 if (depthcomp <= 0.15) {
 		    	    color += vec3(0.75) * ambientColor;
@@ -130,6 +121,7 @@ void main() {
         }
         #ifdef SSR
         #ifdef SPECULAR
+        // specular reflections
         else {
             float roughness = pow(1.0 - pbr.smoothness, 2.0);
             if (roughness <= 0.125 && frag.matMask != 4.0) {
@@ -140,6 +132,9 @@ void main() {
         #endif
         #endif
     }
+        
+    
+
     // if eye in water, render underwater fog
     if (isEyeInWater == 1) {
         float depth = length(viewPos.xyz);
