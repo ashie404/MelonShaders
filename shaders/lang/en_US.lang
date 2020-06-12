@@ -52,6 +52,7 @@ value.EMISSIVE_MAP.2=LabPBR (alpha channel)
 option.EMISSIVE_MAP_STRENGTH=Emissive Map Strength
 
 option.WIND=Wind
+option.WAVE_FOAM=Water Foam
 
 #ACES
 option.SAT_MOD=Saturation

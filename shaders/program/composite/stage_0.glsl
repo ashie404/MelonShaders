@@ -114,9 +114,11 @@ void main() {
                 color += mix(vec3(0.0), skyReflection, 0.05);
                 #endif
                 // water foam
+                #ifdef WAVE_FOAM
                 if (depthcomp <= 0.15) {
 		    	    color += vec3(0.75) * ambientColor;
 		        } 
+                #endif
             }
         }
         #ifdef SSR
