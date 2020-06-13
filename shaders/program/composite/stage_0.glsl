@@ -13,6 +13,10 @@
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
 
+/*
+const float eyeBrightnessSmoothHalflife = 4.0;
+*/
+
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
@@ -44,6 +48,7 @@ uniform float frameTimeCounter;
 uniform int isEyeInWater;
 uniform float rainStrength;
 uniform float centerDepthSmooth;
+uniform ivec2 eyeBrightnessSmooth;
 
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;

@@ -14,6 +14,10 @@
 layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 reflectionsOut;
 
+/*
+const float eyeBrightnessSmoothHalflife = 4.0;
+*/
+
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
@@ -38,6 +42,7 @@ uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
 uniform mat4 gbufferPreviousModelView;
 uniform mat4 gbufferPreviousProjection;
+uniform ivec2 eyeBrightnessSmooth;
 
 uniform float viewWidth;
 uniform float viewHeight;
