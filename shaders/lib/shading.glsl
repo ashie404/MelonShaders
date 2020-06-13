@@ -97,9 +97,13 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
 
     // combine lighting
     vec3 color = vec3(0.0);
-
-    color = mix(shadowLight.rgb+skyLight+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y)/240.0));
+    if (eyeBrightnessSmooth.y <= 64) {
+        color = mix(shadowLight.rgb+skyLight+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y)/64.0));
+    } else {
+        color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
+    }
     
+
     // 1 on matmask is hardcoded SSS
     #ifdef SSS
     if (fragment.matMask == 1) {
