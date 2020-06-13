@@ -153,8 +153,16 @@ void main() {
     else {
         // render regular fog
         if (texture2D(depthtex0, texcoord).r != 1.0) {
-            vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
-            color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
+            if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                float fade = clamp01((eyeBrightnessSmooth.y-9)/55.0);
+                color = mix(color, mix(vec3(0.05), atmosColor, fade), clamp01((depth/256.0)*FOG_DENSITY*mix(8.0, 1.0, fade)));
+            } else if (eyeBrightnessSmooth.y <= 8) {
+                color = mix(color, vec3(0.05), clamp01((depth/256.0)*FOG_DENSITY*8.0));
+            } else {
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
+            }
         }
     }
     #endif
