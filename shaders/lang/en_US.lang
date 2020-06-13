@@ -38,7 +38,7 @@ option.DIRECTIONAL_LIGHTMAP_STRENGTH=Directional Lightmap Strength
 screen.SHADOWS=Shadows
 option.shadowMapResolution=Shadow Resolution
 option.shadowDistance=Shadow Distance
-option.SHADOW_BIAS=Shadow Bias
+option.SHADOW_SOFTNESS=Shadow Softness
 
 screen.BLOCKLIGHT=Blocklight
 option.BLOCKLIGHT_R=§4Red

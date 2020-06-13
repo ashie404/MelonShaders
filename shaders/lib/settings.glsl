@@ -26,6 +26,9 @@
 #define COLOR_AP1 // Whether to use the AP1 color space or not. Makes colors look more natural.
 
 // shadow settings
+#define SHADOW_SOFTNESS 2.0 // How soft the shadows should be. [1.0 1.25 1.5 1.75 2.0 2.25 2.5 2.75 3.0 3.5 4.0 4.5 5.0 6.0 7.0 8.0 9.0 10.0]
+
+
 #define SHADOW_BIAS 0.00025
 
 // sky settings

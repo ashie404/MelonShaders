@@ -25,7 +25,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     float visibility = 0;
     for (int i = 0; i <= 12; i++) {
-        vec2 offset = (poissonDisk[i]*2) / shadowMapResolution;
+        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS) / shadowMapResolution;
         offset = rotationMatrix * offset;
         // sample shadow map
         float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r; // sampling shadow map
