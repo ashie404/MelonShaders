@@ -156,7 +156,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
     float noon = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
 
     vec3 skyPos = worldPos;
-    skyPos.y = max(skyPos.y, -0.001);
+    skyPos.y = max(skyPos.y, 0.0);
 
     vec3 skyColor = vec3(0.14, 0.2, 0.24)*0.025;
 
@@ -174,7 +174,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             1.2e3,                          // Mie scale height
             0.758,                           // Mie preferred scattering direction
             int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
-            int(mix(8,  1, clamp01(noon)))  // secondary raymarching steps
+            int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
         );
 
         skyColor = 1.0 - exp(-1.0 * skyColor);
@@ -193,7 +193,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             1.2e3,                          // Mie scale height
             0.758,                           // Mie preferred scattering direction
             int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
-            int(mix(8,  1, clamp01(noon)))  // secondary raymarching steps
+            int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
         );
 
         skyColor = 1.0 - exp(-1.0 * skyColor);
