@@ -83,7 +83,14 @@ void main() {
 
         // 2 is translucents tag
         if (frag.matMask == 2) {
-            color = calculateBasicShading(frag, pbr, viewPos.xyz);
+            vec4 pos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
+            pos = gbufferProjectionInverse * pos;
+            pos = gbufferModelViewInverse * pos;
+            pos = shadowModelView * pos;
+            pos = shadowProjection * pos;
+            pos /= pos.w;
+            vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
+            color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
         } else if (frag.matMask == 3) {
             // render water fog
             float depth0 = linear(texture2D(depthtex0, texcoord).r);
