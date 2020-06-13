@@ -65,22 +65,19 @@ in vec3 lightColor;
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
-    vec4 screenPos = vec4(gl_FragCoord.xy / vec2(viewWidth, viewHeight), gl_FragCoord.z, 1.0);
-	vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
+    vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
+	vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
-    vec3 worldPos = mat3(gbufferModelViewInverse) * viewPos.xyz;
+    vec4 worldPos = vec4(mat3(gbufferModelViewInverse) * viewPos.xyz, 1.0);
 
     // if sky, draw sky. else, calculate shading.
     if (texture2D(depthtex0, texcoord).r == 1.0) {
-        color = getSkyColor(worldPos, normalize(worldPos), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle);
+        color = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle);
     } else {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
 
-        vec4 pos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
-        pos = gbufferProjectionInverse * pos;
-        pos = gbufferModelViewInverse * pos;
-        pos = shadowModelView * pos;
+        vec4 pos = shadowModelView * worldPos;
         pos = shadowProjection * pos;
         pos /= pos.w;
         vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;

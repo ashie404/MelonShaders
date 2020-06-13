@@ -74,7 +74,7 @@ void main() {
     vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
-    vec3 worldPos = (gbufferModelViewInverse * vec4(viewPos.xyz, 1.0)).xyz;
+    vec4 worldPos = gbufferModelViewInverse * viewPos;
     
     // if not sky check for translucents
     if (texture2D(depthtex0, texcoord).r != 1.0) {
@@ -83,10 +83,7 @@ void main() {
 
         // 2 is translucents tag
         if (frag.matMask == 2) {
-            vec4 pos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
-            pos = gbufferProjectionInverse * pos;
-            pos = gbufferModelViewInverse * pos;
-            pos = shadowModelView * pos;
+            vec4 pos = shadowModelView * worldPos;
             pos = shadowProjection * pos;
             pos /= pos.w;
             vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
