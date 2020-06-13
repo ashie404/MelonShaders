@@ -178,6 +178,10 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         );
 
         skyColor = 1.1 - exp(-1.0 * skyColor);
+        vec3 W = vec3(0.2125, 0.7154, 0.0721);
+        vec3 intensity = vec3(dot(skyColor, W));
+        skyColor = mix(intensity, skyColor, 1.2);
+
     } else if (night < 0.95) {
         vec3 oldC = skyColor;
         skyColor = atmosphere(
@@ -197,6 +201,10 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         );
 
         skyColor = 1.1 - exp(-1.0 * skyColor);
+        vec3 W = vec3(0.2125, 0.7154, 0.0721);
+        vec3 intensity = vec3(dot(skyColor, W));
+        skyColor = mix(intensity, skyColor, 1.2);
+
         skyColor = mix(skyColor, oldC, night);
     }
 
