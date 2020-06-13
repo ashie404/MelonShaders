@@ -154,7 +154,7 @@ void main() {
         // render regular fog
         if (texture2D(depthtex0, texcoord).r != 1.0) {
             vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
-            color = mix(color, atmosColor, clamp01((depth/128.0)*FOG_DENSITY));
+            color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
         }
     }
     #endif
