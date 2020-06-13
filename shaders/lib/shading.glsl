@@ -97,8 +97,10 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
 
     // combine lighting
     vec3 color = vec3(0.0);
-    if (fragment.lightmap.y <= 0.08) {
-        color = mix(shadowLight.rgb+skyLight+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((fragment.lightmap.y)*10));
+    if (fragment.lightmap.y <= 0.08 && fragment.lightmap.y >= 0.04) {
+        color = mix(shadowLight.rgb+skyLight+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((fragment.lightmap.y)*12.5));
+    } else if (fragment.lightmap.y <= 0.04) {
+        color = shadowLight.rgb+skyLight+blockLight;
     } else {
         color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
     }
