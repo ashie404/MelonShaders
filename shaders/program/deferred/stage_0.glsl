@@ -77,7 +77,7 @@ void main() {
 
     // if sky, draw sky. else, calculate shading.
     if (texture2D(depthtex0, texcoord).r == 1.0) {
-        color = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle);
+        color = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
     } else {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);

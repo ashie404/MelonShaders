@@ -28,6 +28,9 @@ option.sunPathRotation=Sun Path Rotation
 option.CELESTIAL_RADIUS=Celestial Body Radius
 option.STARS=Stars
 
+option.FOG=Fog
+option.FOG_DENSITY=Fog Density
+
 screen.CLOUD_SETTINGS=Cloud Settings
 
 option.CLOUDS=Clouds

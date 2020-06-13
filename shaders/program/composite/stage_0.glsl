@@ -111,7 +111,7 @@ void main() {
                 color *= oldcolor;
                 vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
                 vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
-                vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle);
+                vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
                 #ifdef SSR
                 vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
                 color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.35);
@@ -140,16 +140,24 @@ void main() {
         #endif
     }
 
-    // if eye in water, render underwater fog
+    float depth = length(viewPos.xyz);
     if (isEyeInWater == 1) {
-        float depth = length(viewPos.xyz);
+        // render underwater fog
         color *= exp(-attenuationCoefficient * depth);
     } else if (isEyeInWater == 2) {
         // render lava fog
-        float depth = length(viewPos.xyz);
         color *= exp(-vec3(0.1, 0.2, 1.0) * (depth*4));
         color += vec3(0.2, 0.05, 0.0)*0.25;
+    } 
+    #ifdef FOG
+    else {
+        // render regular fog
+        if (texture2D(depthtex0, texcoord).r != 1.0) {
+            vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+            color = mix(color, atmosColor, clamp01((depth/128.0)*FOG_DENSITY));
+        }
     }
+    #endif
 
     colorOut = vec4(color, 1.0);
 }

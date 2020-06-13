@@ -151,12 +151,16 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
     return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
 }
 
-vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle) {
+vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle, bool atmosphereOnly) {
     float night = clamp01(((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03));
     float noon = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
 
     vec3 skyPos = worldPos;
-    skyPos.y = max(skyPos.y, 0.0);
+    if (atmosphereOnly) {
+        skyPos.y = max(skyPos.y, 10.0);
+    } else {
+        skyPos.y = max(skyPos.y, 0.0);
+    }
 
     vec3 skyColor = vec3(0.14, 0.2, 0.24)*0.025;
 
@@ -208,58 +212,57 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         skyColor = mix(skyColor, oldC, night);
     }
 
-
-    // draw clouds if y is greater than 0
     float cloudShape = 0.0;
-    #ifdef CLOUDS
-    if (worldPos.y >= 0) {
-        float time = frameTimeCounter*CLOUD_SPEED/32;
-        vec2 uv = (worldPos.xz / worldPos.y)/2;
-        vec2 sunUv = (sunVec.xz / sunVec.y)/2;
 
-        // set up 2D ray march variables
-        vec2 marchDist = vec2(0.35 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
-        float stepsInv = 1.0 / 3.0;
-        vec2 sunDir = normalize(sunUv - uv) * marchDist * stepsInv;
-        vec2 marchUv = uv;
-        float cloudColor = 1.0;
-        cloudShape = clouds(uv, time);
+    if (!atmosphereOnly) {
+        // draw clouds if y is greater than 0
+        #ifdef CLOUDS
+        if (worldPos.y >= 0) {
+            float time = frameTimeCounter*CLOUD_SPEED/32;
+            vec2 uv = (worldPos.xz / worldPos.y)/2;
+            vec2 sunUv = (sunVec.xz / sunVec.y)/2;
 
-        #ifdef CLOUD_LIGHTING
-        // 2D ray march lighting loop based on uncharted 4
-        if (cloudShape >= 0.25) {
-            for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
-            {
-                marchUv += sunDir * i;
-   	        	float c = clouds(marchUv, time);
-                cloudColor *= clamp(1.0 - c, 0.0, 1.0);
+            // set up 2D ray march variables
+            vec2 marchDist = vec2(0.35 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
+            float stepsInv = 1.0 / 3.0;
+            vec2 sunDir = normalize(sunUv - uv) * marchDist * stepsInv;
+            vec2 marchUv = uv;
+            float cloudColor = 1.0;
+            cloudShape = clouds(uv, time);
+
+            #ifdef CLOUD_LIGHTING
+            // 2D ray march lighting loop based on uncharted 4
+            if (cloudShape >= 0.25) {
+                for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
+                {
+                    marchUv += sunDir * i;
+   	            	float c = clouds(marchUv, time);
+                    cloudColor *= clamp(1.0 - c, 0.0, 1.0);
+                }
             }
+            #endif
+            cloudColor += 0.05-(night*0.035); // cloud "ambient" brightness
+            // beer's law + powder sugar
+            if (night > 0.25)
+                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * (4.0/(night*4));
+            else
+                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0;
+            cloudColor *= cloudShape;
+
+            skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*lightColor, clamp01(cloudShape)), clamp01(worldPos.y/48.0));
         }
         #endif
-        cloudColor += 0.05-(night*0.035); // cloud "ambient" brightness
-        // beer's law + powder sugar
-        if (night > 0.25)
-            cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * (4.0/(night*4));
-        else
-            cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0;
-        cloudColor *= cloudShape;
-        
-        skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*lightColor, clamp01(cloudShape)), clamp01(worldPos.y/48.0));
+
+        skyColor += mix(vec3(0.0), mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS, false).rgb, clamp01(1.0-cloudShape)), clamp01(worldPos.y/64.0))*(skyColor*4.0);
+        skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS+0.1, true).rgb, clamp01(1.0-(cloudShape*2.0)));
+
+        #ifdef STARS
+        float starNoise = cellular(normalize(worldPos)*32);
+        if (starNoise <= 0.05) {
+            skyColor += mix(vec3(0.0), mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos)*16)), clamp01(1.0-starNoise)), night), clamp01(1.0-(cloudShape*4.0)));
+        }
+        #endif
     }
-    #endif
-
-    skyColor += mix(vec3(0.0), mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS, false).rgb, clamp01(1.0-cloudShape)), clamp01(worldPos.y/64.0))*(skyColor*4.0);
-    skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS+0.1, true).rgb, clamp01(1.0-(cloudShape*2.0)));
-
-    #ifdef STARS
-
-    float starNoise = cellular(normalize(worldPos)*32);
-    if (starNoise <= 0.05) {
-        skyColor += mix(vec3(0.0), mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos)*16)), clamp01(1.0-starNoise)), night), clamp01(1.0-(cloudShape*4.0)));
-    }
-    
-
-    #endif
 
     return skyColor;
 }

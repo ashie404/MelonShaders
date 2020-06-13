@@ -33,6 +33,8 @@
 // sky settings
 #define CELESTIAL_RADIUS 0.25 // Radius of celestial bodies (the sun and moon). [ 0.1 0.25 0.3 0.4 0.5 0.6 0.7 ]
 #define STARS // Whether to have stars at night or not.
+#define FOG
+#define FOG_DENSITY 1.0 // Density of the fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0 3.25 3.5]
 
 // cloud settings
 #define CLOUDS // Whether to have clouds or not.
