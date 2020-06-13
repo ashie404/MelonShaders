@@ -47,9 +47,6 @@ float clouds(vec2 coord, float time)
 
 // atmospheric scattering from wwwtyro https://github.com/wwwtyro/glsl-atmosphere
 
-#define iSteps 12
-#define jSteps 4
-
 vec2 rsi(vec3 r0, vec3 rd, float sr) {
     // ray-sphere intersection that assumes
     // the sphere is centered at the origin.
@@ -65,7 +62,7 @@ vec2 rsi(vec3 r0, vec3 rd, float sr) {
     );
 }
 
-vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAtmos, vec3 kRlh, float kMie, float shRlh, float shMie, float g) {
+vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAtmos, vec3 kRlh, float kMie, float shRlh, float shMie, float g, int iSteps, int jSteps) {
     // Normalize the sun and view directions.
     pSun = normalize(pSun);
     r = normalize(r);
@@ -156,9 +153,10 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 
 vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle) {
     float night = clamp01(((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03));
+    float noon = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
 
     vec3 skyPos = worldPos;
-    skyPos.y = max(skyPos.y, 0.0);
+    skyPos.y = max(skyPos.y, -0.001);
 
     vec3 skyColor = vec3(0.14, 0.2, 0.24)*0.025;
 
@@ -170,11 +168,13 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             22.0,                           // intensity of the sun
             6371e3,                         // radius of the planet in meters
             6471e3,                         // radius of the atmosphere in meters
-            vec3(5.5e-6, 13.0e-6, 24.4e-6), // Rayleigh scattering coefficient
-            21e-6,                          // Mie scattering coefficient
-            8.3e3,                         // Rayleigh scale height
+            vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
+            30.2e-6,                          // Mie scattering coefficient
+            8e3,                            // Rayleigh scale height
             1.2e3,                          // Mie scale height
-            0.758                           // Mie preferred scattering direction
+            0.758,                           // Mie preferred scattering direction
+            int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
+            int(mix(8,  1, clamp01(noon)))  // secondary raymarching steps
         );
 
         skyColor = 1.0 - exp(-1.0 * skyColor);
@@ -187,11 +187,13 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             22.0,                           // intensity of the sun
             6371e3,                         // radius of the planet in meters
             6471e3,                         // radius of the atmosphere in meters
-            vec3(5.5e-6, 13.0e-6, 24.4e-6), // Rayleigh scattering coefficient
-            21e-6,                        // Mie scattering coefficient
-            8.3e3,                           // Rayleigh scale height
+            vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
+            30.2e-6,                          // Mie scattering coefficient
+            8e3,                            // Rayleigh scale height
             1.2e3,                          // Mie scale height
-            0.758                           // Mie preferred scattering direction
+            0.758,                           // Mie preferred scattering direction
+            int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
+            int(mix(8,  1, clamp01(noon)))  // secondary raymarching steps
         );
 
         skyColor = 1.0 - exp(-1.0 * skyColor);
