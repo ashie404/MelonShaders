@@ -177,7 +177,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
         );
 
-        skyColor = 1.0 - exp(-1.0 * skyColor);
+        skyColor = 1.1 - exp(-1.0 * skyColor);
     } else if (night < 0.95) {
         vec3 oldC = skyColor;
         skyColor = atmosphere(
@@ -196,7 +196,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
         );
 
-        skyColor = 1.0 - exp(-1.0 * skyColor);
+        skyColor = 1.1 - exp(-1.0 * skyColor);
         skyColor = mix(skyColor, oldC, night);
     }
 
