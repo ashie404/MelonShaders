@@ -147,7 +147,8 @@ void main() {
     } else if (isEyeInWater == 2) {
         // render lava fog
         float depth = length(viewPos.xyz);
-        color *= exp(-vec3(0.1, 0.7, 1.0) * depth);
+        color *= exp(-vec3(0.1, 0.2, 1.0) * (depth*4));
+        color += vec3(0.2, 0.05, 0.0)*0.25;
     }
 
     colorOut = vec4(color, 1.0);
