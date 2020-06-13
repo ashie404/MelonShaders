@@ -28,7 +28,6 @@
 // shadow settings
 #define SHADOW_SOFTNESS 2.0 // How soft the shadows should be. [1.0 1.25 1.5 1.75 2.0 2.25 2.5 2.75 3.0 3.5 4.0 4.5 5.0 6.0 7.0 8.0 9.0 10.0]
 
-
 #define SHADOW_BIAS 0.00025
 
 // sky settings
@@ -55,7 +54,11 @@
 #define BLOOM_STRENGTH 1.0
 #define LUT
 #define TAA
-#define DOF
+
+// camera settings
+#define DOF // Depth of field.
+#define DOF_QUALITY 2 // Quality of the depth of field. Higher is laggier, but will look better. [1 2 3 4]
+#define APERTURE 1.0 // The aperture of the camera. Determines how big the depth of field is. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
 // tweaks
 
@@ -74,4 +77,4 @@
 const int noiseTextureResolution = 256;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
-const float sunPathRotation = -30.0;
+const float sunPathRotation = -30.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]

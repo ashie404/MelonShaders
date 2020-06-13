@@ -37,26 +37,28 @@ void main() {
     float currentDepth = texture2D(depthtex0, texcoord).r;
     vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
 
+    int dofSteps = 8*DOF_QUALITY;
+
     // distance blur
     if (currentDepth >= centerDepthSmooth) {
         vec3 blurred = vec3(0.0);
-        float blurSize = clamp((currentDepth-centerDepthSmooth)*256.0, 0.0, 12.0);
-        for (int i = 0; i <= 16; i++) {
+        float blurSize = clamp((currentDepth-centerDepthSmooth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
+        for (int i = 0; i <= dofSteps; i++) {
                 vec2 offset = poissonDisk[i] * oneTexel * blurSize;
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
         }
-        color = blurred / 16.0;
+        color = blurred / dofSteps;
     }
     
     // close up blur
     else if (currentDepth <= centerDepthSmooth) {
         vec3 blurred = vec3(0.0);
-        float blurSize = clamp((centerDepthSmooth-currentDepth)*256.0, 0.0, 12.0);
-        for (int i = 0; i <= 16; i++) {
+        float blurSize = clamp((centerDepthSmooth-currentDepth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
+        for (int i = 0; i <= dofSteps; i++) {
                 vec2 offset = poissonDisk[i] * oneTexel * blurSize;
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
         }
-        color = blurred / 16.0;
+        color = blurred / dofSteps;
     }
     #endif
 

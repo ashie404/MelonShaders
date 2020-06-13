@@ -12,10 +12,19 @@ option.BLOOM_STRENGTH=Bloom Strength
 
 option.TAA=Temporal Anti-Aliasing
 option.LUT=Color LUT
+
+screen.CAMERA=Camera Settings
 option.DOF=Depth of Field
+option.DOF_QUALITY=DOF Quality
+value.DOF_QUALITY.1=§aLow
+value.DOF_QUALITY.2=§eMedium
+value.DOF_QUALITY.3=§cHigh
+value.DOF_QUALITY.4=§4Ultra
+option.APERTURE=Aperture
 
 screen.ACES_SETTINGS=ACES Settings
 
+option.sunPathRotation=Sun Path Rotation
 option.CELESTIAL_RADIUS=Celestial Body Radius
 option.STARS=Stars
 
