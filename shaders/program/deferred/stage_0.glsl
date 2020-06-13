@@ -68,7 +68,7 @@ void main() {
     vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
 	vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
-    vec4 worldPos = vec4(mat3(gbufferModelViewInverse) * viewPos.xyz, 1.0);
+    vec4 worldPos = gbufferModelViewInverse * viewPos;
 
     // if sky, draw sky. else, calculate shading.
     if (texture2D(depthtex0, texcoord).r == 1.0) {
