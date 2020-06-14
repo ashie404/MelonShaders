@@ -122,6 +122,8 @@ void main() {
 		    	    color += vec3(0.75) * ambientColor;
 		        } 
                 #endif
+
+                applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
             }
         }
         #ifdef SSR
