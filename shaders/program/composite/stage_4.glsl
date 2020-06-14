@@ -61,7 +61,7 @@ void main() {
 
     colorOut = texture2D(colortex6, texcoord);
     
-    taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/2.0)+(YCoCgToRGB(history)/2.0), 1.0);
+    taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/11.0)+(YCoCgToRGB(history)/1.1), 1.0);
     #else
     colorOut = texture2D(colortex0, texcoord);
     #endif
