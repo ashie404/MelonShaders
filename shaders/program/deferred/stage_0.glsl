@@ -70,13 +70,15 @@ in vec3 lightColor;
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
-    vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
+    float depth0 = texture2D(depthtex0, texcoord).r;
+
+    vec4 screenPos = vec4(vec3(texcoord, depth0) * 2.0 - 1.0, 1.0);
 	vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
 
     // if sky, draw sky. else, calculate shading.
-    if (texture2D(depthtex0, texcoord).r == 1.0) {
+    if (depth0 == 1.0) {
         color = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
     } else {
         Fragment frag = getFragment(texcoord);

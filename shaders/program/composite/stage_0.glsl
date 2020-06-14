@@ -76,13 +76,15 @@ const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
-    vec4 screenPos = vec4(vec3(texcoord, texture2D(depthtex0, texcoord).r) * 2.0 - 1.0, 1.0);
+    float depth0 = texture2D(depthtex0, texcoord).r;
+
+    vec4 screenPos = vec4(vec3(texcoord, depth0) * 2.0 - 1.0, 1.0);
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
     
     // if not sky check for translucents
-    if (texture2D(depthtex0, texcoord).r != 1.0) {
+    if (depth0 != 1.0) {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
 
@@ -95,7 +97,7 @@ void main() {
             color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
         } else if (frag.matMask == 3) {
             // render water fog
-            float depth0 = linear(texture2D(depthtex0, texcoord).r);
+            float depth0 = linear(depth0);
             float depth1 = linear(texture2D(depthtex1, texcoord).r);
 
             float depthcomp = (depth1-depth0);
@@ -152,7 +154,7 @@ void main() {
     #ifdef FOG
     else {
         // render regular fog
-        if (texture2D(depthtex0, texcoord).r != 1.0) {
+        if (depth0 != 1.0) {
             if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                 vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
                 float fade = clamp01((eyeBrightnessSmooth.y-9)/55.0);

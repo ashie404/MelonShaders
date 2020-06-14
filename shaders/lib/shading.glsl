@@ -32,7 +32,7 @@ vec4 getShadows(in vec2 coord, in vec3 shadowPos)
         visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         
         // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
-        if (texture2D(shadowtex0, shadowPos.xy + offset).r < texture2D(shadowtex1, shadowPos.xy + offset).r ) {
+        if (shadowMapSample < texture2D(shadowtex1, shadowPos.xy + offset).r ) {
             vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
             shadowCol += colorSample*8;
         } else {
@@ -131,7 +131,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     #ifdef SPECULAR
     // calculate specular highlights if non-shadowed
     
-    if (shadowLight.a > 0.1 && fragment.lightmap.y <= 0.05) {
+    if (shadowLight.a > 0.1) {
         float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
         vec3 specularHighlight = specularStrength * lightColor;
         color += mix(vec3(0.0), specularHighlight, clamp01(shadowLight.a));
