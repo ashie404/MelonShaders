@@ -97,10 +97,10 @@ void main() {
             color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
         } else if (frag.matMask == 3) {
             // render water fog
-            float depth0 = linear(depth0);
-            float depth1 = linear(texture2D(depthtex1, texcoord).r);
+            float ldepth0 = linear(depth0);
+            float ldepth1 = linear(texture2D(depthtex1, texcoord).r);
 
-            float depthcomp = (depth1-depth0);
+            float depthcomp = (ldepth1-ldepth0);
             // set color to color without water in it
             vec3 oldcolor = color;
             color = texture2D(colortex5, texcoord).rgb;
