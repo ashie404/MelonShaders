@@ -88,6 +88,13 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
     vec3 blockLight = blockLightColor * fragment.lightmap.x;
 
+    #ifdef NETHER
+
+    vec3 color = vec3(0.81, 0.5, 0.49)*0.25;
+    color += blockLight;
+
+    #else
+
     // calculate diffuse lighting
     float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal), pow(1.0 - pbrData.smoothness, 2.0));
     vec3 diffuseLight = diffuseStrength * lightColor;
@@ -136,6 +143,8 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
         vec3 specularHighlight = specularStrength * lightColor;
         color += mix(vec3(0.0), specularHighlight, clamp01(shadowLight.a));
     }
+    #endif
+
     #endif
 
     // multiply by albedo to get final color

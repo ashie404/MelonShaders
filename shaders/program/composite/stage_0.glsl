@@ -152,6 +152,7 @@ void main() {
         color += vec3(0.2, 0.05, 0.0)*0.25;
     } 
     #ifdef FOG
+    #ifndef NETHER
     else {
         // render regular fog
         if (depth0 != 1.0) {
@@ -167,6 +168,14 @@ void main() {
             }
         }
     }
+    #else
+    else {
+        // render regular fog
+        if (depth0 != 1.0) {
+            color = mix(color, vec3(0.1, 0.02, 0.015)*0.5, clamp01((depth/256.0)*FOG_DENSITY*4.0));
+        }
+    }
+    #endif
     #endif
 
     colorOut = vec4(color, 1.0);

@@ -79,7 +79,11 @@ void main() {
 
     // if sky, draw sky. else, calculate shading.
     if (depth0 == 1.0) {
+        #ifndef NETHER
         color = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
+        #else
+        color = vec3(0.1, 0.02, 0.015)*0.5;
+        #endif
     } else {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
