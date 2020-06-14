@@ -71,7 +71,7 @@ void main() {
     // output everything
 
     albedoOut = albedo;
-    lmMatOut = vec4(lmcoord.xy, 0.0, matMask);
+    lmMatOut = vec4(lmcoord.xy, albedo.a, matMask);
     normalOut = vec4(normalData.xyz * 0.5 + 0.5, 1.0);
     specularOut = specularData;
 

@@ -72,7 +72,6 @@ in vec3 lightColor;
 #include "/lib/raytrace.glsl"
 #include "/lib/reflection.glsl"
 
-const vec3 attenuationCoefficient = vec3(1.0, 0.2, 0.1);
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
@@ -90,11 +89,8 @@ void main() {
 
         // 2 is translucents tag
         if (frag.matMask == 2) {
-            vec4 pos = shadowModelView * worldPos;
-            pos = shadowProjection * pos;
-            pos /= pos.w;
-            vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
-            color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
+            color = calculateTranslucentShading(frag, pbr, normalize(viewPos.xyz), texture2D(colortex1, texcoord).b);
+            applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
         } else if (frag.matMask == 3) {
             // render water fog
             float ldepth0 = linear(depth0);
@@ -107,7 +103,7 @@ void main() {
             // if eye is not in water, render above-water fog and render sky reflection
             if (isEyeInWater == 0) {
                 // calculate transmittance
-                vec3 transmittance = exp(-attenuationCoefficient * depthcomp);
+                vec3 transmittance = exp(-vec3(1.0, 0.2, 0.1) * depthcomp);
                 color = color * transmittance;
                 // colorize water fog based on biome color
                 color *= oldcolor;
@@ -141,42 +137,6 @@ void main() {
         #endif
         #endif
     }
-
-    float depth = length(viewPos.xyz);
-    if (isEyeInWater == 1) {
-        // render underwater fog
-        color *= exp(-attenuationCoefficient * depth);
-    } else if (isEyeInWater == 2) {
-        // render lava fog
-        color *= exp(-vec3(0.1, 0.2, 1.0) * (depth*4));
-        color += vec3(0.2, 0.05, 0.0)*0.25;
-    } 
-    #ifdef FOG
-    #ifndef NETHER
-    else {
-        // render regular fog
-        if (depth0 != 1.0) {
-            if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
-                float fade = clamp01((eyeBrightnessSmooth.y-9)/55.0);
-                color = mix(color, mix(vec3(0.05), atmosColor, fade), clamp01((depth/256.0)*FOG_DENSITY*mix(8.0, 1.0, fade)));
-            } else if (eyeBrightnessSmooth.y <= 8) {
-                color = mix(color, vec3(0.05), clamp01((depth/256.0)*FOG_DENSITY*8.0));
-            } else {
-                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
-                color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
-            }
-        }
-    }
-    #else
-    else {
-        // render regular fog
-        if (depth0 != 1.0) {
-            color = mix(color, vec3(0.1, 0.02, 0.015)*0.5, clamp01((depth/256.0)*FOG_DENSITY*4.0));
-        }
-    }
-    #endif
-    #endif
 
     colorOut = vec4(color, 1.0);
 }

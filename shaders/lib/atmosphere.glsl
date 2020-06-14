@@ -266,3 +266,41 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
     return skyColor;
 }
+
+void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 color) {
+    float depth = length(viewPos);
+    if (isEyeInWater == 1) {
+        // render underwater fog
+        color *= exp(-vec3(1.0, 0.2, 0.1) * depth);
+    } else if (isEyeInWater == 2) {
+        // render lava fog
+        color *= exp(-vec3(0.1, 0.2, 1.0) * (depth*4));
+        color += vec3(0.2, 0.05, 0.0)*0.25;
+    } 
+    #ifdef FOG
+    #ifndef NETHER
+    else {
+        // render regular fog
+        if (depth0 != 1.0) {
+            if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                float fade = clamp01((eyeBrightnessSmooth.y-9)/55.0);
+                color = mix(color, mix(vec3(0.05), atmosColor, fade), clamp01((depth/256.0)*FOG_DENSITY*mix(8.0, 1.0, fade)));
+            } else if (eyeBrightnessSmooth.y <= 8) {
+                color = mix(color, vec3(0.05), clamp01((depth/256.0)*FOG_DENSITY*8.0));
+            } else {
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
+            }
+        }
+    }
+    #else
+    else {
+        // render regular fog
+        if (depth0 != 1.0) {
+            color = mix(color, vec3(0.1, 0.02, 0.015)*0.5, clamp01((depth/256.0)*FOG_DENSITY*4.0));
+        }
+    }
+    #endif
+    #endif
+}

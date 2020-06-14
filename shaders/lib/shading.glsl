@@ -153,3 +153,48 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     return color;
 }
 
+vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec, in float alpha) {
+    // calculate skylight
+    vec3 skyLight = ambientColor * fragment.lightmap.y;
+
+    // calculate blocklight
+    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
+    vec3 blockLight = blockLightColor * fragment.lightmap.x;
+
+    #ifdef NETHER
+
+    vec3 color = vec3(0.81, 0.5, 0.49)*0.25;
+    color += blockLight;
+
+    #else
+
+    // calculate diffuse lighting
+    float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal), pow(1.0 - pbrData.smoothness, 2.0));
+    vec3 diffuseLight = diffuseStrength * lightColor;
+
+    vec3 color = vec3(0.0);
+    if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+        color = mix(skyLight+blockLight, diffuseLight+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+    } else if (eyeBrightnessSmooth.y <= 8) {
+        color = skyLight+blockLight;
+    } else {
+        color = diffuseLight+skyLight+blockLight;
+    }
+
+    #ifdef SPECULAR
+    // calculate specular highlights
+    float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
+    vec3 specularHighlight = specularStrength * lightColor;
+    color += specularHighlight;
+    #endif
+
+    #endif
+
+    // multiply by albedo to get final color
+    color *= fragment.albedo.rgb;
+
+    color = mix(texture2D(colortex5, fragment.coord).rgb, color, alpha);
+
+    return color;
+}
+

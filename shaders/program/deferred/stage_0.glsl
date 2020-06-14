@@ -22,6 +22,7 @@ uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D colortex3;
+uniform sampler2D colortex5;
 
 uniform sampler2D depthtex0;
 
@@ -37,6 +38,7 @@ uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 
 uniform int frameCounter;
+uniform int isEyeInWater;
 
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
@@ -94,6 +96,7 @@ void main() {
         vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
         color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
+        applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
     }
     colorOut = vec4(color, 1.0);
     reflectionsOut = vec4(color, 1.0);
