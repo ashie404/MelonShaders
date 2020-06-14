@@ -96,7 +96,7 @@ void main() {
         vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
         color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
-        applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
+        if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
     }
     colorOut = vec4(color, 1.0);
     reflectionsOut = vec4(color, 1.0);
