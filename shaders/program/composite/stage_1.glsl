@@ -45,7 +45,13 @@ void main() {
         float blurSize = clamp((currentDepth-centerDepthSmooth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
         for (int i = 0; i <= dofSteps; i++) {
                 vec2 offset = poissonDisk[i] * oneTexel * blurSize;
+                #ifdef CHROM_ABB
+                float r = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).r;
+                vec2 gb = texture2D(colortex0, texcoord + offset).gb;
+                blurred += vec3(r, gb);
+                #else
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
+                #endif
         }
         color = blurred / dofSteps;
     }
@@ -56,7 +62,13 @@ void main() {
         float blurSize = clamp((centerDepthSmooth-currentDepth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
         for (int i = 0; i <= dofSteps; i++) {
                 vec2 offset = poissonDisk[i] * oneTexel * blurSize;
+                #ifdef CHROM_ABB
+                float b = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).b;
+                vec2 rg = texture2D(colortex0, texcoord + offset).rg;
+                blurred += vec3(rg, b);
+                #else
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
+                #endif
         }
         color = blurred / dofSteps;
     }

@@ -21,6 +21,7 @@ value.DOF_QUALITY.2=§eMedium
 value.DOF_QUALITY.3=§cHigh
 value.DOF_QUALITY.4=§4Ultra
 option.APERTURE=Aperture
+option.CHROM_ABB=Chromatic Aberration
 
 screen.ACES_SETTINGS=ACES Settings
 
