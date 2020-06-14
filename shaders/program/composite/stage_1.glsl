@@ -46,9 +46,9 @@ void main() {
         for (int i = 0; i <= dofSteps; i++) {
                 vec2 offset = poissonDisk[i] * oneTexel * blurSize;
                 #ifdef CHROM_ABB
-                float r = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).r;
-                vec2 gb = texture2D(colortex0, texcoord + offset).gb;
-                blurred += vec3(r, gb);
+                float g = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).g;
+                vec2 rb = texture2D(colortex0, texcoord + offset).rb;
+                blurred += vec3(rb.x, g, rb.y);
                 #else
                 blurred += texture2D(colortex0, texcoord + offset).rgb;
                 #endif
