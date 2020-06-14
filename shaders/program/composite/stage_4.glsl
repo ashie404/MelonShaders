@@ -59,9 +59,11 @@ void main() {
     
     history = clamp(history, colorMin, colorMax);
 
-    colorOut = texture2D(colortex6, texcoord);
+    history = YCoCgToRGB(history);
+
+    colorOut = vec4(mix(texture2D(colortex0, texcoord).rgb, history, 0.85), 1.0);
     
-    taaOut = vec4((texture2D(colortex0, texcoord+jitter()).rgb/11.0)+(YCoCgToRGB(history)/1.1), 1.0);
+    taaOut = vec4(mix(texture2D(colortex0, texcoord+jitter()).rgb, history, 0.95), 1.0);
     #else
     colorOut = texture2D(colortex0, texcoord);
     #endif
