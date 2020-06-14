@@ -75,6 +75,7 @@
 
 #define WIND // Whether to have waving terrain (leaves, plants) or not.
 #define WAVE_FOAM // Whether to have water foam or not.
+#define NIGHT_DESAT // Whether to desaturate dark colors at night.
 
 const int noiseTextureResolution = 256;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]

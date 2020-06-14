@@ -66,6 +66,7 @@ option.EMISSIVE_MAP_STRENGTH=Emissive Map Strength
 
 option.WIND=Wind
 option.WAVE_FOAM=Water Foam
+option.NIGHT_DESAT=Night Desaturation
 
 #ACES
 option.SAT_MOD=Saturation

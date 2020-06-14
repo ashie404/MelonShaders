@@ -28,6 +28,7 @@ uniform sampler2D colortex7;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float sunAngle;
 
 vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     #ifndef LUT
@@ -60,20 +61,18 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     return vec3(newColor.rgb);
 }
 
-vec3 desaturate(vec3 color, float desaturationFac)
-{
-	vec3 grayXfer = vec3(0.3, 0.59, 0.11);
-	vec3 gray = vec3(dot(grayXfer, color));
-	return mix(color, gray, desaturationFac);
-}
-
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
     // ACES color grading (from Raspberry Shaders https://rutherin.netlify.app)
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
-	m.saturation = 0.95 + SAT_MOD; // TODO: night desaturation
+    #ifdef NIGHT_DESAT
+    float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
+	m.saturation = 0.95 + SAT_MOD - clamp(mix(0.0, 1.0-clamp01(luma(color)*16), night), 0.0, 0.8);
+    #else
+    m.saturation = 0.95 + SAT_MOD;
+    #endif
 	m.vibrance = VIB_MOD;
 	m.contrast = 1.0 - CONT_MOD;
 	m.contrastMidpoint = CONT_MIDPOINT;
