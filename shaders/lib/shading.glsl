@@ -120,7 +120,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
             visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         }
 
-        float strength = 1.0-(depth-(visibility/16));
+        float strength = 1.0-(depth-(visibility/8));
         vec3 subsurfColor = mix(vec3(0), lightColor/2.0, clamp01(strength))*SSS_STRENGTH;
         color += subsurfColor;
     }
