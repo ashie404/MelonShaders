@@ -24,7 +24,7 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius, bool isMoon
 
 float clouds(vec2 coord, float time)
 {
-    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp(CLOUD_COVERAGE + rainStrength*2, 0.0, 2.0); // cloud coverage value
+    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp(CLOUD_COVERAGE + rainStrength*2.0, 0.0, 2.0); // cloud coverage value
 
     // base noises
  	float perlinFbm = perlinFbm(coord, 2.0, time); // perlin fbm noise
@@ -241,15 +241,15 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
                 }
             }
             #endif
-            cloudColor += 0.05-(night*0.035); // cloud "ambient" brightness
+            cloudColor += clamp01(0.05-(night*0.035)); // cloud "ambient" brightness
             // beer's law + powder sugar
             if (night > 0.25)
-                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * (4.0/(night*4));
+                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * clamp01(4.0/(night*4));
             else
                 cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0;
             cloudColor *= cloudShape;
 
-            skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*lightColor, clamp01(cloudShape)), clamp01(worldPos.y/48.0));
+            skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*max(lightColor, 0.1), clamp01(cloudShape)), clamp01(worldPos.y/48.0));
         }
         #endif
 
