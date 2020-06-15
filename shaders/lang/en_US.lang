@@ -70,6 +70,12 @@ option.WIND_STRENGTH=Wind Strength
 option.WAVE_FOAM=Water Foam
 option.NIGHT_DESAT=Night Desaturation
 
+screen.VISUAL=Visual
+
+option.TRANS_REFRACTION=Translucent Refractions
+option.REFRACTION_STRENGTH=Refraction Strength
+option.BLUR_TRANSLUCENT=Blur Translucents
+
 #ACES
 option.SAT_MOD=Saturation
 option.VIB_MOD=Vibrance

@@ -79,6 +79,10 @@
 #define WAVE_FOAM // Whether to have water foam or not.
 #define NIGHT_DESAT // Whether to desaturate dark colors at night.
 
+//#define TRANS_REFRACTION // Whether to have (fake) translucent refraction or not.
+#define REFRACTION_STRENGTH 1.0 // Strength of translucent refraction. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2.0]
+//#define BLUR_TRANSLUCENT // Whether to blur translucents or not. Has no effect if translucent refraction is off.
+
 const int noiseTextureResolution = 256;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
