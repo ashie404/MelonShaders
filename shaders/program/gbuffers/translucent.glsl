@@ -103,6 +103,8 @@ uniform mat4 gbufferProjectionInverse;
 attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
 
+#include "/lib/noise.glsl"
+
 void main() {
 	gl_Position = ftransform();
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
