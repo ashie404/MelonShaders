@@ -154,7 +154,7 @@ out vec3 viewPos;
 #include "/lib/noise.glsl"
 
 void main() {
-	gl_Position = ftransform();
+	vec4 position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
 	lmcoord  = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
 	glcolor = gl_Color;
@@ -162,7 +162,7 @@ void main() {
 
     #ifdef WIND
     if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
-        gl_Position.x += sin(frameTimeCounter*cellular(gl_Vertex.xyz)*4)/32;
+        position.xz += sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4)/32;
     }
     #endif
 
@@ -171,6 +171,8 @@ void main() {
     normal   = normalize(gl_NormalMatrix * gl_Normal);
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
+
+    gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
 }
 
 #endif
