@@ -25,6 +25,7 @@ uniform sampler2D colortex3;
 uniform sampler2D colortex5;
 
 uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
@@ -44,10 +45,13 @@ uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
 uniform mat4 gbufferPreviousModelView;
 uniform mat4 gbufferPreviousProjection;
+uniform mat4 gbufferProjection;
 uniform ivec2 eyeBrightnessSmooth;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float far, near;
+uniform float aspectRatio;
 uniform float sunAngle;
 uniform float frameTimeCounter;
 uniform float rainStrength;
@@ -60,14 +64,18 @@ in vec2 texcoord;
 in vec3 ambientColor;
 in vec3 lightColor;
 
+#define linear(x) (2.0 * near) / (far + near - x * (far - near))
+
 #include "/lib/distort.glsl"
 #include "/lib/fragmentUtil.glsl"
 #include "/lib/labpbr.glsl"
 #include "/lib/poisson.glsl"
 #include "/lib/shading.glsl"
+#include "/lib/dither.glsl"
 #include "/lib/noise.glsl"
 #include "/lib/atmosphere.glsl"
-//#include "/lib/temporalUtil.glsl"
+
+#include "/lib/ssao.glsl"
 
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
@@ -96,6 +104,11 @@ void main() {
         vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
 
         color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
+
+        // calculate ssao
+        float ao = AmbientOcclusion(depthtex0, bayer64(gl_FragCoord.xy));
+        color *= mix(1.0, ao, 0.65);
+
         if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
     }
     colorOut = vec4(color, 1.0);

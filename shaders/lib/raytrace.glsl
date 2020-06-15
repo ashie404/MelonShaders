@@ -3,7 +3,7 @@
     https://j0sh.cf
 */
 
-// Raytracing code based on BSL
+// Raytracing code from BSL Shaders ( https://bitslablab.com/ )
 
 vec3 nvec3(vec4 pos){
     return pos.xyz/pos.w;

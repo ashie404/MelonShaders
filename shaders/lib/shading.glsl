@@ -12,6 +12,7 @@ mat2 getRotationMatrix(in vec2 coord) {
             viewHeight / noiseTextureResolution
         )
     ).r;
+    rotationAmount = fract(frameTimeCounter * 4.0 + rotationAmount);
     return mat2(
         cos(rotationAmount), -sin(rotationAmount),
         sin(rotationAmount), cos(rotationAmount)

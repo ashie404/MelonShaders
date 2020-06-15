@@ -41,6 +41,7 @@ uniform mat4 shadowProjection;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float aspectRatio;
 uniform float far;
 uniform float near;
 uniform float sunAngle;
@@ -139,6 +140,8 @@ void main() {
         #endif
         #endif
     }
+
+    // apply fog
 
     if (isEyeInWater != 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
 
