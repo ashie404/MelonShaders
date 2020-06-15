@@ -43,15 +43,13 @@ vec4 getTangentNormals(vec2 coord) {
 
 void main() {
     // get albedo
-
     vec4 albedo = texture2D(texture, texcoord) * glcolor;
     albedo.rgb = toLinear(albedo.rgb);
-    // TODO: make emissives brighter
-
-    // get lightmap
 
     // correct floating point precision errors
     int correctedId = int(id + 0.5);
+
+    // determine material mask
     float matMask = 2.0;
     if (correctedId == 8) {
         matMask = 3.0;
@@ -103,8 +101,6 @@ uniform mat4 gbufferProjectionInverse;
 attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
 
-#include "/lib/noise.glsl"
-
 void main() {
 	gl_Position = ftransform();
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
@@ -116,12 +112,6 @@ void main() {
     vec3 tangent = normalize(gl_NormalMatrix * (at_tangent.xyz));
 
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
-
-    float waterWaves = 0.0;
-    // if water do fancy stuff for waves
-    if (id == 8.0) {
-        // unimplemented for now
-    }
 }
 
 #endif

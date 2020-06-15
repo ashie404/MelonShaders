@@ -28,7 +28,6 @@ void main() {
 		discard;
 	} else {
 		vec4 color = texture2D(texture, texcoord) * color;
-
 		shadowcolor0Out = color;
 	}
 }

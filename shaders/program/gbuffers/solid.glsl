@@ -51,7 +51,7 @@ vec4 getTangentNormals(vec2 coord) {
 }
 
 void main() {
-
+    // correct floating point precision errors
     int correctedId = int(id + 0.5);
 
     // get specular
@@ -82,7 +82,7 @@ void main() {
     }
 
 
-    // correct floating point precision errors
+    // determine material mask
     
     float matMask = 0.0;
     // subsurf scattering id is 20, 21 and 23
@@ -104,7 +104,7 @@ void main() {
     normalData = normalize(normalData * tbn);
     #endif
 
-    // lightmap
+    // get lightmap
     #ifdef DIRECTIONAL_LIGHTMAP
     vec2 lm = lmcoord.xy;
 
