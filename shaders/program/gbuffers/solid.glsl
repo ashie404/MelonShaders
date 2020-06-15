@@ -81,6 +81,10 @@ void main() {
         albedo.rgb *= clamp(specularData.a * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
     }
 
+    #ifdef SPIDEREYES
+    albedo.rgb *= 100.0;
+    #endif
+
 
     // determine material mask
     

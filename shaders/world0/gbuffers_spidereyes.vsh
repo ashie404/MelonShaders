@@ -6,4 +6,5 @@
 */
 
 #define VERT
+#define SPIDEREYES
 #include "/program/gbuffers/solid.glsl"

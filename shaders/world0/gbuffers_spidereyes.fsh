@@ -6,4 +6,5 @@
 */
 
 #define FRAG
+#define SPIDEREYES
 #include "/program/gbuffers/solid.glsl"
