@@ -7,4 +7,5 @@
 
 #define VERT
 #define NETHER
+#define SPIDEREYES
 #include "/program/gbuffers/solid.glsl"
