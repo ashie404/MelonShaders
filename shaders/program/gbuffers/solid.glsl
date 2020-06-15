@@ -82,7 +82,7 @@ void main() {
     }
 
     #ifdef SPIDEREYES
-    albedo.rgb *= 100.0;
+    albedo.rgb *= 300.0;
     #endif
 
 
