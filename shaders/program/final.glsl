@@ -54,6 +54,14 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     texPos2.x = (quad2.x * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.r);
     texPos2.y = (quad2.y * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.g);
 
+    float voffset = (LUTV*512.0)/2048.0;
+
+    texPos1.y /= 4.0;
+    texPos2.y /= 4.0;
+
+    texPos1.y += voffset;
+    texPos2.y += voffset;
+
     vec4 newColor1 = texture2D(lookupTable, texPos1);
     vec4 newColor2 = texture2D(lookupTable, texPos2);
 

@@ -55,6 +55,7 @@
 #define BLOOM
 #define BLOOM_STRENGTH 1.0 // Strength of bloom. [0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.7 1.75]
 #define LUT
+#define LUTV 0 // Which color LUT to use. [0 1 2 3]
 #define TAA
 
 // camera settings

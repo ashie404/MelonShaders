@@ -12,6 +12,11 @@ option.BLOOM_STRENGTH=Bloom Strength
 
 option.TAA=Temporal Anti-Aliasing
 option.LUT=Color LUT
+option.LUTV=LUT
+value.LUTV.0=Kingdom Come
+value.LUTV.1=Kodak DSCS 3151
+value.LUTV.2=Agfachrome RSX2 050
+value.LUTV.3=Fujifilm F400
 
 screen.CAMERA=Camera Settings
 option.DOF=Depth of Field
