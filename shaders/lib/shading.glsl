@@ -196,12 +196,12 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     #ifdef TRANS_REFRACTION
     vec3 behind = vec3(0.0);
     vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
-    
+
     #ifdef BLUR_TRANSLUCENT
     for (int i = 0; i <= 16; i++) {
         vec2 poffset = vec2(7.0*REFRACTION_STRENGTH) * (1.0-alpha);
-        vec2 gboffset = (poissonDisk[i] + poffset) * oneTexel * (8.0*REFRACTION_STRENGTH);
-        vec2 roffset = (poissonDisk[i+14] + poffset) * oneTexel * (10.0*REFRACTION_STRENGTH);
+        vec2 gboffset = (poissonDisk[i] + poffset) * oneTexel * (4.0*REFRACTION_STRENGTH);
+        vec2 roffset = (poissonDisk[i+14] + poffset) * oneTexel * (5.0*REFRACTION_STRENGTH);
         vec3 temp = vec3(0.0, texture2D(colortex5, fragment.coord + gboffset).gb);
         temp.r = texture2D(colortex5, fragment.coord + roffset).r;
         behind += temp;
@@ -209,8 +209,8 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     behind /= 16.0;
     #else
     vec2 poffset = vec2(7.0*REFRACTION_STRENGTH) * (1.0-alpha);
-    vec2 gboffset = poffset * oneTexel * (8.0*REFRACTION_STRENGTH);
-    vec2 roffset = poffset * oneTexel * (10.0*REFRACTION_STRENGTH);
+    vec2 gboffset = poffset * oneTexel * (4.0*REFRACTION_STRENGTH);
+    vec2 roffset = poffset * oneTexel * (5.0*REFRACTION_STRENGTH);
     behind = vec3(0.0, texture2D(colortex5, fragment.coord + gboffset).gb);
     behind.r = texture2D(colortex5, fragment.coord + roffset).r;
     #endif
