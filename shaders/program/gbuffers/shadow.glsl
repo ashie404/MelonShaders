@@ -68,7 +68,7 @@ void main() {
 
 	#ifdef WIND
     if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
-        position.xz += sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4)/32;
+        position.xz += (sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4)/16)*WIND_STRENGTH;
     }
     #endif
 
