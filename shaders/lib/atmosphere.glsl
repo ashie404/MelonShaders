@@ -259,7 +259,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         #ifdef STARS
         float starNoise = cellular(normalize(worldPos)*32);
         if (starNoise <= 0.05) {
-            skyColor += mix(vec3(0.0), mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos)*16)), clamp01(1.0-starNoise)), night), clamp01(1.0-(cloudShape*4.0)));
+            skyColor += mix(vec3(0.0), mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos)*16.0)*4.0), clamp01(1.0-starNoise)), night), clamp01(1.0-(cloudShape*4.0)));
         }
         #endif
     }
