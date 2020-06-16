@@ -81,6 +81,12 @@ option.TRANS_REFRACTION=Translucent Refractions
 option.REFRACTION_STRENGTH=Refraction Strength
 option.BLUR_TRANSLUCENT=Blur Translucents
 
+option.DEBUG_MODE=Debug Mode
+value.DEBUG_MODE.0=Off
+value.DEBUG_MODE.1=Lightmap
+value.DEBUG_MODE.2=Normals
+value.DEBUG_MODE.3=Specular
+
 #ACES
 option.SAT_MOD=Saturation
 option.VIB_MOD=Vibrance
