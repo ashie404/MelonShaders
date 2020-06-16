@@ -10,9 +10,10 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:05 */
+/* DRAWBUFFERS:015 */
 layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 reflectionsOut;
+layout (location = 1) out vec4 lmMatOut;
+layout (location = 2) out vec4 reflectionsOut;
 
 /*
 const float eyeBrightnessSmoothHalflife = 4.0;
@@ -81,6 +82,7 @@ void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
     float depth0 = texture2D(depthtex0, texcoord).r;
+    float depth1 = texture2D(depthtex1, texcoord).r;
 
     vec4 screenPos = vec4(vec3(texcoord, depth0) * 2.0 - 1.0, 1.0);
 	vec4 viewPos = gbufferProjectionInverse * screenPos;
@@ -97,6 +99,27 @@ void main() {
     } else {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
+
+        #ifdef LIGHTMAP_FILTER
+        #ifndef DIRECTIONAL_LIGHTMAP
+        float baseDepth = linear(depth0);
+        vec2 oneTexel = (1.0 / vec2(viewWidth, viewHeight)) * 64.0;
+        vec2 lightmap = vec2(0.0);
+        for (int i = 0; i <= 16; i++) {
+            vec2 offset = poissonDisk[i] * oneTexel;
+            float currentDepth = linear(texture2D(depthtex0, texcoord + offset).r);
+            if (currentDepth >= baseDepth-0.01 && currentDepth <= baseDepth+0.01) {
+                lightmap += texture2D(colortex1, texcoord + offset).xy;
+            } else {
+                lightmap += frag.lightmap;
+            }
+        }
+        lightmap /= 16.0;
+        frag.lightmap = lightmap;
+        #endif
+        #endif
+
+        lmMatOut = vec4(frag.lightmap, texture2D(colortex1, texcoord).ba);
 
         vec4 pos = shadowModelView * worldPos;
         pos = shadowProjection * pos;

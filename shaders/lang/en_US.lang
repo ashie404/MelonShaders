@@ -52,6 +52,7 @@ option.SSS=Subsurface Scattering
 option.SSS_STRENGTH=SSS Strength
 option.DIRECTIONAL_LIGHTMAP=Directional Lightmap
 option.DIRECTIONAL_LIGHTMAP_STRENGTH=Directional Lightmap Strength
+option.LIGHTMAP_FILTER=Lightmap Filtering
 
 screen.SHADOWS=Shadows
 option.shadowMapResolution=Shadow Resolution
