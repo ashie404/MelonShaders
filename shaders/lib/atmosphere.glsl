@@ -26,21 +26,14 @@ float clouds(vec2 coord, float time)
 {
     float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp(CLOUD_COVERAGE + rainStrength*2.0, 0.0, 2.0); // cloud coverage value
 
-    // base noises
- 	float perlinFbm = perlinFbm(coord, 2.0, time); // perlin fbm noise
-    vec4 worleyFbmLowFreq = worleyFbm(coord, 2.0, time * 2.0, false); // low frequency worley without curl
-    vec4 worleyFbmHighFreq = worleyFbm(coord, 8.0, time * 4.0, true); // high freq worley with curl
+    float perlinFbm = perlinFbm(coord, 2.0, time);
+    vec4 worleyFbmLowFreq = worleyFbm(coord, 2.0, time * 2.0, false);
+    vec4 worleyFbmHighFreq = worleyFbm(coord, 4.0, time * 4.0, true);
 
-    // remapping of noise values
-    float perlinWorley = remap(abs(perlinFbm * 2.0 - 1.0), 1.0 - worleyFbmLowFreq.r, 1.0, 0.0, 1.0);
-    perlinWorley = remap(perlinWorley, 1.0 - coverage, 1.0, 0.0, 1.0) * coverage;
+    float perlinWorley = remap(perlinFbm, 1.0 - coverage, 1.0, 0.0, 1.0) * coverage;
 
-    float worleyLowFreq = worleyFbmLowFreq.g * 0.625 + worleyFbmLowFreq.b * 0.25 + worleyFbmLowFreq.a * 0.125;
-    float worleyHighFreq = worleyFbmHighFreq.g * 0.625 + worleyFbmHighFreq.b * 0.25 + worleyFbmHighFreq.a * 0.125;
-
-    // create final clouds by remapping previous noise values
-    float finalClouds = remap(perlinWorley, worleyLowFreq - 1.0, 1.0, 0.0, 1.0);
-    finalClouds = remap(finalClouds, worleyHighFreq * 0.2, 1.0, 0.0, 1.0);
+    float finalClouds = remap(perlinWorley, 1.0 - worleyFbmLowFreq.r, 1.0, 0.0, 1.0);
+    finalClouds = remap(finalClouds, worleyFbmHighFreq.g * 0.45, 1.0, 0.0, 1.0);
     
     return max(0.0, finalClouds);
 }
