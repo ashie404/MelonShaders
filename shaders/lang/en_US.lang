@@ -75,6 +75,7 @@ option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
 option.WAVE_FOAM=Water Foam
 option.NIGHT_DESAT=Night Desaturation
+option.WHITEWORLD=Whiteworld
 
 screen.VISUAL=Visual
 

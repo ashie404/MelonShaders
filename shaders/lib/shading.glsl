@@ -149,7 +149,9 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     #endif
 
     // multiply by albedo to get final color
+    #ifndef WHITEWORLD
     color *= fragment.albedo.rgb;
+    #endif
 
     return color;
 }
@@ -220,6 +222,10 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     vec3 behind = texture2D(colortex5, fragment.coord).rgb;
     #endif
 
+    #ifdef WHITEWORLD
+    color = vec3(1.0);
+    #endif
+    
     color = mix(behind, color, alpha);
 
     return color;
