@@ -216,8 +216,8 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             vec2 sunUv = (sunVec.xz / sunVec.y)/2;
 
             // set up 2D ray march variables
-            vec2 marchDist = vec2(0.35 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
-            float stepsInv = 1.0 / 3.0;
+            vec2 marchDist = vec2(0.25 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
+            float stepsInv = 1.0 / 4.0;
             vec2 sunDir = normalize(sunUv - uv) * marchDist * stepsInv;
             vec2 marchUv = uv;
             float cloudColor = 1.0;
@@ -234,7 +234,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
                 }
             }
             #endif
-            cloudColor += clamp01(0.05-(night*0.035)); // cloud "ambient" brightness
+            cloudColor += clamp01(0.015-(night*0.0015)); // cloud "ambient" brightness
             // beer's law + powder sugar
             if (night > 0.25)
                 cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * clamp01(4.0/(night*4));
