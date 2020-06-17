@@ -237,7 +237,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
             cloudColor += clamp01(0.015-(night*0.0015)); // cloud "ambient" brightness
             // beer's law + powder sugar
             if (night > 0.25)
-                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * clamp01(4.0/(night*4));
+                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * clamp(4.0/(night*4), 0.1, 1.0);
             else
                 cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0;
             cloudColor *= cloudShape;
