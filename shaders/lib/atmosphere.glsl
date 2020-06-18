@@ -24,15 +24,12 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius, bool isMoon
 
 float clouds(vec2 coord, float time)
 {
-    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp(CLOUD_COVERAGE + rainStrength*2.0, 0.0, 2.0); // cloud coverage value
+    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp((CLOUD_COVERAGE*0.9) + rainStrength*2.0, 0.0, 2.0); // cloud coverage value
 
     float perlinFbm = perlinFbm(coord, 2.0, time);
-    vec4 worleyFbmLowFreq = worleyFbm(coord, 2.0, time * 2.0, false);
     vec4 worleyFbmHighFreq = worleyFbm(coord, 4.0, time * 4.0, true);
 
-    float perlinWorley = remap(perlinFbm, 1.0 - coverage, 1.0, 0.0, 1.0) * coverage;
-
-    float finalClouds = remap(perlinWorley, 1.0 - worleyFbmLowFreq.r, 1.0, 0.0, 1.0);
+    float finalClouds = remap(texture2D(noisetex, (coord/2.0) + (time/4.0)).g, 1.0 - coverage, 1.0, 0.0, 1.0) * coverage;
     finalClouds = remap(finalClouds, worleyFbmHighFreq.g * 0.45, 1.0, 0.0, 1.0);
     
     return max(0.0, finalClouds);

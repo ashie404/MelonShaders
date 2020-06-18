@@ -90,7 +90,7 @@
 // debug stuff
 #define DEBUG_MODE 0 // Debug mode display. [0 1 2 3]
 
-const int noiseTextureResolution = 256;
+const int noiseTextureResolution = 512;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
 const float sunPathRotation = -30.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]
