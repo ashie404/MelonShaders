@@ -20,6 +20,8 @@ layout (location = 3) out vec4 specularOut; // specular output
 uniform sampler2D texture;
 uniform sampler2D normals;
 uniform sampler2D specular;
+uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferModelViewInverse;
 
 // inputs from vertex
 in float id;

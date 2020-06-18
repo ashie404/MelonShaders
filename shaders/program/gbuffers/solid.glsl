@@ -26,6 +26,8 @@ uniform float sunAngle;
 uniform float viewWidth;
 uniform float viewHeight;
 
+uniform mat4 gbufferModelViewInverse;
+
 // inputs from vertex
 in float id;
 in vec2 texcoord;
