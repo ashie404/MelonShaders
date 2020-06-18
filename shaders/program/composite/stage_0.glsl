@@ -25,6 +25,7 @@ uniform sampler2D colortex5;
 
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
+uniform sampler2D depthtex2;
 
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
@@ -52,6 +53,7 @@ uniform float centerDepthSmooth;
 uniform ivec2 eyeBrightnessSmooth;
 
 uniform vec3 shadowLightPosition;
+uniform vec3 cameraPosition;
 uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 
@@ -122,6 +124,10 @@ void main() {
                 if (depthcomp <= 0.15) {
 		    	    color += vec3(0.75) * ambientColor;
 		        } 
+
+                vec3 worldPosCamera = worldPos.xyz + cameraPosition;
+                worldPosCamera.z += int((frameTimeCounter/12.0)*16.0)/16.0;
+                color += vec3(texture2D(depthtex2, worldPosCamera.xz).r) * 0.75 * ambientColor;
                 #endif
 
                 applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
