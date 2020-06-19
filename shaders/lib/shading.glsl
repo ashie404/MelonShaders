@@ -87,7 +87,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
 
     // calculate blocklight
     vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
-    vec3 blockLight = blockLightColor * fragment.lightmap.x;
+    vec3 blockLight = blockLightColor * pow(fragment.lightmap.x, 4);
 
     #ifdef NETHER
 
@@ -106,9 +106,9 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     // combine lighting
     vec3 color = vec3(0.0);
     if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-        color = mix(shadowLight.rgb+skyLight+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+        color = mix(shadowLight.rgb+vec3(0.001)+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
     } else if (eyeBrightnessSmooth.y <= 8) {
-        color = shadowLight.rgb+skyLight+blockLight;
+        color = shadowLight.rgb+vec3(0.001)+blockLight;
     } else {
         color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
     }
