@@ -73,7 +73,7 @@ void main() {
 
 	gl_Position = gl_ProjectionMatrix * shadowModelView * position;
 	gl_Position.xyz = distort(gl_Position.xyz);
-	if (mc_Entity.x == 8.0) {
+	if (mc_Entity.x == 8.0 || mc_Entity.x == 9.0) {
 		isWater = 1.0;
 	} else {
 		isWater = 0.0;
