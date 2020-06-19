@@ -162,7 +162,7 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
 
     // calculate blocklight
     vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
-    vec3 blockLight = blockLightColor * fragment.lightmap.x;
+    vec3 blockLight = blockLightColor * pow(fragment.lightmap.x, 4);
 
     #ifdef NETHER
 
@@ -177,9 +177,9 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
 
     vec3 color = vec3(0.0);
     if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-        color = mix(skyLight+blockLight, diffuseLight+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+        color = mix(vec3(0.001)+blockLight, diffuseLight+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
     } else if (eyeBrightnessSmooth.y <= 8) {
-        color = skyLight+blockLight;
+        color = vec3(0.001)+blockLight;
     } else {
         color = diffuseLight+skyLight+blockLight;
     }
