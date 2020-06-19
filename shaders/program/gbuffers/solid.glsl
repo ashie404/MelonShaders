@@ -70,11 +70,11 @@ void main() {
     // emissive handling
     if (EMISSIVE_MAP == 0) {
         if (correctedId == 50)  albedo.rgb *= clamp01(pow(luminance, 6))*100.0;
-        if (correctedId == 51)  albedo.rgb *= clamp01(pow(luminance, 6))*150.0;
-        if (correctedId == 83)  albedo.rgb *= clamp01(pow(luminance, 8))*250.0;
-        if (correctedId == 100) albedo.rgb *= clamp01(pow(luminance, 8))*200.0;
-        if (correctedId == 110) albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
-        if (correctedId == 120) albedo.rgb *= 100;
+        else if (correctedId == 51)  albedo.rgb *= clamp01(pow(luminance, 6))*150.0;
+        else if (correctedId == 83)  albedo.rgb *= clamp01(pow(luminance, 8))*250.0;
+        else if (correctedId == 100) albedo.rgb *= clamp01(pow(luminance, 8))*200.0;
+        else if (correctedId == 110) albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
+        else if (correctedId == 120) albedo.rgb *= 100;
     } else if (EMISSIVE_MAP == 1 && specularData.b > 0.0) {
         albedo.rgb *= clamp(specularData.b * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
     } else if (EMISSIVE_MAP == 2 && specularData.a < 1.0) {
