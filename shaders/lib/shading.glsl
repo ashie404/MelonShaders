@@ -86,7 +86,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
     // calculate blocklight
-    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I*2.0;
+    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
     vec3 blockLight = blockLightColor * pow(fragment.lightmap.x, 4);
 
     #ifdef NETHER
@@ -161,7 +161,7 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
     // calculate blocklight
-    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I*2.0;
+    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
     vec3 blockLight = blockLightColor * pow(fragment.lightmap.x, 4);
 
     #ifdef NETHER
