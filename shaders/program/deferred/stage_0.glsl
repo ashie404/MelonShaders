@@ -124,7 +124,7 @@ void main() {
         vec4 pos = shadowModelView * worldPos;
         pos = shadowProjection * pos;
         pos /= pos.w;
-        vec3 shadowPos = distort(pos.xyz) * 0.5 + 0.5;
+        vec3 shadowPos = pos.xyz;
 
         color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
 

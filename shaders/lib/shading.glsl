@@ -20,27 +20,28 @@ mat2 getRotationMatrix(in vec2 coord) {
 }
 
 // shadowmap sampling
-vec4 getShadows(in vec2 coord, in vec3 shadowPos)
+vec4 getShadows(in vec2 coord, in vec3 unDisShadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     float visibility = 0;
-    for (int i = 0; i <= 8; i++) {
-        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS) / shadowMapResolution;
+    for (int i = 0; i <= 16; i++) {
+        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*0.5) / shadowMapResolution;
         offset = rotationMatrix * offset;
         // sample shadow map
-        float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r; // sampling shadow map
+        vec3 shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
+        float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
         visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         
         // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
-        if (shadowMapSample < texture2D(shadowtex1, shadowPos.xy + offset).r ) {
-            vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy + offset).rgb; // sample shadow color
+        if (shadowMapSample < texture2D(shadowtex1, shadowPos.xy).r) {
+            vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy).rgb; // sample shadow color
             shadowCol += colorSample*2.0;
         } else {
             shadowCol += mix(vec3(shadowMapSample), vec3(1.0), visibility);
         }
     }
-    return vec4(shadowCol / 64, visibility);
+    return vec4(shadowCol / 128, visibility);
 }
 
 // diffuse shading
@@ -81,7 +82,8 @@ float ggx(vec3 normal, vec3 svec, vec3 lvec, PBRData pbrData) {
 }
 
 // shading calculation
-vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec, in vec3 shadowPos) {
+vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec, in vec3 undistortedShadowPos) {
+
     // calculate skylight
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
@@ -101,7 +103,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec3 diffuseLight = diffuseStrength * lightColor;
 
     // calculate shadows
-    vec4 shadowLight = getShadows(fragment.coord, shadowPos);
+    vec4 shadowLight = getShadows(fragment.coord, undistortedShadowPos);
 
     // combine lighting
     vec3 color = vec3(0.0);
@@ -123,9 +125,10 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
         mat2 rotationMatrix = getRotationMatrix(fragment.coord);
 
         for (int i = 0; i <= 4; i++) {
-            vec2 offset = (poissonDisk[i]*64) / shadowMapResolution;
+            vec2 offset = (poissonDisk[i]*16) / shadowMapResolution;
             offset = rotationMatrix * offset;
             // sample shadow map
+            vec3 shadowPos = distort(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
             float shadowMapSample = texture2D(shadowtex0, shadowPos.xy + offset).r;
             visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         }
