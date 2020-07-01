@@ -46,6 +46,8 @@ out float isWater;
 
 // uniforms
 uniform mat4 shadowModelViewInverse;
+uniform mat4 shadowProjectionInverse;
+uniform mat4 shadowProjection;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 shadowModelView;
 uniform vec3 cameraPosition;
@@ -63,7 +65,7 @@ void main() {
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
 	color = gl_Color;
 
-	vec4 position = shadowModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
+	vec4 position = shadowModelViewInverse * shadowProjectionInverse * ftransform();
 
 	#ifdef WIND
     if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
@@ -71,7 +73,7 @@ void main() {
     }
     #endif
 
-	gl_Position = gl_ProjectionMatrix * shadowModelView * position;
+	gl_Position = shadowProjection * shadowModelView * position;
 	gl_Position.xyz = distort(gl_Position.xyz);
 	if (mc_Entity.x == 8.0 || mc_Entity.x == 9.0) {
 		isWater = 1.0;
