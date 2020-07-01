@@ -136,12 +136,10 @@ void main() {
         #ifdef SSR
         #ifdef SPECULAR
         // specular reflections
-        else {
-            float roughness = pow(1.0 - pbr.smoothness, 2.0);
-            if (roughness <= 0.125 && frag.matMask != 4.0) {
-                vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*8, colortex5);
-                color *= mix(vec3(1.0), mix(vec3(1.0), reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*8)-(1.0-SPECULAR_REFLECTION_STRENGTH)));
-            }
+        float roughness = pow(1.0 - pbr.smoothness, 2.0);
+        if (roughness <= 0.125 && frag.matMask != 3.0 && frag.matMask != 4.0) {
+            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*8, colortex5);
+            color *= mix(vec3(1.0), mix(vec3(1.0), reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*8)-(1.0-SPECULAR_REFLECTION_STRENGTH)));
         }
         #endif
         #endif
