@@ -74,6 +74,7 @@ option.EMISSIVE_MAP_STRENGTH=Emissive Map Strength
 option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
 option.WAVE_FOAM=Water Foam
+option.WAVE_LINES=Water Lines
 option.NIGHT_DESAT=Night Desaturation
 option.WHITEWORLD=Whiteworld
 

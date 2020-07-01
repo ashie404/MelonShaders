@@ -79,6 +79,7 @@
 #define WIND // Whether to have waving terrain (leaves, plants) or not.
 #define WIND_STRENGTH 1.0 // Strength of wind. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0]
 #define WAVE_FOAM // Whether to have water foam or not.
+#define WAVE_LINES // Whether to have water lines or not.
 #define NIGHT_DESAT // Whether to desaturate dark colors at night.
 
 //#define WHITEWORLD

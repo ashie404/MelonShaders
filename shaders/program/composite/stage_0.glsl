@@ -124,7 +124,9 @@ void main() {
                 if (depthcomp <= 0.15) {
 		    	    color += vec3(0.75) * ambientColor;
 		        } 
+                #endif
 
+                #ifdef WAVE_LINES
                 vec3 worldPosCamera = worldPos.xyz + cameraPosition;
                 worldPosCamera.z += int((frameTimeCounter/12.0)*16.0)/16.0;
                 color += vec3(texture2D(depthtex2, worldPosCamera.xz).r) * 0.75 * ambientColor;
