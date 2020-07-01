@@ -113,6 +113,16 @@ void main() {
                 vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
                 vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
                 vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
+
+                vec3 foamBrightness = ambientColor;
+
+                if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+                    skyReflection *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
+                    foamBrightness *= clamp01(((eyeBrightnessSmooth.y-9)/55.0)+0.25);
+                } else if (eyeBrightnessSmooth.y <= 8) {
+                    skyReflection *= 0.0;
+                    foamBrightness *= 0.25;
+                }
                 #ifdef SSR
                 vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
                 color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.5);
@@ -122,14 +132,14 @@ void main() {
                 // water foam
                 #ifdef WAVE_FOAM
                 if (depthcomp <= 0.15) {
-		    	    color += vec3(0.75) * ambientColor;
+		    	    color += vec3(0.75) * foamBrightness;
 		        } 
                 #endif
 
                 #ifdef WAVE_LINES
                 vec3 worldPosCamera = worldPos.xyz + cameraPosition;
                 worldPosCamera.z += int((frameTimeCounter/12.0)*16.0)/16.0;
-                color += vec3(texture2D(depthtex2, worldPosCamera.xz).r) * 0.75 * ambientColor;
+                color += vec3(texture2D(depthtex2, worldPosCamera.xz).r) * 0.75 * foamBrightness;
                 #endif
 
                 applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
