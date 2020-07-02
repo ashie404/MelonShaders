@@ -121,12 +121,11 @@ void main() {
 
         lmMatOut = vec4(frag.lightmap, texture2D(colortex1, texcoord).ba);
 
-        vec4 pos = shadowModelView * worldPos;
-        pos = shadowProjection * pos;
-        pos /= pos.w;
-        vec3 shadowPos = pos.xyz;
+        vec4 shadowPos = shadowModelView * worldPos;
+        shadowPos = shadowProjection * shadowPos;
+        shadowPos /= shadowPos.w;
 
-        color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos);
+        color = calculateShading(frag, pbr, normalize(viewPos.xyz), shadowPos.xyz);
 
         // calculate ssao
         float ao = AmbientOcclusion(depthtex0, bayer64(gl_FragCoord.xy));

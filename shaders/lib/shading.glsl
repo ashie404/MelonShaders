@@ -159,7 +159,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     return color;
 }
 
-vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec, in float alpha) {
+vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec, in vec3 undistortedShadowPos, in float alpha) {
     // calculate skylight
     vec3 skyLight = ambientColor * fragment.lightmap.y;
 
@@ -178,20 +178,26 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal), pow(1.0 - pbrData.smoothness, 2.0));
     vec3 diffuseLight = diffuseStrength * lightColor;
 
+    // calculate shadows
+    vec4 shadowLight = getShadows(fragment.coord, undistortedShadowPos);
+
+    // combine lighting
     vec3 color = vec3(0.0);
     if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-        color = mix(vec3(0.001)+blockLight, diffuseLight+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+        color = mix(shadowLight.rgb+vec3(0.001)+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
     } else if (eyeBrightnessSmooth.y <= 8) {
-        color = vec3(0.001)+blockLight;
+        color = shadowLight.rgb+vec3(0.001)+blockLight;
     } else {
-        color = diffuseLight+skyLight+blockLight;
+        color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
     }
 
     #ifdef SPECULAR
     // calculate specular highlights
-    float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
-    vec3 specularHighlight = specularStrength * lightColor;
-    color += specularHighlight;
+    if (shadowLight.a > 0.1) {
+        float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
+        vec3 specularHighlight = specularStrength * lightColor;
+        color += specularHighlight;
+    }
     #endif
 
     #endif

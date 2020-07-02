@@ -92,8 +92,15 @@ void main() {
 
         // 2 is translucents tag
         if (frag.matMask == 2) {
-            color = calculateTranslucentShading(frag, pbr, normalize(viewPos.xyz), texture2D(colortex1, texcoord).b);
+
+            vec4 shadowPos = shadowModelView * worldPos;
+            shadowPos = shadowProjection * shadowPos;
+            shadowPos /= shadowPos.w;
+
+            color = calculateTranslucentShading(frag, pbr, normalize(viewPos.xyz), shadowPos.xyz, texture2D(colortex1, texcoord).b);
+
             if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
+
         } else if (frag.matMask == 3) {
             // render water fog
             float ldepth0 = linear(depth0);
