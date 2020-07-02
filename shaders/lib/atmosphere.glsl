@@ -231,7 +231,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
                 cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0;
             cloudColor *= cloudShape;
 
-            skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*max(lightColor, 0.1), clamp01(cloudShape)), clamp01(worldPos.y/256.0));
+            skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*max(lightColor, 0.1)*mix(mix(skyColor, vec3(1.0), clamp01(cloudColor)), vec3(1.0), night), clamp01(cloudShape)), clamp01(worldPos.y/256.0));
         }
         #endif
 
