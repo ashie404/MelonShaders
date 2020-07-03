@@ -244,7 +244,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
                     ), 
                     clamp01(cloudShape)
                 ), 
-                clamp01((worldPos.y)/512.0)
+                clamp01((worldPos.y/512.0)-0.15)
             );
 
         }
