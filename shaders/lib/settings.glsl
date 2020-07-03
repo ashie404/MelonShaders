@@ -37,7 +37,7 @@
 #define FOG_DENSITY 1.0 // Density of the fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0 3.25 3.5]
 
 // cloud settings
-#define CLOUDS // Whether to have clouds or not.
+#define CUMULUS // Whether to have cumulus clouds or not.
 #define CIRRUS // Whether to have cirrus clouds or not.
 #define CLOUD_SPEED 0.3 // How fast clouds move. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
 #define CLOUD_LIGHTING // Turns on and off cloud lighting. Can be very intensive. If your game lags badly when looking at the sky or a reflective surface like water, turn off.

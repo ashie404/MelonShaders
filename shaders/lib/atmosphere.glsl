@@ -195,7 +195,6 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
     if (!atmosphereOnly) {
         // draw clouds if y is greater than 0
-        #ifdef CLOUDS
 
         // CIRRUS CLOUDS //
 
@@ -253,6 +252,8 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
         // CUMULUS CLOUDS //
 
+        #ifdef CUMULUS
+
         if (worldPos.y >= 0) {
             float time = frameTimeCounter*CLOUD_SPEED/32;
             vec2 uv = (worldPos.xz / (worldPos.y+16.0))/2;
@@ -301,6 +302,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
                 clamp01((worldPos.y)/256.0)
             );
         }
+
         #endif
 
         // add sun & moon spots to the sky
