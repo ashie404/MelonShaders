@@ -40,6 +40,7 @@ option.FOG_DENSITY=Fog Density
 screen.CLOUD_SETTINGS=Cloud Settings
 
 option.CLOUDS=Clouds
+option.CIRRUS=Cirrus Clouds
 option.CLOUD_SPEED=Cloud Speed
 option.CLOUD_COVERAGE=Cloud Coverage
 option.CLOUD_LIGHTING=Cloud Lighting
