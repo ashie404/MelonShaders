@@ -152,46 +152,31 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         skyPos.y = max(skyPos.y, 0.0);
     }
 
-    vec3 skyColor = vec3(0.14, 0.2, 0.24)*0.025;
+    vec3 skyColor = vec3(0.0);
 
-    if (night < 0.1) {
-        skyColor = atmosphere(
-            normalize(skyPos),           // normalized ray direction
-            vec3(0,6372e3,0),               // ray origin
-            sunVec,                        // position of the sun
-            22.0,                           // intensity of the sun
-            6371e3,                         // radius of the planet in meters
-            6471e3,                         // radius of the atmosphere in meters
-            vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
-            30.2e-6,                          // Mie scattering coefficient
-            8e3,                            // Rayleigh scale height
-            1.2e3,                          // Mie scale height
-            0.758,                           // Mie preferred scattering direction
-            int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
-            int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
-        );
+    skyColor = atmosphere(
+        normalize(skyPos),           // normalized ray direction
+        vec3(0,6372e3,0),               // ray origin
+        sunVec,                        // position of the sun
+        22.0,                           // intensity of the sun
+        6371e3,                         // radius of the planet in meters
+        6471e3,                         // radius of the atmosphere in meters
+        vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
+        30.2e-6,                          // Mie scattering coefficient
+        8e3,                            // Rayleigh scale height
+        1.2e3,                          // Mie scale height
+        0.758,                           // Mie preferred scattering direction
+        int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
+        int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
+    );
 
-        skyColor = 1.025 - exp(-1.0 * skyColor);
-    } else if (night < 0.95) {
-        vec3 oldC = skyColor;
-        skyColor = atmosphere(
-            normalize(skyPos),           // normalized ray direction
-            vec3(0,6372e3,0),               // ray origin
-            sunVec,                        // position of the sun
-            22.0,                           // intensity of the sun
-            6371e3,                         // radius of the planet in meters
-            6471e3,                         // radius of the atmosphere in meters
-            vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
-            30.2e-6,                          // Mie scattering coefficient
-            8e3,                            // Rayleigh scale height
-            1.2e3,                          // Mie scale height
-            0.758,                           // Mie preferred scattering direction
-            int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
-            int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
-        );
+    // apply exposure
+    skyColor = 1.025 - exp(-1.0 * skyColor);
 
-        skyColor = 1.025 - exp(-1.0 * skyColor);
-        skyColor = mix(skyColor, oldC, night);
+    if (night < 0.95 && night > 0.1) {
+        skyColor = mix(skyColor, nightSkyColor, night);
+    } else if (night > 0.95) {
+        skyColor = nightSkyColor;
     }
 
     float cloudShape = 0.0;
@@ -231,13 +216,29 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
                 cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0;
             cloudColor *= cloudShape;
 
-            skyColor = mix(skyColor, mix(skyColor, vec3(cloudColor)*max(lightColor, 0.1)*mix(mix(skyColor, vec3(1.0), clamp01(cloudColor)), vec3(1.0), night), clamp01(cloudShape)), clamp01(worldPos.y/256.0));
+            // add clouds to skycolor
+
+            skyColor = mix(
+                skyColor, 
+                mix(
+                    skyColor, 
+                    vec3(cloudColor)*max(lightColor, 0.1)*mix(
+                        mix(skyColor, vec3(1.0), clamp01(cloudColor)), 
+                        vec3(1.0), 
+                        night
+                    ), 
+                    clamp01(cloudShape)
+                ), 
+                clamp01(worldPos.y/256.0)
+            );
         }
         #endif
 
+        // add sun & moon spots to the sky
         skyColor += mix(vec3(0.0), mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS, false).rgb, clamp01(1.0-cloudShape)), clamp01(worldPos.y/192.0))*(skyColor*4.0);
         skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS+0.1, true).rgb, clamp01(1.0-(cloudShape*2.0)));
 
+        // stars
         #ifdef STARS
         float starNoise = cellular(normalize(worldPos)*32);
         if (starNoise <= 0.05) {
