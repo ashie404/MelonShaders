@@ -201,7 +201,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         #ifdef CIRRUS
         if (worldPos.y >= 4.0) {
             float time = frameTimeCounter*CLOUD_SPEED/32;
-            vec2 uv = (worldPos.xz / (worldPos.y-16.0))/6.0;
+            vec2 uv = (worldPos.xz / (worldPos.y-32.0))/6.0;
             vec2 sunUv = (sunVec.xz / sunVec.y)/6.0;
 
             // set up 2D ray march variables
@@ -256,7 +256,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
         if (worldPos.y >= 0) {
             float time = frameTimeCounter*CLOUD_SPEED/32;
-            vec2 uv = (worldPos.xz / (worldPos.y+16.0))/2;
+            vec2 uv = (worldPos.xz / (worldPos.y))/2;
             vec2 sunUv = (sunVec.xz / sunVec.y)/2;
 
             // set up 2D ray march variables
