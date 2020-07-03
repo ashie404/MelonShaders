@@ -36,7 +36,7 @@ float clouds(vec2 coord, float time)
 }
 
 float cirrusClouds(vec2 coord, float time) {
-    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp((CLOUD_COVERAGE*0.9), 0.0, 2.0); // cloud coverage value
+    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + 1.1; // cloud coverage value
 
     float perlinFbm = perlinFbm(coord/2.0, 2.0, time);
     vec4 worleyFbmHighFreq = worleyFbm(coord/4.0, 4.0, time * 4.0, true);
@@ -44,7 +44,7 @@ float cirrusClouds(vec2 coord, float time) {
     float finalClouds = remap(texture2D(noisetex, (vec2(coord.x*8.0, coord.y*2.0)/2.0) + (time/4.0)).g, 1.0 - coverage, 1.0, 0.0, 1.0) * coverage;
     finalClouds = remap(finalClouds, worleyFbmHighFreq.g * 0.45, 1.0, 0.0, 1.0);
     
-    return max(0.0, finalClouds)/1.75;
+    return max(0.0, finalClouds)/2.0;
 }
 
 // atmospheric scattering from wwwtyro https://github.com/wwwtyro/glsl-atmosphere
@@ -201,8 +201,8 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         #ifdef CIRRUS
         if (worldPos.y >= 4.0) {
             float time = frameTimeCounter*CLOUD_SPEED/32;
-            vec2 uv = (worldPos.xz / (worldPos.y-16.0))/4.0;
-            vec2 sunUv = (sunVec.xz / sunVec.y)/4.0;
+            vec2 uv = (worldPos.xz / (worldPos.y-16.0))/6.0;
+            vec2 sunUv = (sunVec.xz / sunVec.y)/6.0;
 
             // set up 2D ray march variables
             vec2 marchDist = vec2(0.25 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
