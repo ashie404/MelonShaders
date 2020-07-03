@@ -169,7 +169,7 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
 
     #ifdef NETHER
 
-    vec3 color = vec3(0.81, 0.5, 0.49)*0.25;
+    vec3 color = fogColor*0.05;//vec3(0.81, 0.5, 0.49)*0.25;
     color += blockLight;
 
     #else

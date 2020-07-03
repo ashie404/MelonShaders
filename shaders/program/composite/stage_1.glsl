@@ -78,7 +78,7 @@ void main() {
     // output bloom if pixel is bright enough
     int matMask = int(texture2D(colortex1, texcoord).a+0.5);
     vec3 bloomSample = vec3(0.0);
-    if (luma(color) > 6.5 || (matMask == 4 && EMISSIVE_MAP != 0)) {
+    if (luma(color) > 4.5 || (matMask == 4 && EMISSIVE_MAP != 0)) {
         bloomSample = color;
     }
     bloomOut = vec4(bloomSample, 1.0);

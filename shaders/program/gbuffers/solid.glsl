@@ -69,12 +69,13 @@ void main() {
     albedo.rgb = toLinear(albedo.rgb);
     // emissive handling
     if (EMISSIVE_MAP == 0) {
-        if (correctedId == 50)  albedo.rgb *= clamp01(pow(luminance, 6))*100.0;
-        else if (correctedId == 51)  albedo.rgb *= clamp01(pow(luminance, 6))*150.0;
-        else if (correctedId == 83)  albedo.rgb *= clamp01(pow(luminance, 8))*250.0;
-        else if (correctedId == 100) albedo.rgb *= clamp01(pow(luminance, 8))*200.0;
-        else if (correctedId == 110) albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
-        else if (correctedId == 120) albedo.rgb *= 100;
+        if      (correctedId == 50 )  albedo.rgb *= clamp01(pow(luminance, 6))*120.0;
+        else if (correctedId == 51 )  albedo.rgb *= clamp01(pow(luminance, 6))*150.0;
+        else if (correctedId == 83 )  albedo.rgb *= clamp01(pow(luminance, 8))*125.0;
+        else if (correctedId == 100)  albedo.rgb *= clamp01(pow(luminance, 8))*200.0;
+        else if (correctedId == 105)  albedo.rgb *= clamp01(pow(luminance, 4))*200.0;
+        else if (correctedId == 110)  albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
+        else if (correctedId == 120)  albedo.rgb *= 50;
     } else if (EMISSIVE_MAP == 1 && specularData.b > 0.0) {
         albedo.rgb *= clamp(specularData.b * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
     } else if (EMISSIVE_MAP == 2 && specularData.a < 1.0) {
@@ -92,7 +93,7 @@ void main() {
     // subsurf scattering id is 20, 21 and 23
     if (correctedId == 20 || correctedId == 21 || correctedId == 23) {
         matMask = 1.0;
-    } else if (correctedId == 50||correctedId == 51||correctedId == 83||correctedId == 90||correctedId == 100||correctedId == 120||correctedId == 123) {
+    } else if (correctedId == 50||correctedId == 51||correctedId == 83||correctedId == 100||correctedId == 105||correctedId == 110||correctedId == 120) {
         // emissive material mask
         matMask = 4.0;
     } else if ((EMISSIVE_MAP == 1 && specularData.b > 0.0) || (EMISSIVE_MAP == 2 && specularData.a < 1.0)) {
