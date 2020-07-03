@@ -57,6 +57,8 @@ uniform vec3 cameraPosition;
 uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 
+uniform vec3 fogColor;
+
 in vec2 texcoord;
 in vec3 ambientColor;
 in vec3 lightColor;

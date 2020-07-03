@@ -61,6 +61,8 @@ uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 
+uniform vec3 fogColor;
+
 in vec2 texcoord;
 in vec3 ambientColor;
 in vec3 lightColor;
@@ -94,7 +96,7 @@ void main() {
         #ifndef NETHER
         color = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
         #else
-        color = vec3(0.1, 0.02, 0.015)*0.5;
+        color = fogColor*0.5;
         #endif
     } else {
         Fragment frag = getFragment(texcoord);

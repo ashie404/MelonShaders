@@ -352,7 +352,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
     else {
         // render regular fog
         if (depth0 != 1.0) {
-            color = mix(color, vec3(0.1, 0.02, 0.015)*0.5, clamp01((depth/256.0)*FOG_DENSITY*4.0));
+            color = mix(color, fogColor*0.5, clamp01((depth/256.0)*FOG_DENSITY*4.0));
         }
     }
     #endif
