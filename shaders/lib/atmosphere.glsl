@@ -35,6 +35,18 @@ float clouds(vec2 coord, float time)
     return max(0.0, finalClouds);
 }
 
+float cirrusClouds(vec2 coord, float time) {
+    float coverage = hash12(vec2(coord.x * viewHeight/viewWidth, coord.y)) * 0.1 + clamp((CLOUD_COVERAGE*0.9), 0.0, 2.0); // cloud coverage value
+
+    float perlinFbm = perlinFbm(coord/2.0, 2.0, time);
+    vec4 worleyFbmHighFreq = worleyFbm(coord/4.0, 4.0, time * 4.0, true);
+
+    float finalClouds = remap(texture2D(noisetex, (vec2(coord.x*8.0, coord.y*2.0)/2.0) + (time/4.0)).g, 1.0 - coverage, 1.0, 0.0, 1.0) * coverage;
+    finalClouds = remap(finalClouds, worleyFbmHighFreq.g * 0.45, 1.0, 0.0, 1.0);
+    
+    return max(0.0, finalClouds)/1.75;
+}
+
 // atmospheric scattering from wwwtyro https://github.com/wwwtyro/glsl-atmosphere
 
 vec2 rsi(vec3 r0, vec3 rd, float sr) {
@@ -184,9 +196,66 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
     if (!atmosphereOnly) {
         // draw clouds if y is greater than 0
         #ifdef CLOUDS
+
+        // CIRRUS CLOUDS //
+
+        #ifdef CIRRUS
+        if (worldPos.y >= 4.0) {
+            float time = frameTimeCounter*CLOUD_SPEED/32;
+            vec2 uv = (worldPos.xz / (worldPos.y-16.0))/4.0;
+            vec2 sunUv = (sunVec.xz / sunVec.y)/4.0;
+
+            // set up 2D ray march variables
+            vec2 marchDist = vec2(0.25 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
+            float stepsInv = 1.0 / 4.0;
+            vec2 sunDir = normalize(sunUv - uv) * marchDist * stepsInv;
+            vec2 marchUv = uv;
+            float cloudColor = 1.0;
+            cloudShape = cirrusClouds(uv, time);
+
+            #ifdef CLOUD_LIGHTING
+            // 2D ray march lighting loop based on uncharted 4
+            if (cloudShape >= 0.25) {
+                for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
+                {
+                    marchUv += sunDir * i;
+   	            	float c = cirrusClouds(marchUv, time);
+                    cloudColor *= clamp(1.0 - c, 0.0, 1.0);
+                }
+            }
+            #endif
+            cloudColor += clamp01(0.015-(night*0.0015)); // cloud "ambient" brightness
+            // beer's law + powder sugar
+            if (night > 0.25)
+                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * clamp(4.0/(night*4), 0.1, 1.0);
+            else
+                cloudColor = exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0;
+            cloudColor *= cloudShape;
+
+            // add clouds to skycolor
+
+            skyColor = mix(
+                skyColor, 
+                mix(
+                    skyColor, 
+                    vec3(cloudColor)*max(lightColor, 0.1)*mix(
+                        mix(skyColor, vec3(1.0), clamp01(cloudColor)), 
+                        vec3(1.0), 
+                        night
+                    ), 
+                    clamp01(cloudShape)
+                ), 
+                clamp01((worldPos.y)/512.0)
+            );
+
+        }
+        #endif 
+
+        // CUMULUS CLOUDS //
+
         if (worldPos.y >= 0) {
             float time = frameTimeCounter*CLOUD_SPEED/32;
-            vec2 uv = (worldPos.xz / worldPos.y)/2;
+            vec2 uv = (worldPos.xz / (worldPos.y+16.0))/2;
             vec2 sunUv = (sunVec.xz / sunVec.y)/2;
 
             // set up 2D ray march variables
@@ -229,7 +298,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
                     ), 
                     clamp01(cloudShape)
                 ), 
-                clamp01(worldPos.y/256.0)
+                clamp01((worldPos.y)/256.0)
             );
         }
         #endif
