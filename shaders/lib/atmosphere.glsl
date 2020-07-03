@@ -179,7 +179,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         1.2e3,                          // Mie scale height
         0.758,                           // Mie preferred scattering direction
         int(mix(16, 4, clamp01(noon))), // Primary raymarching steps
-        int(mix(8,  2, clamp01(noon)))  // secondary raymarching steps
+        int(mix(4,  2, clamp01(noon)))  // secondary raymarching steps
     );
 
     // apply exposure
