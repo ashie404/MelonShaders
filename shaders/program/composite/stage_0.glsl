@@ -168,7 +168,7 @@ void main() {
             vec3 skyReflection = fogColor*0.5;
             #endif
 
-            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*8.0, colortex5);
+            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy)), roughness*8.0, colortex5);
 
             float fresnel = clamp(fresnel(0.2, 0.1, 1.0, viewPos.xyz, frag.normal)+0.5, 0.15, 1.0);
 
