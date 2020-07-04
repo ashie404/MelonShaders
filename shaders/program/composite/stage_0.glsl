@@ -160,10 +160,14 @@ void main() {
         // specular reflections
         float roughness = pow(1.0 - pbr.smoothness, 2.0);
         if (roughness <= 0.125 && frag.matMask != 3.0 && frag.matMask != 4.0) {
+            #ifndef NETHER
             vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
             vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
             vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
-
+            #else
+            vec3 skyReflection = fogColor*0.5;
+            #endif
+            
             vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), roughness*8.0, colortex5);
             color *= mix(vec3(1.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*4.0)-(1.0-SPECULAR_REFLECTION_STRENGTH)));
         }
