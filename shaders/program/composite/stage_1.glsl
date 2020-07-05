@@ -10,9 +10,8 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:04 */
+/* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 bloomOut;
 
 /*
 const float centerDepthSmoothHalflife = 4.0;
@@ -72,16 +71,6 @@ void main() {
         }
         color = blurred / dofSteps;
     }
-    #endif
-
-    #ifdef BLOOM
-    // output bloom if pixel is bright enough
-    int matMask = int(texture2D(colortex1, texcoord).a+0.5);
-    vec3 bloomSample = vec3(0.0);
-    if (luma(color) > 4.5 || (matMask == 4 && EMISSIVE_MAP != 0)) {
-        bloomSample = color;
-    }
-    bloomOut = vec4(bloomSample, 1.0);
     #endif
 
     colorOut = vec4(color, 1.0);

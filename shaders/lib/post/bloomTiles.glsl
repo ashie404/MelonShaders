@@ -25,7 +25,7 @@ vec3 calcBloomTile(vec2 offset, float lod) {
             float weight = (PI-(x*x)-(y*y))/sqrt(2*PI)+5;
             weight *= weight;
 
-            totalBloom += texture2DLod(colortex4, coord + vec2(x, y) * scale, lod).rgb * weight;
+            totalBloom += texture2DLod(colortex0, coord + vec2(x, y) * scale, lod).rgb * weight;
 
             totalWeight += weight;
         }

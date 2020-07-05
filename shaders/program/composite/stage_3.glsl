@@ -41,7 +41,7 @@ void main() {
     bloom += getBloomTile(vec2(0.3,0.3), 4.0, texcoord);
     bloom += getBloomTile(vec2(0.6,0.3), 5.0, texcoord);
     bloom += getBloomTile(vec2(0.6,0.6), 6.0, texcoord);
-    color.rgb += mix(vec3(0.0), bloom, clamp01(BLOOM_STRENGTH-0.75));
+    color.rgb = mix(color.rgb, bloom, clamp01(BLOOM_STRENGTH));
     #endif
 
     colorOut = color;

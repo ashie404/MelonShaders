@@ -15,7 +15,7 @@ layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 bloomTileOut;
 
 /*
-const bool colortex4MipmapEnabled = true;
+const bool colortex0MipmapEnabled = true;
 */
 
 in vec2 texcoord;
