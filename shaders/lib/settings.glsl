@@ -90,7 +90,7 @@
 //#define BLUR_TRANSLUCENT // Whether to blur translucents or not. Has no effect if translucent refraction is off.
 
 // debug stuff
-#define DEBUG_MODE 0 // Debug mode display. [0 1 2 3]
+#define DEBUG_MODE 0 // Debug mode display. [0 1 2 3 4]
 
 const int noiseTextureResolution = 512;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]

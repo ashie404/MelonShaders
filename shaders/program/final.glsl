@@ -24,6 +24,7 @@ uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D colortex3;
+uniform sampler2D colortex4;
 uniform sampler2D colortex7;
 
 uniform float viewWidth;
@@ -115,6 +116,7 @@ void main() {
     else if (DEBUG_MODE == 1) screenOut = vec4(texture2D(colortex1, texcoord).rg, 0.0, 1.0);
     else if (DEBUG_MODE == 2) screenOut = texture2D(colortex2, texcoord);
     else if (DEBUG_MODE == 3) screenOut = texture2D(colortex3, texcoord);
+    else if (DEBUG_MODE == 4) screenOut = texture2D(colortex4, texcoord);
 }
 
 #endif

@@ -90,6 +90,7 @@ value.DEBUG_MODE.0=Off
 value.DEBUG_MODE.1=Lightmap
 value.DEBUG_MODE.2=Normals
 value.DEBUG_MODE.3=Specular
+value.DEBUG_MODE.4=Bloom Tiles
 
 #ACES
 option.SAT_MOD=Saturation
