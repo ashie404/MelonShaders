@@ -10,8 +10,9 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:04 */
 layout (location = 0) out vec4 colorOut;
+layout (location = 1) out vec4 bloomOut;
 
 /*
 const float centerDepthSmoothHalflife = 4.0;
@@ -71,6 +72,11 @@ void main() {
         }
         color = blurred / dofSteps;
     }
+    #endif
+
+    #ifdef BLOOM
+    vec3 bloomSample = color.rgb * clamp01(pow(luma(color.rgb), 4.0));
+    bloomOut = vec4(bloomSample, 1.0);
     #endif
 
     colorOut = vec4(color, 1.0);

@@ -16,8 +16,8 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius, bool isMoon
 
     float x = clamp(1.0 - ((sunAngularRadius * 0.6) - acos(cosTheta)) / (sunAngularRadius * 0.6), 0.0, 1.0);
     vec3 sunDisk = vec3(0.0);
-    if (!isMoon) sunDisk = (vec3(1.0, 0.99, 0.96)*5.0*8.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
-    else sunDisk = (vec3(0.6, 0.6, 0.6)*0.15*8.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
+    if (!isMoon) sunDisk = (vec3(1.0, 0.99, 0.96)*250.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
+    else sunDisk = (vec3(0.6, 0.6, 0.6)*25.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
 
     return vec4(sunDisk, float(cosTheta > cos(sunAngularRadius)));
 }
