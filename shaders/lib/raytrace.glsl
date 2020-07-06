@@ -17,14 +17,14 @@ float cdist(vec2 coord){
 	return max(abs(coord.s-0.5),abs(coord.t-0.5))*1.85;
 }
 
-vec4 raytrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither,
+vec4 raytrace(sampler2D depthtex, vec3 viewPos, vec3 rayDir, float dither,
 			  float maxf, float stp, float ref, float inc) {
 	vec3 pos = vec3(0.0);
 	float dist = 0.0;
 
 	vec3 start = viewPos;
 
-    vec3 vector = stp * reflect(normalize(viewPos), normalize(normal));
+    vec3 vector = stp * rayDir;
     viewPos += vector;
 	vec3 tvector = vector;
 
