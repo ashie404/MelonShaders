@@ -151,13 +151,9 @@ void main() {
                 worldPosCamera.z += int((frameTimeCounter/12.0)*16.0)/16.0;
                 color += vec3(texture2D(depthtex2, worldPosCamera.xz).r) * 0.75 * foamBrightness;
                 #endif
-            } else if (isEyeInWater == 1) {
-                #ifdef SSR
-                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
-                color += mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a);
-                #endif
+
+                applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
             }
-            applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
         }
         #ifdef SSR
         #ifdef SPECULAR
@@ -184,7 +180,7 @@ void main() {
 
     // apply fog
 
-    //if (isEyeInWater != 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
+    if (isEyeInWater != 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
 
     colorOut = vec4(color, 1.0);
 }

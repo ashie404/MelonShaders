@@ -133,7 +133,7 @@ void main() {
         float ao = AmbientOcclusion(depthtex0, bayer64(gl_FragCoord.xy));
         color *= mix(1.0, ao, 0.65);
 
-        applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
+        if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
     }
     colorOut = vec4(color, 1.0);
     reflectionsOut = vec4(color, 1.0);
