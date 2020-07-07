@@ -1,6 +1,6 @@
 /*
     Melon Shaders by June
-    https://j0sh.cf
+    https://juniebyte.cf
 */
 
 mat3 getLightmapTBN(vec3 viewPos){

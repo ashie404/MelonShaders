@@ -2,7 +2,7 @@
 
 /*
 	Melon Shaders by June
-	https://j0sh.cf
+	https://juniebyte.cf
 */
 
 #define FRAG

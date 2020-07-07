@@ -1,6 +1,6 @@
 /*
     Melon Shaders by June
-    https://j0sh.cf
+    https://juniebyte.cf
 */
 
 vec4 reflection(vec3 viewPos, vec3 normal, float dither, sampler2D reflectionTex) {

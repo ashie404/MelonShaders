@@ -1,6 +1,6 @@
 /*
     Melon Shaders by June
-    https://j0sh.cf
+    https://juniebyte.cf
 */
 
 float cubeLength(vec2 v) {

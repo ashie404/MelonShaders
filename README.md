@@ -1,1 +1,1 @@
-![Melon](https://raw.githubusercontent.com/TheJSHuA/MelonShaders/master/melonpromo.png)
+![Melon](https://raw.githubusercontent.com/juniebyte/MelonShaders/master/melonpromo.png)

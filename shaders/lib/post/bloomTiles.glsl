@@ -1,6 +1,6 @@
 /*
     Melon Shaders by June
-    https://j0sh.cf
+    https://juniebyte.cf
 */
 
 vec3 calcBloomTile(vec2 offset, float lod) {
