@@ -60,6 +60,8 @@ void main() {
     } else if (correctedId == 9) {
         matMask = 3.0;
         albedo = vec4(0.1, 0.8, 0.1, 1.0);
+    } else if (correctedId == 122) {
+        albedo.rgb *= 15.0;
     }
     
     // get normals
