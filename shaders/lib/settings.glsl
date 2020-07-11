@@ -64,7 +64,7 @@
 #define DOF // Depth of field.
 #define DOF_QUALITY 2 // Quality of the depth of field. Higher is laggier, but will look better. [1 2 3 4]
 #define APERTURE 1.0 // The aperture of the camera. Determines how big the depth of field is. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
-//#define CHROM_ABB // Whether to have chromatic aberration in out-of-focus areas or not. Has no effect if DOF is off.
+#define CHROM_ABB // Whether to have chromatic aberration in out-of-focus areas or not. Has no effect if DOF is off.
 
 // tweaks
 
