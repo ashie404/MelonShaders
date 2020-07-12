@@ -349,15 +349,17 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         }
 
         #ifdef VL
+        float noon = ((clamp(sunAngle, 0.02, 0.15)-0.02) / 0.13   - (clamp(sunAngle, 0.35, 0.48)-0.35) / 0.13);
+
         vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
         vec4 stepSize = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
-        stepSize /= 32.0;
+        stepSize /= VL_STEPS;
 
         vec4 currentPos = startPos;
 
         float visibility = 0.0;
 
-        for (int i = 0; i < 32; i++) {
+        for (int i = 0; i < VL_STEPS; i++) {
             vec3 currentPosShadow = distort(currentPos.xyz) * 0.5 + 0.5;
 
             bool intersection = texture2D(shadowtex1, currentPosShadow.xy).r < currentPosShadow.z;
@@ -366,8 +368,9 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
             currentPos += stepSize;
         }
 
-        visibility /= 32.0;
-        vec3 vlColor = mix(vec3(0.0), lightColor/16.0, clamp01(visibility));
+        visibility /= VL_STEPS;
+        vec3 vlColor = mix(vec3(0.0), lightColor/24.0, clamp01(visibility));
+        vlColor *= mix(vec3(1.0), vec3(0.25), clamp01(noon));
         color += vlColor;
         #endif
         
