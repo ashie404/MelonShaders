@@ -34,6 +34,7 @@
 #define CELESTIAL_RADIUS 0.25 // Radius of celestial bodies (the sun and moon). [ 0.1 0.25 0.3 0.4 0.5 0.6 0.7 ]
 #define STARS // Whether to have stars at night or not.
 #define FOG
+//#define VL // Whether to have volumetric lighting or not.
 #define FOG_DENSITY 1.0 // Density of the fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0 3.25 3.5]
 
 // cloud settings
@@ -95,6 +96,7 @@
 const int noiseTextureResolution = 512;
 const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
 const int shadowDistance = 128; //[128 256 512 1024]
+const float shadowIntervalSize = 0.1;
 const float sunPathRotation = -30.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]
 
 const vec3 nightSkyColor = vec3(0.14, 0.2, 0.24)*0.025;

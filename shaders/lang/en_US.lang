@@ -35,6 +35,7 @@ option.CELESTIAL_RADIUS=Celestial Body Radius
 option.STARS=Stars
 
 option.FOG=Fog
+option.VL=Volumetric Lighting
 option.FOG_DENSITY=Fog Density
 
 screen.CLOUD_SETTINGS=Cloud Settings
