@@ -346,6 +346,11 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
                 vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
                 color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
             }
+        } else {
+            if (eyeBrightnessSmooth.y > 64) {
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                color = mix(color, atmosColor, clamp01(((depth/256.0)*FOG_DENSITY)-(worldPos.y/64.0)));
+            }
         }
 
         #ifdef VL
