@@ -58,8 +58,8 @@
 // post processing settings
 #define BLOOM
 #define BLOOM_STRENGTH 0.1 // Strength of bloom. [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
-#define LUT
-#define LUTV 0 // Which color LUT to use. [0 1 2 3]
+#define LUT // Color lookup table. Adjusts the overall look of colors.
+#define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4]
 #define TAA
 
 // camera settings
