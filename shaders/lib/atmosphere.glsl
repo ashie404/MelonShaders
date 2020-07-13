@@ -214,7 +214,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
             #ifdef CLOUD_LIGHTING
             // 2D ray march lighting loop based on uncharted 4
-            if (cloudShape >= 0.25) {
+            if (cloudShape >= 0.10) {
                 for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
                 {
                     marchUv += sunDir * i;
@@ -269,7 +269,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
 
             #ifdef CLOUD_LIGHTING
             // 2D ray march lighting loop based on uncharted 4
-            if (cloudShape >= 0.25) {
+            if (cloudShape >= 0.10) {
                 for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
                 {
                     marchUv += sunDir * i;
