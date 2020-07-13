@@ -330,7 +330,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         color *= exp(-vec3(1.0, 0.2, 0.1) * depth);
 
         #ifdef VL
-        color += calcVolumetricLighting(viewPos, vec3(3.0), 0.65, false);
+        color += calcVolumetricLighting(viewPos, vec3(0.5, 0.7, 1.5)*4.0, 0.65, false);
         #endif
     } else if (isEyeInWater == 2) {
         // render lava fog
