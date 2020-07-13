@@ -1,3 +1,7 @@
+/*
+    Melon Shaders by June
+    https://juniebyte.cf
+*/
 
 vec3 calcVolumetricLighting(in vec3 viewPos, in vec3 color, in float densityMult, in bool noonDensityDecrease) {
     float noon = ((clamp(sunAngle, 0.02, 0.15)-0.02) / 0.13   - (clamp(sunAngle, 0.35, 0.48)-0.35) / 0.13);

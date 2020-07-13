@@ -33,13 +33,13 @@
 // sky settings
 #define CELESTIAL_RADIUS 0.25 // Radius of celestial bodies (the sun and moon). [ 0.1 0.25 0.3 0.4 0.5 0.6 0.7 ]
 #define STARS // Whether to have stars at night or not.
-#define FOG
-#define FOG_DENSITY 1.0 // Density of the fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0 3.25 3.5]
+#define FOG // Whether to have fog or not.
+#define FOG_DENSITY 1.0 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0 3.25 3.5]
 
 // volumetrics
-//#define VL // Whether to have volumetric lighting or not.
-#define VL_STEPS 8 // Volumetric lighting steps. [4 8 16 24 32 48 64]
-#define VL_DENSITY 0.6 // Density of volumetric lighting fog stuff. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define VL // Whether to have volumetric lighting or not. Does not work if fog is turned off.
+#define VL_STEPS 8 // Volumetric lighting steps. Higher is much laggier. [4 8 16 24 32 48 64]
+#define VL_DENSITY 0.6 // Density of VL fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
 // cloud settings
 #define CUMULUS // Whether to have cumulus clouds or not.

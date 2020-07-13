@@ -10,10 +10,9 @@
 
 #ifdef FRAG
 
-#define MELONINFO 0 // Melon Shaders by June. V1.3 [0 1]
+#define MELONINFO 0 // Melon Shaders by June (juniebyte). V1.4 [0 1]
 
 #include "/lib/aces/ACES.glsl"
-#include "/lib/dither.glsl"
 
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 screenOut;
@@ -31,7 +30,7 @@ uniform float viewWidth;
 uniform float viewHeight;
 uniform float sunAngle;
 
-vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
+vec3 lookup(in vec3 textureColor) {
     #ifndef LUT
     return textureColor;
     #endif
@@ -63,8 +62,8 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
     texPos1.y += voffset;
     texPos2.y += voffset;
 
-    vec4 newColor1 = texture2D(lookupTable, texPos1);
-    vec4 newColor2 = texture2D(lookupTable, texPos2);
+    vec4 newColor1 = texture2D(colortex7, texPos1);
+    vec4 newColor2 = texture2D(colortex7, texPos2);
 
     vec4 newColor = mix(newColor1, newColor2, fract(blueColor));
     return vec3(newColor.rgb);
@@ -109,7 +108,7 @@ void main() {
     #endif
     // do lut
     #ifdef LUT
-    color = lookup(color, colortex7);
+    color = lookup(color);
     #endif
 
     if (DEBUG_MODE == 0) screenOut = vec4(color, 1.0);
