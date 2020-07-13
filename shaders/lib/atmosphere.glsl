@@ -354,6 +354,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
         vec4 stepSize = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
         stepSize /= VL_STEPS;
+        stepSize *= fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy));
 
         vec4 currentPos = startPos;
 
