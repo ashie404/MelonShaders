@@ -3,6 +3,8 @@
     https://juniebyte.cf
 */
 
+#include "/lib/volumetrics.glsl"
+
 // sun spot calculation
 vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius, bool isMoon) {
     float cosTheta = dot(viewVector, sunVector);
@@ -326,6 +328,10 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
     if (isEyeInWater == 1) {
         // render underwater fog
         color *= exp(-vec3(1.0, 0.2, 0.1) * depth);
+
+        #ifdef VL
+        color += calcVolumetricLighting(viewPos, vec3(3.0), 0.65, false);
+        #endif
     } else if (isEyeInWater == 2) {
         // render lava fog
         color *= exp(-vec3(0.1, 0.2, 1.0) * (depth*4));
@@ -354,30 +360,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         }
 
         #ifdef VL
-        float noon = ((clamp(sunAngle, 0.02, 0.15)-0.02) / 0.13   - (clamp(sunAngle, 0.35, 0.48)-0.35) / 0.13);
-
-        vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
-        vec4 stepSize = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
-        stepSize /= VL_STEPS;
-        stepSize *= fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy));
-
-        vec4 currentPos = startPos;
-
-        float visibility = 0.0;
-
-        for (int i = 0; i < VL_STEPS; i++) {
-            vec3 currentPosShadow = distort(currentPos.xyz) * 0.5 + 0.5;
-
-            bool intersection = texture2D(shadowtex1, currentPosShadow.xy).r < currentPosShadow.z;
-            visibility += intersection ? 0.0 : 1.0;
-
-            currentPos += stepSize;
-        }
-
-        visibility /= VL_STEPS;
-        vec3 vlColor = mix(vec3(0.0), lightColor*(VL_DENSITY/15.0), clamp01(visibility));
-        vlColor *= mix(vec3(1.0), vec3(0.25), clamp01(noon));
-        color += vlColor;
+        color += calcVolumetricLighting(viewPos, lightColor, 1.0, true);
         #endif
         
     }

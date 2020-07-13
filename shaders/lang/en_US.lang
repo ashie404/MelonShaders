@@ -38,7 +38,7 @@ option.STARS=Stars
 option.FOG=Fog
 option.FOG_DENSITY=Fog Density
 
-screen.VOLUMETRICS=Volumetrics
+screen.VOLUMETRICS=Volumetrics [WIP]
 
 option.VL=Volumetric Lighting
 option.VL_STEPS=VL Steps
