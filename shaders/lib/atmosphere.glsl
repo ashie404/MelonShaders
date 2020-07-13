@@ -370,7 +370,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         }
 
         visibility /= VL_STEPS;
-        vec3 vlColor = mix(vec3(0.0), lightColor/24.0, clamp01(visibility));
+        vec3 vlColor = mix(vec3(0.0), lightColor*(VL_DENSITY/15.0), clamp01(visibility));
         vlColor *= mix(vec3(1.0), vec3(0.25), clamp01(noon));
         color += vlColor;
         #endif

@@ -42,6 +42,7 @@ screen.VOLUMETRICS=Volumetrics
 
 option.VL=Volumetric Lighting
 option.VL_STEPS=VL Steps
+option.VL_DENSITY=VL Density
 
 screen.CLOUD_SETTINGS=Cloud Settings
 
