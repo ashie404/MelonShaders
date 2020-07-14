@@ -330,8 +330,9 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         color *= exp(-vec3(1.0, 0.2, 0.1) * depth);
 
         #ifdef VL
-        color += calcVolumetricLighting(viewPos, vec3(0.5, 0.7, 1.5)*4.0, 0.65, false);
+        color += calcVolumetricLighting(viewPos, vec3(0.5, 0.7, 1.5)*4.0, 0.65, false, false);
         #endif
+
     } else if (isEyeInWater == 2) {
         // render lava fog
         color *= exp(-vec3(0.1, 0.2, 1.0) * (depth*4));
@@ -352,17 +353,18 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
                 vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
                 color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
             }
+            #ifdef VL
+            color += calcVolumetricLighting(viewPos, lightColor, 1.0, true, true);
+            #endif
         } else {
             if (eyeBrightnessSmooth.y > 64) {
                 vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
                 color = mix(color, atmosColor, clamp01(((depth/256.0)*FOG_DENSITY)-(worldPos.y/64.0)));
             }
+            #ifdef VL
+            color += calcVolumetricLighting(viewPos, lightColor, 1.0, true, false);
+            #endif
         }
-
-        #ifdef VL
-        color += calcVolumetricLighting(viewPos, lightColor, 1.0, true);
-        #endif
-        
     }
     #else
     else {
