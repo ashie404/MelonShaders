@@ -173,6 +173,8 @@ void main() {
             float fresnel = clamp(fresnel(0.2, 0.1, 1.0, viewPos.xyz, frag.normal)+0.5, 0.15, 1.0);
 
             color *= mix(vec3(1.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*4.0)-(1.0-SPECULAR_REFLECTION_STRENGTH)-(1.0-fresnel)));
+
+            if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
         }
         #endif
         #endif

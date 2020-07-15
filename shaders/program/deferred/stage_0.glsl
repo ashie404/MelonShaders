@@ -90,6 +90,8 @@ void main() {
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
 
+    bool shouldDrawFog = true;
+
     // if sky, draw sky. else, calculate shading.
     if (depth0 == 1.0) {
         #ifndef NETHER
@@ -101,6 +103,9 @@ void main() {
         Fragment frag = getFragment(texcoord);
         PBRData pbr = getPBRData(frag.specular);
 
+        float roughness = pow(1.0 - pbr.smoothness, 2.0);
+        shouldDrawFog = (roughness <= 0.125 && frag.matMask != 3.0 && frag.matMask != 4.0) ? false : true;
+
         vec4 shadowPos = shadowModelView * worldPos;
         shadowPos = shadowProjection * shadowPos;
         shadowPos /= shadowPos.w;
@@ -111,9 +116,10 @@ void main() {
         float ao = AmbientOcclusion(depthtex0, bayer64(gl_FragCoord.xy));
         color *= mix(1.0, ao, 0.65);
 
-        //if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
     }
-    if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
+    
+    if (isEyeInWater == 0 && shouldDrawFog) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
+
     colorOut = vec4(color, 1.0);
     reflectionsOut = vec4(color, 1.0);
 }
