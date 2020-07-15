@@ -124,7 +124,7 @@ void main() {
     // output everything
 
     albedoOut = albedo;
-    lmNormalMatOut = vec4(encodeLightmaps(clamp01(lm)), encodeNormals(normalData), matMask, 1.0);
+    lmNormalMatOut = vec4(encodeLightmaps(clamp01(lm)), encodeNormals(clamp(normalData, -1.0, 1.0)), matMask, 1.0);
     specularOut = specularData;
 }
 

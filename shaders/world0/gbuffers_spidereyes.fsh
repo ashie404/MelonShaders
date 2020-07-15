@@ -7,4 +7,5 @@
 
 #define FRAG
 #define SPIDEREYES
+#define NO_NORMALMAP
 #include "/program/gbuffers/solid.glsl"
