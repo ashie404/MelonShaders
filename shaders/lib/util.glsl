@@ -90,17 +90,23 @@ vec3 decodeNormals(float a) {
     return vec3( b * sqrt(1.0-c*0.25), 1.0 - c * 0.5 );
 }
 
-#define m vec3(31,63,31)
-float encodeVec3(vec3 a){
-    a += (bayer64(gl_FragCoord.xy)-0.5) / m;
-    a = clamp(a, 0.0, 1.0);
-    ivec3 b = ivec3(a*m);
-    return float( b.r|(b.g<<5)|(b.b<<11) ) / 65535.0;
-}
-#undef m
+const vec3 bits = vec3( 5, 6, 5 );
+const vec3 values = exp2( bits );
+const vec3 rvalues = 1.0 / values;
+const vec3 maxValues = values - 1.0;
+const vec3 rmaxValues = 1.0 / maxValues;
+const vec3 positions = vec3( 1.0, values.x, values.x*values.y );
+const vec3 rpositions = 65535.0 / positions;
 
-vec3 decodeVec3(float a){
-    int bf = int(a*65535.0);
-    return vec3(bf%32, (bf>>5)%64, bf>>11) / vec3(31,63,31);
+// vec3 encoding/decoding
+
+float encodeVec3(vec3 a) {
+    a += (bayer64(gl_FragCoord.xy)-0.5) / maxValues;
+    a = clamp(a, 0.0, 1.0);
+    return dot( round( a * maxValues ), positions ) / 65535.0;
+}
+
+vec3 decodeVec3(float a) {
+    return mod( a * rpositions, values ) * rmaxValues;
 }
 #endif
