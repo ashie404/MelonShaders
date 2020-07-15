@@ -119,10 +119,22 @@ void main() {
                 color = color * transmittance;
                 // colorize water fog based on biome color
                 color *= oldcolor;
+
+                // get sky reflection
                 vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
                 vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
+
                 vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false);
 
+                // combine reflections
+                #ifdef SSR
+                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
+                color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.5);
+                #else
+                color += mix(vec3(0.0), skyReflection, 0.05);
+                #endif
+
+                // calculate water foam/lines color
                 vec3 foamBrightness = ambientColor;
 
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
@@ -132,12 +144,7 @@ void main() {
                     skyReflection *= 0.0;
                     foamBrightness *= 0.25;
                 }
-                #ifdef SSR
-                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
-                color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.5);
-                #else
-                color += mix(vec3(0.0), skyReflection, 0.05);
-                #endif
+
                 // water foam
                 #ifdef WAVE_FOAM
                 if (depthcomp <= 0.15) {
