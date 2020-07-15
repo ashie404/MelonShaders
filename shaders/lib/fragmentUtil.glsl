@@ -17,7 +17,6 @@ Fragment getFragment(in vec2 coord) {
 
     vec4 tex0 = texture2D(colortex0, coord);
     vec4 tex1 = texture2D(colortex1, coord);
-    //vec4 tex2 = texture2D(colortex2, coord);
 
     f.albedo = tex0;
     f.lightmap = clamp01(decodeVec3(tex1.x).xy);
