@@ -123,7 +123,7 @@ void main() {
     // output everything
 
     albedoOut = albedo;
-    lmNormalMatSpecOut = vec4(encodeVec3(vec3(clamp01(lm), 1.0)), encodeNormals(clamp(normalData, -1.0, 1.0)), matMask, encodeVec3(specularData.rgb));
+    lmNormalMatSpecOut = vec4(encodeLightmaps(clamp01(lm)), encodeNormals(clamp(normalData, -1.0, 1.0)), encodeLightmaps(vec2(matMask/10.0, 1.0)), encodeVec3(specularData.rgb));
 }
 
 #endif

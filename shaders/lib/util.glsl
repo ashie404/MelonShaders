@@ -90,6 +90,16 @@ vec3 decodeNormals(float a) {
     return vec3( b * sqrt(1.0-c*0.25), 1.0 - c * 0.5 );
 }
 
+float encodeLightmaps(vec2 a) {
+    ivec2 bf = ivec2(a*255.0);
+    return float( bf.x|(bf.y<<8) ) / 65535.0;
+}
+
+vec2 decodeLightmaps(float a) {
+    int bf = int(a*65535.0);
+    return vec2(bf%256, bf>>8) / 255.0;
+}
+
 const vec3 bits = vec3( 5, 6, 5 );
 const vec3 values = exp2( bits );
 const vec3 rvalues = 1.0 / values;
@@ -101,7 +111,7 @@ const vec3 rpositions = 65535.0 / positions;
 // vec3 encoding/decoding
 
 float encodeVec3(vec3 a) {
-    a += (bayer64(gl_FragCoord.xy)-0.5) / maxValues;
+    a += (clamp01(bayer4(gl_FragCoord.xy))-0.5) / maxValues;
     a = clamp(a, 0.0, 1.0);
     return dot( round( a * maxValues ), positions ) / 65535.0;
 }
