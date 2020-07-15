@@ -18,13 +18,12 @@ Fragment getFragment(in vec2 coord) {
     vec4 tex0 = texture2D(colortex0, coord);
     vec4 tex1 = texture2D(colortex1, coord);
     vec4 tex2 = texture2D(colortex2, coord);
-    vec4 tex3 = texture2D(colortex3, coord);
 
     f.albedo = tex0;
-    f.lightmap = tex1.xy;
-    f.matMask = int(tex1.a+0.5);
-    f.normal = tex2.xyz * 2.0 - 1.0;
-    f.specular = tex3;
+    f.lightmap = decodeLightmaps(tex1.x);
+    f.matMask = int(tex1.z+0.5);
+    f.normal = decodeNormals(tex1.y);
+    f.specular = tex2;
     f.coord = coord;
     return f;
 }

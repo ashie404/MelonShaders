@@ -10,11 +10,10 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:0123 */
+/* DRAWBUFFERS:012 */
 layout (location = 0) out vec4 albedoOut; // albedo output
-layout (location = 1) out vec4 lmMatOut; // lightmap and material mask output
-layout (location = 2) out vec4 normalOut; // normal output
-layout (location = 3) out vec4 specularOut; // specular output
+layout (location = 1) out vec4 lmNormalMatOut; // lightmap, normal map, and material mask output
+layout (location = 2) out vec4 specularOut; // specular output
 
 // uniforms
 uniform sampler2D texture;
@@ -125,10 +124,8 @@ void main() {
     // output everything
 
     albedoOut = albedo;
-    lmMatOut = vec4(lm, 0.0, matMask);
-    normalOut = vec4(normalData * 0.5 + 0.5, 1.0);
+    lmNormalMatOut = vec4(encodeLightmaps(clamp01(lm)), encodeNormals(normalData), matMask, 1.0);
     specularOut = specularData;
-
 }
 
 #endif

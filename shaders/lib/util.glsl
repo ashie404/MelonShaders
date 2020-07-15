@@ -5,7 +5,7 @@
 
 /*
 const int colortex0Format = RGBA16F;
-const int colortex1Format = RGBA16F;
+const int colortex1Format = RGBA32F;
 const int colortex4Format = RGBA16F;
 const int colortex5Format = RGBA16F;
 const int colortex6Format = RGBA16F;
@@ -59,4 +59,29 @@ float remap(float val, float min1, float max1, float min2, float max2) {
 float fresnel(float bias, float scale, float power, vec3 I, vec3 N)
 {
     return bias + scale * pow(1.0 + dot(I, N), power);
+}
+
+// encoding/decoding
+
+float encodeLightmaps(vec2 a) {
+    ivec2 bf = ivec2(a*255.0);
+    return float( bf.x|(bf.y<<8) ) / 65535.0;
+}
+
+vec2 decodeLightmaps(float a) {
+    int bf = int(a*65535.0);
+    return vec2(bf%256, bf>>8) / 255.0;
+}
+
+float encodeNormals(vec3 a) {
+    vec2 spheremap = a.xy / sqrt( a.z * 8.0 + 8.0 ) + 0.5;
+    ivec2 bf = ivec2(spheremap*255.0);
+    return float( bf.x|(bf.y<<8) ) / 65535.0;
+}
+
+vec3 decodeNormals(float a) {
+    int bf = int(a*65535.0);
+    vec2 b = vec2(bf%256, bf>>8) / 63.75 - 2.0;
+    float c = dot(b, b);
+    return vec3( b * sqrt(1.0-c*0.25), 1.0 - c * 0.5 );
 }

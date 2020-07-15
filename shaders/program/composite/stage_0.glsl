@@ -100,7 +100,7 @@ void main() {
             shadowPos = shadowProjection * shadowPos;
             shadowPos /= shadowPos.w;
 
-            color = calculateTranslucentShading(frag, pbr, normalize(viewPos.xyz), shadowPos.xyz, texture2D(colortex1, texcoord).b);
+            color = calculateTranslucentShading(frag, pbr, normalize(viewPos.xyz), shadowPos.xyz, texture2D(colortex1, texcoord).a);
 
             if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
 
