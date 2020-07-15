@@ -114,7 +114,7 @@ void main() {
     if (DEBUG_MODE == 0) screenOut = vec4(color, 1.0);
     else if (DEBUG_MODE == 1) screenOut = vec4(decodeVec3(texture2D(colortex1, texcoord).x).xy, 0.0, 1.0);
     else if (DEBUG_MODE == 2) screenOut = vec4(decodeNormals(texture2D(colortex1, texcoord).y), 1.0);
-    else if (DEBUG_MODE == 3) screenOut = texture2D(colortex2, texcoord);
+    else if (DEBUG_MODE == 3) screenOut = vec4(decodeVec3(texture2D(colortex1, texcoord).w), 1.0);
     else if (DEBUG_MODE == 4) screenOut = texture2D(colortex4, texcoord);
 }
 
