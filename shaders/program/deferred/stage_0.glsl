@@ -73,7 +73,6 @@ in vec3 lightColor;
 #include "/lib/labpbr.glsl"
 #include "/lib/poisson.glsl"
 #include "/lib/shading.glsl"
-#include "/lib/dither.glsl"
 #include "/lib/noise.glsl"
 #include "/lib/atmosphere.glsl"
 

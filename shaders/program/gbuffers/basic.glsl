@@ -27,7 +27,7 @@ vec3 toLinear(vec3 srgb) {
 
 void main() {
     albedoOut = vec4(toLinear(glcolor.rgb), glcolor.a);
-    lmNormalMatOut = vec4(encodeLightmaps(vec2(0.0, 1.0)), encodeNormals(clamp(normal, -1.0, 1.0)), 0.0, 1.0);
+    lmNormalMatOut = vec4(encodeVec3(vec3(0.0, 1.0, 1.0)), encodeNormals(clamp(normal, -1.0, 1.0)), 0.0, encodeVec3(vec3(0.0)));
 }
 
 #endif

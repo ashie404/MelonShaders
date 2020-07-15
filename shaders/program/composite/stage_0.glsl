@@ -72,7 +72,6 @@ in vec3 lightColor;
 #include "/lib/labpbr.glsl"
 #include "/lib/poisson.glsl"
 #include "/lib/shading.glsl"
-#include "/lib/dither.glsl"
 #include "/lib/atmosphere.glsl"
 
 #include "/lib/raytrace.glsl"
@@ -100,7 +99,7 @@ void main() {
             shadowPos = shadowProjection * shadowPos;
             shadowPos /= shadowPos.w;
 
-            color = calculateTranslucentShading(frag, pbr, normalize(viewPos.xyz), shadowPos.xyz, texture2D(colortex1, texcoord).a);
+            color = calculateTranslucentShading(frag, pbr, normalize(viewPos.xyz), shadowPos.xyz, decodeVec3(texture2D(colortex1, texcoord).x).z);
 
             if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
 

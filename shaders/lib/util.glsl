@@ -12,6 +12,19 @@ const int colortex6Format = RGBA16F;
 const bool colortex6Clear = false;
 */
 
+float bayer2(vec2 a){
+    a = floor(a);
+    return fract(dot(a, vec2(0.5, a.y * 0.75)));
+}
+
+#define bayer4(a)   (bayer2(  0.5 * (a)) * 0.25 + bayer2(a))
+#define bayer8(a)   (bayer4(  0.5 * (a)) * 0.25 + bayer2(a))
+#define bayer16(a)  (bayer8(  0.5 * (a)) * 0.25 + bayer2(a))
+#define bayer32(a)  (bayer16( 0.5 * (a)) * 0.25 + bayer2(a))
+#define bayer64(a)  (bayer32( 0.5 * (a)) * 0.25 + bayer2(a))
+#define bayer128(a) (bayer64( 0.5 * (a)) * 0.25 + bayer2(a))
+#define bayer256(a) (bayer128(0.5 * (a)) * 0.25 + bayer2(a))
+
 #define clamp01(p) (clamp(p, 0.0, 1.0))
 #define log10(x) log(x) / log(10.0)
 
@@ -63,16 +76,7 @@ float fresnel(float bias, float scale, float power, vec3 I, vec3 N)
 
 // encoding/decoding
 
-float encodeLightmaps(vec2 a) {
-    ivec2 bf = ivec2(a*255.0);
-    return float( bf.x|(bf.y<<8) ) / 65535.0;
-}
-
-vec2 decodeLightmaps(float a) {
-    int bf = int(a*65535.0);
-    return vec2(bf%256, bf>>8) / 255.0;
-}
-
+#ifdef FRAG
 float encodeNormals(vec3 a) {
     vec2 spheremap = a.xy / sqrt( a.z * 8.0 + 8.0 ) + 0.5;
     ivec2 bf = ivec2(spheremap*255.0);
@@ -85,3 +89,18 @@ vec3 decodeNormals(float a) {
     float c = dot(b, b);
     return vec3( b * sqrt(1.0-c*0.25), 1.0 - c * 0.5 );
 }
+
+#define m vec3(31,63,31)
+float encodeVec3(vec3 a){
+    a += (bayer64(gl_FragCoord.xy)-0.5) / m;
+    a = clamp(a, 0.0, 1.0);
+    ivec3 b = ivec3(a*m);
+    return float( b.r|(b.g<<5)|(b.b<<11) ) / 65535.0;
+}
+#undef m
+
+vec3 decodeVec3(float a){
+    int bf = int(a*65535.0);
+    return vec3(bf%32, (bf>>5)%64, bf>>11) / vec3(31,63,31);
+}
+#endif
