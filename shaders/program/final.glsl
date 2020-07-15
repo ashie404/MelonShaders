@@ -111,11 +111,7 @@ void main() {
     color = lookup(color);
     #endif
 
-    if (DEBUG_MODE == 0) screenOut = vec4(color, 1.0);
-    else if (DEBUG_MODE == 1) screenOut = vec4(decodeLightmaps(texture2D(colortex1, texcoord).x), 0.0, 1.0);
-    else if (DEBUG_MODE == 2) screenOut = texture2D(colortex2, texcoord);
-    else if (DEBUG_MODE == 3) screenOut = texture2D(colortex3, texcoord);
-    else if (DEBUG_MODE == 4) screenOut = texture2D(colortex4, texcoord);
+    screenOut = vec4(color, 1.0);
 }
 
 #endif
