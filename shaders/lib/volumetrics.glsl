@@ -36,7 +36,7 @@ vec3 calcVolumetricLighting(in vec3 viewPos, in vec3 color, in float densityMult
     #endif
 
     vec3 vlColor = mix(vec3(0.0), color*((VL_DENSITY/15.0)*densityMult*fogNoise), clamp01(visibility));
-    if (noonDensityDecrease) vlColor *= mix(vec3(1.0), vec3(0.25), clamp01(noon));
+    if (noonDensityDecrease) vlColor *= mix(vec3(1.0), vec3(0.05), clamp01(noon));
 
     return vlColor;
 }

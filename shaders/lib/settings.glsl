@@ -39,7 +39,7 @@
 // volumetrics
 #define VL // Whether to have volumetric lighting or not. Does not work if fog is turned off.
 #define VL_STEPS 8 // Volumetric lighting steps. Higher is much laggier. [4 8 16 24 32 48 64]
-#define VL_DENSITY 0.6 // Density of VL fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define VL_DENSITY 1.0 // Density of VL fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 #define VARYING_VL_DENSITY
 
 // cloud settings
