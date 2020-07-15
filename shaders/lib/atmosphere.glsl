@@ -332,7 +332,8 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         color *= exp(-vec3(1.0, 0.2, 0.1) * depth);
 
         #ifdef VL
-        color += calcVolumetricLighting(viewPos, vec3(0.5, 0.7, 1.5)*4.0, 0.65, false, false);
+        float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
+        color += calcVolumetricLighting(viewPos, vec3(0.5, 0.7, 1.5)*2.0*mix(1.0, 0.05, night), 0.65, false, false);
         #endif
 
     } else if (isEyeInWater == 2) {
