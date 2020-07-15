@@ -1,6 +1,6 @@
 option.MELONINFO=§aMelon Shaders
 value.MELONINFO.0=§bBy June
-value.MELONINFO.1=§dV1.4
+value.MELONINFO.1=§dV1.5
 
 screen.POST=Post Processing
 screen.SKY=Sky
@@ -120,3 +120,8 @@ option.in_Match=IN Match
 option.Out_Match=OUT Match
 screen.COLOR=Color Adjustments
 option.COLOR_AP1=AP1 Colorspace
+
+profile.Minimal=§bMinimal
+profile.Low=§aLow
+profile.Default=§dDefault
+profile.High=§cHigh

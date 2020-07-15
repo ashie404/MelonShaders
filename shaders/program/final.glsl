@@ -10,7 +10,7 @@
 
 #ifdef FRAG
 
-#define MELONINFO 0 // Melon Shaders by June (juniebyte). V1.4 [0 1]
+#define MELONINFO 0 // Melon Shaders by June (juniebyte). V1.5. <3 [0 1]
 
 #include "/lib/aces/ACES.glsl"
 
