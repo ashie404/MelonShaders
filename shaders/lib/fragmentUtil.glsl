@@ -20,9 +20,9 @@ Fragment getFragment(in vec2 coord) {
     vec4 tex2 = texture2D(colortex2, coord);
 
     f.albedo = tex0;
-    f.lightmap = decodeLightmaps(tex1.x);
+    f.lightmap = clamp01(decodeLightmaps(tex1.x));
     f.matMask = int(tex1.z+0.5);
-    f.normal = decodeNormals(tex1.y);
+    f.normal = clamp(decodeNormals(tex1.y), -1.0, 1.0);
     f.specular = tex2;
     f.coord = coord;
     return f;
