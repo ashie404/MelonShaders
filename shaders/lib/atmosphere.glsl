@@ -155,7 +155,7 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
     return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
 }
 
-vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle, bool atmosphereOnly) {
+vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle, bool atmosphereOnly, bool sunMoonSpot) {
     float night = clamp01(((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03));
     float noon = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
 
@@ -308,8 +308,10 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
         #endif
 
         // add sun & moon spots to the sky
-        skyColor += mix(vec3(0.0), mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS, false).rgb, clamp01(1.0-cloudShape)), clamp01(worldPos.y/192.0))*(skyColor*4.0);
-        skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS+0.1, true).rgb, clamp01(1.0-(cloudShape*2.0)));
+        if (sunMoonSpot) {
+            skyColor += mix(vec3(0.0), mix(vec3(0.0), calculateSunSpot(viewVec, sunVec, CELESTIAL_RADIUS, false).rgb, clamp01(1.0-cloudShape)), clamp01(worldPos.y/192.0))*(skyColor*4.0);
+            skyColor += mix(vec3(0.0), calculateSunSpot(viewVec, moonVec, CELESTIAL_RADIUS+0.1, true).rgb, clamp01(1.0-(cloudShape*2.0)));
+        }
 
         // stars
         #ifdef STARS
@@ -344,13 +346,13 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         // render regular fog
         if (depth0 != 1.0) {
             if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true, false);
                 float fade = clamp01((eyeBrightnessSmooth.y-9)/55.0);
                 color = mix(color, mix(vec3(0.001), atmosColor, fade), clamp01((depth/256.0)*FOG_DENSITY*mix(8.0, 1.0, fade)));
             } else if (eyeBrightnessSmooth.y <= 8) {
                 color = mix(color, vec3(0.001), clamp01((depth/256.0)*FOG_DENSITY*8.0));
             } else {
-                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true, false);
                 color = mix(color, atmosColor, clamp01((depth/256.0)*FOG_DENSITY));
             }
             #ifdef VL
@@ -358,7 +360,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
             #endif
         } else {
             if (eyeBrightnessSmooth.y > 64) {
-                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true);
+                vec3 atmosColor = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, true, false);
                 color = mix(color, atmosColor, clamp01(((depth/256.0)*FOG_DENSITY)-(worldPos.y/64.0)));
             }
             #ifdef VL
