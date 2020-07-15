@@ -109,15 +109,12 @@ void main() {
     #endif
 
     // get lightmap
-    #ifdef DIRECTIONAL_LIGHTMAP
     vec2 lm = lmcoord.xy;
-
+    #ifdef DIRECTIONAL_LIGHTMAP
     mat3 lmtbn = getLightmapTBN(viewPos);
 
     lm.x = directionalLightmap(lm.x, normalData, lmtbn);
     lm.y = directionalLightmap(lm.y, normalData, lmtbn);
-    #else
-    vec2 lm = lmcoord.xy;
     #endif
 
     // output everything
