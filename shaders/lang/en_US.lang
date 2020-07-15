@@ -55,6 +55,7 @@ option.CLOUD_LIGHTING=Cloud Lighting
 
 option.SPECULAR=Specular
 option.SSR=Reflections
+option.HQ_REFLECTIONS=HQ Reflections
 option.SPECULAR_REFLECTION_STRENGTH=Specular Reflection Strength
 
 option.SSS=Subsurface Scattering
