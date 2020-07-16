@@ -105,4 +105,4 @@ const int shadowDistance = 128; //[128 256 512 1024]
 const float shadowIntervalSize = 0.1;
 const float sunPathRotation = -30.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]
 
-const vec3 nightSkyColor = vec3(0.14, 0.2, 0.24)*0.025;
+const vec3 nightSkyColor = vec3(0.14, 0.2, 0.24)*0.0005;
