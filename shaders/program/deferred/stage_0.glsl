@@ -65,6 +65,7 @@ uniform vec3 fogColor;
 in vec2 texcoord;
 in vec3 ambientColor;
 in vec3 lightColor;
+in vec4 times;
 
 #define linear(x) (2.0 * near) / (far + near - x * (far - near))
 
@@ -132,6 +133,7 @@ void main() {
 out vec2 texcoord;
 out vec3 ambientColor;
 out vec3 lightColor;
+out vec4 times;
 
 uniform float sunAngle;
 uniform float rainStrength;
@@ -142,7 +144,7 @@ uniform vec3 shadowLightPosition;
 void main() {
 	gl_Position = ftransform();
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-    calcLightingColor(sunAngle, rainStrength, sunPosition, shadowLightPosition, ambientColor, lightColor);
+    calcLightingColor(sunAngle, rainStrength, sunPosition, shadowLightPosition, ambientColor, lightColor, times);
 }
 
 #endif

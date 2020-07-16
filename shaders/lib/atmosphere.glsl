@@ -156,8 +156,8 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 }
 
 vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle, bool atmosphereOnly, bool sunMoonSpot) {
-    float night = clamp01(((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03));
-    float noon = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
+    float night = times.w;
+    float noon = times.y;
 
     vec3 skyPos = worldPos;
     if (atmosphereOnly) {

@@ -4,7 +4,7 @@
 */
 
 vec3 calcVolumetricLighting(in vec3 viewPos, in vec3 color, in float densityMult, in bool noonDensityDecrease, in bool varyingDensity) {
-    float noon = ((clamp(sunAngle, 0.02, 0.15)-0.02) / 0.13   - (clamp(sunAngle, 0.35, 0.48)-0.35) / 0.13);
+    float noon = times.y;
 
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 stepSize = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
