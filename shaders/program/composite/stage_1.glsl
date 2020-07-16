@@ -44,14 +44,14 @@ void main() {
         vec3 blurred = vec3(0.0);
         float blurSize = clamp((currentDepth-centerDepthSmooth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
         for (int i = 0; i <= dofSteps; i++) {
-                vec2 offset = poissonDisk[i] * oneTexel * blurSize;
-                #ifdef CHROM_ABB
-                float g = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).g;
-                vec2 rb = texture2D(colortex0, texcoord + offset).rb;
-                blurred += vec3(rb.x, g, rb.y);
-                #else
-                blurred += texture2D(colortex0, texcoord + offset).rgb;
-                #endif
+            vec2 offset = poissonDisk[i] * oneTexel * blurSize;
+            #ifdef CHROM_ABB
+            float g = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).g;
+            vec2 rb = texture2D(colortex0, texcoord + offset).rb;
+            blurred += vec3(rb.x, g, rb.y);
+            #else
+            blurred += texture2D(colortex0, texcoord + offset).rgb;
+            #endif
         }
         color = blurred / dofSteps;
     }
@@ -61,14 +61,14 @@ void main() {
         vec3 blurred = vec3(0.0);
         float blurSize = clamp((centerDepthSmooth-currentDepth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
         for (int i = 0; i <= dofSteps; i++) {
-                vec2 offset = poissonDisk[i] * oneTexel * blurSize;
-                #ifdef CHROM_ABB
-                float b = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).b;
-                vec2 rg = texture2D(colortex0, texcoord + offset).rg;
-                blurred += vec3(rg, b);
-                #else
-                blurred += texture2D(colortex0, texcoord + offset).rgb;
-                #endif
+            vec2 offset = poissonDisk[i] * oneTexel * blurSize;
+            #ifdef CHROM_ABB
+            float b = texture2D(colortex0, texcoord + offset + vec2(blurSize * oneTexel.x, 0.0)).b;
+            vec2 rg = texture2D(colortex0, texcoord + offset).rg;
+            blurred += vec3(rg, b);
+            #else
+            blurred += texture2D(colortex0, texcoord + offset).rgb;
+            #endif
         }
         color = blurred / dofSteps;
     }
