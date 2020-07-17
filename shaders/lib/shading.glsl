@@ -51,21 +51,21 @@ vec4 getShadows(in vec2 coord, in vec3 unDisShadowPos)
 
     #ifdef PCSS
     float blockerDepth = getBlockerDepth(coord, unDisShadowPos);
-
     float softness = clamp01(blockerDepth)*80.0;
     #endif
 
     for (int i = 0; i <= 16; i++) {
         #ifdef PCSS
-        vec2 offset = (poissonDisk[i]*softness) / shadowMapResolution;
+        vec2 offset = (poissonDisk[i]*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #else
-        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*0.5) / shadowMapResolution;
+        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #endif
         offset = rotationMatrix * offset;
 
         // sample shadow map
         vec3 shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
         float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
+
         visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         
         // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
