@@ -10,7 +10,7 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:045 */
+/* DRAWBUFFERS:04 */
 layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 bloomOut;
 

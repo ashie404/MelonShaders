@@ -235,7 +235,7 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     color = vec3(1.0);
     #endif
     
-    color = mix(behind, color, alpha);
+    color = behind * mix(vec3(1.0), color, clamp01(alpha+0.5));
 
     return color;
 }

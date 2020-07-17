@@ -10,8 +10,9 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:03 */
 layout (location = 0) out vec4 colorOut;
+layout (location = 1) out vec4 reflectionsOut;
 
 /*
 const float eyeBrightnessSmoothHalflife = 4.0;
@@ -41,6 +42,10 @@ uniform mat4 gbufferModelView;
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 
+uniform vec3 previousCameraPosition;
+uniform mat4 gbufferPreviousModelView;
+uniform mat4 gbufferPreviousProjection;
+
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float aspectRatio;
@@ -48,6 +53,7 @@ uniform float far;
 uniform float near;
 uniform float sunAngle;
 uniform float frameTimeCounter;
+uniform int frameCounter;
 uniform int isEyeInWater;
 uniform float rainStrength;
 uniform float centerDepthSmooth;
@@ -67,6 +73,8 @@ in vec3 lightColor;
 in vec4 times;
 
 #define linear(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
+
+#include "/lib/temporalUtil.glsl"
 
 #include "/lib/distort.glsl"
 #include "/lib/fragmentUtil.glsl"
@@ -130,7 +138,7 @@ void main() {
 
                 // combine reflections
                 #ifdef SSR
-                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
+                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex3);
                 color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.5);
                 #else
                 color += mix(vec3(0.0), skyReflection, 0.05);
@@ -163,6 +171,9 @@ void main() {
                 applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
             }
         }
+
+        reflectionsOut = vec4(color, 1.0);
+
         #ifdef SSR
         #ifdef SPECULAR
         // specular reflections
@@ -176,7 +187,7 @@ void main() {
             vec3 skyReflection = fogColor*0.5;
             #endif
 
-            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy)), roughness*8.0, colortex5);
+            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy)), roughness*8.0, colortex3);
 
             float fresnel = clamp(fresnel(0.2, 0.1, 1.0, viewPos.xyz, frag.normal)+0.5, 0.15, 1.0);
 
@@ -186,6 +197,8 @@ void main() {
         }
         #endif
         #endif
+    } else {
+        reflectionsOut = vec4(color, 1.0);
     }
 
     // apply fog

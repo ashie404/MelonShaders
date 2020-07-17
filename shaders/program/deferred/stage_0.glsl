@@ -12,7 +12,7 @@
 
 /* DRAWBUFFERS:05 */
 layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 reflectionsOut;
+layout (location = 1) out vec4 noTranslucentsOut;
 
 /*
 const float eyeBrightnessSmoothHalflife = 4.0;
@@ -121,7 +121,7 @@ void main() {
     if (isEyeInWater == 0 && shouldDrawFog) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
 
     colorOut = vec4(color, 1.0);
-    reflectionsOut = vec4(color, 1.0);
+    noTranslucentsOut = vec4(color, 1.0);
 }
 
 #endif
