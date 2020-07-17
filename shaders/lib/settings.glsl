@@ -27,7 +27,7 @@
 
 // shadow settings
 #define SHADOW_SOFTNESS 1.0 // How soft the shadows should be. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0 2.25 2.5 2.75 3.0 3.5 4.0 4.5 5.0 6.0 7.0 8.0 9.0 10.0]
-
+#define PCSS
 #define SHADOW_BIAS 0.00025
 
 // sky settings

@@ -19,17 +19,52 @@ mat2 getRotationMatrix(in vec2 coord) {
     );
 }
 
+float getBlockerDepth(in vec2 coord, in vec3 unDisShadowPos) {
+    mat2 rotationMatrix = getRotationMatrix(coord);
+
+    float blockerDepth = 0.0;
+    int blockers = 0;
+
+    for (int i = 0; i <= 8; i++) {
+        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*8.0) / shadowMapResolution;
+        offset = rotationMatrix * offset;
+
+        vec3 shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
+        
+        float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r;
+
+        if (shadowMapSample < shadowPos.z) {
+            blockerDepth += shadowPos.z - shadowMapSample;
+            blockers++;
+        }
+    }
+
+    return blockerDepth / blockers;
+}
+
 // shadowmap sampling
 vec4 getShadows(in vec2 coord, in vec3 unDisShadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     float visibility = 0;
+
+    float softnessSize = 0.5;
+
+    vec3 shadowPos = distort(unDisShadowPos) * 0.5 + 0.5;
+
+    #ifdef PCSS
+    float blockerDepth = getBlockerDepth(coord, unDisShadowPos);
+
+    softnessSize = clamp01(blockerDepth)*80.0;
+    #endif
+
     for (int i = 0; i <= 16; i++) {
-        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*0.5) / shadowMapResolution;
+        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*softnessSize) / shadowMapResolution;
         offset = rotationMatrix * offset;
+
         // sample shadow map
-        vec3 shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
+        shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
         float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
         visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         
@@ -155,6 +190,8 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     #ifndef WHITEWORLD
     color *= fragment.albedo.rgb;
     #endif
+
+    //color = vec3(clamp01(pow(getBlockerDepth(fragment.coord, undistortedShadowPos.xyz), 2.0)));
 
     return color;
 }
