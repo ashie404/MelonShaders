@@ -51,8 +51,6 @@ vec4 getShadows(in vec2 coord, in vec3 unDisShadowPos)
 
     float softnessSize = 0.5;
 
-    vec3 shadowPos = distort(unDisShadowPos) * 0.5 + 0.5;
-
     #ifdef PCSS
     float blockerDepth = getBlockerDepth(coord, unDisShadowPos);
 
@@ -64,7 +62,7 @@ vec4 getShadows(in vec2 coord, in vec3 unDisShadowPos)
         offset = rotationMatrix * offset;
 
         // sample shadow map
-        shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
+        vec3 shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
         float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
         visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         
