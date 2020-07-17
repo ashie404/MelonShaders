@@ -26,7 +26,7 @@ float getBlockerDepth(in vec2 coord, in vec3 unDisShadowPos) {
     int blockers = 0;
 
     for (int i = 0; i <= 8; i++) {
-        vec2 offset = (poissonDisk[i]*8.0) / shadowMapResolution;
+        vec2 offset = (poissonDisk[i]*8.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
         offset = rotationMatrix * offset;
 
         vec3 shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
@@ -160,7 +160,7 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
         mat2 rotationMatrix = getRotationMatrix(fragment.coord);
 
         for (int i = 0; i <= 4; i++) {
-            vec2 offset = (poissonDisk[i]*16) / shadowMapResolution;
+            vec2 offset = (poissonDisk[i]*16.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
             offset = rotationMatrix * offset;
             // sample shadow map
             vec3 shadowPos = distort(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
