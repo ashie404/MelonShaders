@@ -26,7 +26,7 @@ float getBlockerDepth(in vec2 coord, in vec3 unDisShadowPos) {
     int blockers = 0;
 
     for (int i = 0; i <= 8; i++) {
-        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*8.0) / shadowMapResolution;
+        vec2 offset = (poissonDisk[i]*8.0) / shadowMapResolution;
         offset = rotationMatrix * offset;
 
         vec3 shadowPos = distort(vec3(unDisShadowPos.xy + offset, unDisShadowPos.z)) * 0.5 + 0.5;
@@ -49,16 +49,18 @@ vec4 getShadows(in vec2 coord, in vec3 unDisShadowPos)
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
     float visibility = 0;
 
-    float softnessSize = 0.5;
-
     #ifdef PCSS
     float blockerDepth = getBlockerDepth(coord, unDisShadowPos);
 
-    softnessSize = clamp01(blockerDepth)*80.0;
+    float softness = clamp01(blockerDepth)*80.0;
     #endif
 
     for (int i = 0; i <= 16; i++) {
-        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*softnessSize) / shadowMapResolution;
+        #ifdef PCSS
+        vec2 offset = (poissonDisk[i]*softness) / shadowMapResolution;
+        #else
+        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*0.5) / shadowMapResolution;
+        #endif
         offset = rotationMatrix * offset;
 
         // sample shadow map
