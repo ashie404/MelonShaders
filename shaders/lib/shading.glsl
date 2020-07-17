@@ -189,8 +189,6 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     color *= fragment.albedo.rgb;
     #endif
 
-    //color = vec3(clamp01(pow(getBlockerDepth(fragment.coord, undistortedShadowPos.xyz), 2.0)));
-
     return color;
 }
 
