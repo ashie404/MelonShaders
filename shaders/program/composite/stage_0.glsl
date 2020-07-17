@@ -16,7 +16,7 @@ layout (location = 1) out vec4 reflectionsOut;
 
 /*
 const float eyeBrightnessSmoothHalflife = 4.0;
-const bool colortex5MipmapEnabled = true;
+const bool colortex3MipmapEnabled = true;
 */
 
 uniform sampler2D colortex0;
