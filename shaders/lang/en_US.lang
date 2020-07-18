@@ -89,9 +89,11 @@ option.WHITEWORLD=Whiteworld
 
 screen.VISUAL=Visual
 
+screen.TRANSLUCENTS=Translucents
 option.TRANS_REFRACTION=Translucent Refractions
 option.REFRACTION_STRENGTH=Refraction Strength
 option.BLUR_TRANSLUCENT=Blur Translucents
+option.TRANS_COMPAT=Translucents Compat Mode
 
 #debug
 option.DEBUG_MODE=Debug Mode
