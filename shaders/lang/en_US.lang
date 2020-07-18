@@ -93,6 +93,7 @@ option.WAVE_CAUSTICS=Water Caustics
 option.WAVE_PIXEL=Pixelate Water Patterns
 option.WAVE_PIXEL_R=Pixelation Resolution
 option.WAVE_SPEED=Water Pattern Speed
+option.WAVE_BRIGHTNESS=Water Foam/Pattern Brightness
 
 screen.VISUAL=Visual
 

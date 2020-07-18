@@ -131,6 +131,8 @@ void main() {
                     foamBrightness *= 0.25;
                 }
 
+                foamBrightness *= WAVE_BRIGHTNESS;
+
                 // water foam
                 #ifdef WAVE_FOAM
                 if (depthcomp <= 0.15) {
