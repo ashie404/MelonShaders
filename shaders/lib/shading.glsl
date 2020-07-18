@@ -141,7 +141,14 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec4 shadowLight = getShadows(fragment.coord, undistortedShadowPos);
 
     // combine lighting
-    vec3 color = (mix(shadowLight.rgb, shadowLight.rgb*diffuseLight, clamp01(shadowLight.a)))+skyLight+blockLight;
+    vec3 color = vec3(0.0);
+    if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+        color = mix(shadowLight.rgb+vec3(0.001)+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+    } else if (eyeBrightnessSmooth.y <= 8) {
+        color = shadowLight.rgb+vec3(0.001)+blockLight;
+    } else {
+        color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
+    }
     
     // 1 on matmask is hardcoded SSS
     #ifdef SSS
@@ -209,7 +216,14 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     vec4 shadowLight = getShadows(fragment.coord, undistortedShadowPos);
 
     // combine lighting
-    vec3 color = (mix(shadowLight.rgb, shadowLight.rgb*diffuseLight, clamp01(shadowLight.a)))+skyLight+blockLight;
+    vec3 color = vec3(0.0);
+    if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+        color = mix(shadowLight.rgb+vec3(0.001)+blockLight, (shadowLight.rgb*diffuseLight)+skyLight+blockLight, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+    } else if (eyeBrightnessSmooth.y <= 8) {
+        color = shadowLight.rgb+vec3(0.001)+blockLight;
+    } else {
+        color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
+    }
 
     #ifdef SPECULAR
     // calculate specular highlights
