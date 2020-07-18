@@ -143,9 +143,9 @@ void main() {
                 #ifdef WAVE_LINES
                 vec3 worldPosCamera = worldPos.xyz + cameraPosition;
 
-                worldPosCamera.z += int((frameTimeCounter*(WAVE_SPEED*0.175))*WAVE_PIXEL_R)/WAVE_PIXEL_R;
+                worldPosCamera.z += int((frameTimeCounter*(WAVE_SPEED*0.175))*16.0)/16.0;
 
-                color += vec3(texture2D(depthtex2, worldPosCamera.xz*(WAVE_PIXEL_R/16.0)).r) * 0.75 * foamBrightness;
+                color += vec3(texture2D(depthtex2, worldPosCamera.xz).r) * 0.75 * foamBrightness;
                 #endif
 
                 #ifdef WAVE_CAUSTICS
