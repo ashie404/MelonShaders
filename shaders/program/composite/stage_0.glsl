@@ -10,14 +10,8 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:03 */
+/* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 reflectionsOut;
-
-/*
-const float eyeBrightnessSmoothHalflife = 4.0;
-const bool colortex3MipmapEnabled = true;
-*/
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
@@ -74,8 +68,6 @@ in vec4 times;
 
 #define linear(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
 
-#include "/lib/temporalUtil.glsl"
-
 #include "/lib/distort.glsl"
 #include "/lib/fragmentUtil.glsl"
 #include "/lib/noise.glsl"
@@ -130,28 +122,12 @@ void main() {
                 // colorize water fog based on biome color
                 color *= oldcolor;
 
-                // get sky reflection
-                vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
-                vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
-
-                vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false, true);
-
-                // combine reflections
-                #ifdef SSR
-                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex3);
-                color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.5);
-                #else
-                color += mix(vec3(0.0), skyReflection, 0.05);
-                #endif
-
                 // calculate water foam/lines color
                 vec3 foamBrightness = ambientColor;
 
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                    skyReflection *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
                     foamBrightness *= clamp01(((eyeBrightnessSmooth.y-9)/55.0)+0.25);
                 } else if (eyeBrightnessSmooth.y <= 8) {
-                    skyReflection *= 0.0;
                     foamBrightness *= 0.25;
                 }
 
@@ -167,38 +143,8 @@ void main() {
                 worldPosCamera.z += int((frameTimeCounter/12.0)*16.0)/16.0;
                 color += vec3(texture2D(depthtex2, worldPosCamera.xz).r) * 0.75 * foamBrightness;
                 #endif
-
-                applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
             }
         }
-
-        reflectionsOut = vec4(color, 1.0);
-
-        #ifdef SSR
-        #ifdef SPECULAR
-        // specular reflections
-        float roughness = pow(1.0 - pbr.smoothness, 2.0);
-        if (roughness <= 0.125 && frag.matMask != 3.0 && frag.matMask != 4.0) {
-            #ifndef NETHER
-            vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
-            vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
-            vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false, false);
-            #else
-            vec3 skyReflection = fogColor*0.5;
-            #endif
-
-            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy)), roughness*8.0, colortex3);
-
-            float fresnel = clamp(fresnel(0.2, 0.1, 1.0, viewPos.xyz, frag.normal)+0.5, 0.15, 1.0);
-
-            color *= mix(vec3(1.0), mix(skyReflection, reflectionColor.rgb, reflectionColor.a), clamp01((1.0-roughness*4.0)-(1.0-SPECULAR_REFLECTION_STRENGTH)-(1.0-fresnel)));
-
-            if (isEyeInWater == 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
-        }
-        #endif
-        #endif
-    } else {
-        reflectionsOut = vec4(color, 1.0);
     }
 
     // apply fog

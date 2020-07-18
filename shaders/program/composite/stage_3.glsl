@@ -10,8 +10,9 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:04 */
 layout (location = 0) out vec4 colorOut;
+layout (location = 1) out vec4 bloomTileOut;
 
 /*
 const bool colortex4MipmapEnabled = true;
@@ -21,9 +22,6 @@ in vec2 texcoord;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex4;
-uniform sampler2D colortex6;
-
-uniform sampler2D depthtex0;
 
 uniform float viewWidth;
 uniform float viewHeight;
@@ -34,15 +32,14 @@ void main() {
     vec4 color = texture2D(colortex0, texcoord);
 
     #ifdef BLOOM
-    // get all bloom tiles and calculate them with final color
-    vec3 bloom = vec3(0.0);
-    bloom += getBloomTile(vec2(0.0,0.0), 2.0, texcoord);
-    bloom += getBloomTile(vec2(0.3,0.0), 3.0, texcoord);
-    bloom += getBloomTile(vec2(0.3,0.3), 4.0, texcoord);
-    bloom += getBloomTile(vec2(0.6,0.3), 5.0, texcoord);
-    bloom += getBloomTile(vec2(0.6,0.6), 6.0, texcoord);
-    bloom /= 5.0;
-    color.rgb = mix(color.rgb, bloom, clamp01(BLOOM_STRENGTH));
+    // calculate all bloom tiles
+    vec3 bloomTiles = vec3(0.0);
+    bloomTiles += calcBloomTile(vec2(0.0,0.0), 2.0);
+    bloomTiles += calcBloomTile(vec2(0.3,0.0), 3.0);
+    bloomTiles += calcBloomTile(vec2(0.3,0.3), 4.0);
+    bloomTiles += calcBloomTile(vec2(0.6,0.3), 5.0);
+    bloomTiles += calcBloomTile(vec2(0.6,0.6), 6.0);
+    bloomTileOut = vec4(bloomTiles,1.0);
     #endif
 
     colorOut = color;

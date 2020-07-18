@@ -14,10 +14,6 @@
 layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 noTranslucentsOut;
 
-/*
-const float eyeBrightnessSmoothHalflife = 4.0;
-*/
-
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;

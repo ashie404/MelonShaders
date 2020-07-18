@@ -10,8 +10,7 @@ const int colortex4Format = RGBA16F;
 const int colortex5Format = RGBA16F;
 const int colortex6Format = RGBA16F;
 const bool colortex6Clear = false;
-const bool colortex3Clear = false;
-const int colortex3Format = RGBA16F;
+const float eyeBrightnessSmoothHalflife = 4.0;
 */
 
 float bayer2(vec2 a){
