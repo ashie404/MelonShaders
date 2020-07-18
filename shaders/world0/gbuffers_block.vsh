@@ -6,5 +6,5 @@
 */
 
 #define VERT
-#define NO_NORMALMAP
+#define WORLD 0
 #include "/program/gbuffers/solid.glsl"
