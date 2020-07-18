@@ -82,10 +82,17 @@ option.EMISSIVE_MAP_STRENGTH=Emissive Map Strength
 
 option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
-option.WAVE_FOAM=Water Foam
-option.WAVE_LINES=Water Lines
 option.NIGHT_DESAT=Night Desaturation
 option.WHITEWORLD=Whiteworld
+
+screen.WATER=Water
+
+option.WAVE_FOAM=Water Foam
+option.WAVE_LINES=Water Lines
+option.WAVE_CAUSTICS=Water Caustics
+option.WAVE_PIXEL=Pixelate Water Patterns
+option.WAVE_PIXEL_R=Pixelation Resolution
+option.WAVE_SPEED=Water Pattern Speed
 
 screen.VISUAL=Visual
 

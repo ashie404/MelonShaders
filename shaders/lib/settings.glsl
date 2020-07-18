@@ -85,11 +85,19 @@
 
 #define WIND // Whether to have waving terrain (leaves, plants) or not.
 #define WIND_STRENGTH 1.0 // Strength of wind. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0]
-#define WAVE_FOAM // Whether to have water foam or not.
-#define WAVE_LINES // Whether to have water lines or not.
 #define NIGHT_DESAT // Whether to desaturate dark colors at night.
 
 //#define WHITEWORLD
+
+// water visual settings
+#define WAVE_FOAM // Whether to have water foam or not.
+#define WAVE_LINES // Whether to have water lines pattern on the water or not.
+//#define WAVE_CAUSTICS // Whether to have a water caustics pattern on the water or not.
+#define WAVE_PIXEL // Whether to snap the water patterns to a pixel grid or not.
+#define WAVE_PIXEL_R 16.0 // Resolution of the pixel grid that water patterns are snapped to. [4.0 8.0 16.0 32.0 64.0 128.0]
+#define WAVE_SPEED 0.5 // Speed of water patterns. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
+
+// translucents
 
 //#define TRANS_REFRACTION // Whether to have (fake) translucent refraction or not.
 #define REFRACTION_STRENGTH 1.0 // Strength of translucent refraction. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2.0]
