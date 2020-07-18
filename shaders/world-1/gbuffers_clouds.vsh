@@ -6,5 +6,5 @@
 */
 
 #define VERT
-#define NETHER
+#define WORLD -1
 #include "/program/gbuffers/discard.glsl"

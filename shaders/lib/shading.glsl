@@ -126,12 +126,12 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
     vec3 blockLight = blockLightColor * pow(fragment.lightmap.x, 4);
 
-    #ifdef NETHER
+    #if WORLD == -1
 
     vec3 color = vec3(0.81, 0.5, 0.49)*0.25;
     color += blockLight;
 
-    #else
+    #elif WORLD == 0
 
     // calculate diffuse lighting
     float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal), pow(1.0 - pbrData.smoothness, 2.0));
@@ -202,12 +202,12 @@ vec3 calculateTranslucentShading(in Fragment fragment, in PBRData pbrData, in ve
     vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B)*BLOCKLIGHT_I;
     vec3 blockLight = blockLightColor * pow(fragment.lightmap.x, 4);
 
-    #ifdef NETHER
+    #if WORLD == -1
 
     vec3 color = fogColor*0.05;//vec3(0.81, 0.5, 0.49)*0.25;
     color += blockLight;
 
-    #else
+    #elif WORLD == 0
 
     // calculate diffuse lighting
     float diffuseStrength = OrenNayar(normalize(viewVec), normalize(shadowLightPosition), normalize(fragment.normal), pow(1.0 - pbrData.smoothness, 2.0));

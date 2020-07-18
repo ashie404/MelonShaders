@@ -90,9 +90,9 @@ void main() {
 
     // if sky, draw sky. else, calculate shading.
     if (depth0 == 1.0) {
-        #ifndef NETHER
+        #if WORLD == 0
         color = getSkyColor(worldPos.xyz, normalize(worldPos.xyz), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false, true);
-        #else
+        #elif WORLD == -1
         color = fogColor*0.5;
         #endif
     } else {

@@ -76,7 +76,7 @@ void main() {
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
     #ifdef NIGHT_DESAT
-    #ifndef NETHER
+    #if WORLD == 0
     float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
 	m.saturation = 0.95 + SAT_MOD - clamp(mix(0.0, 1.0-clamp01(luma(color)*32.0), night), 0.0, 0.8);
     #else

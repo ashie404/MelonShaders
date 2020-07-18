@@ -6,6 +6,6 @@
 */
 
 #define VERT
-#define NETHER
+#define WORLD -1
 #define NO_NORMALMAP
 #include "/program/gbuffers/solid.glsl"

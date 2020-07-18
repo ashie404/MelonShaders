@@ -342,7 +342,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
         color += vec3(0.2, 0.05, 0.0)*0.25;
     } 
     #ifdef FOG
-    #ifndef NETHER
+    #if WORLD == 0
     else {
         // render regular fog
         if (depth0 != 1.0) {
@@ -369,7 +369,7 @@ void applyFog(in vec3 viewPos, in vec3 worldPos, in float depth0, inout vec3 col
             #endif
         }
     }
-    #else
+    #elif WORLD == -1
     else {
         // render regular fog
         if (depth0 != 1.0) {

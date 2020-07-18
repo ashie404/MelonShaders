@@ -6,5 +6,5 @@
 */
 
 #define FRAG
-#define NETHER
+#define WORLD -1
 #include "/program/gbuffers/translucent.glsl"

@@ -6,4 +6,5 @@
 */
 
 #define FRAG
+#define WORLD 0
 #include "/program/deferred/stage_0.glsl"

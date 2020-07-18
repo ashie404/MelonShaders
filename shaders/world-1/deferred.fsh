@@ -6,5 +6,5 @@
 */
 
 #define FRAG
-#define NETHER
+#define WORLD -1
 #include "/program/deferred/stage_0.glsl"

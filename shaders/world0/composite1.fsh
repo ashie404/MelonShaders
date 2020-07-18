@@ -6,4 +6,5 @@
 */
 
 #define FRAG
+#define WORLD 0
 #include "/program/composite/stage_1.glsl"

@@ -6,6 +6,6 @@
 */
 
 #define FRAG
-#define NETHER
+#define WORLD -1
 #define SPIDEREYES
 #include "/program/gbuffers/solid.glsl"

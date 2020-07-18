@@ -128,16 +128,16 @@ void main() {
         // specular reflections
         float roughness = pow(1.0 - pbr.smoothness, 2.0);
         if (roughness <= 0.125 && frag.matMask != 3.0 && frag.matMask != 4.0) {
-            #ifndef NETHER
+            #if WORLD == 0
             vec3 reflectedPos = reflect(viewPos.xyz, frag.normal);
             vec3 reflectedPosWorld = (gbufferModelViewInverse * vec4(reflectedPos, 1.0)).xyz;
             vec3 skyReflection = getSkyColor(reflectedPosWorld, normalize(reflectedPosWorld), mat3(gbufferModelViewInverse) * normalize(sunPosition), mat3(gbufferModelViewInverse) * normalize(moonPosition), sunAngle, false, false);
-            #else
+            #elif WORLD == -1
             vec3 skyReflection = fogColor*0.5;
             #endif
 
             // make sky reflection darker if in cave mode
-            #ifndef NETHER
+            #if WORLD == 0
             if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                 skyReflection *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
             } else if (eyeBrightnessSmooth.y <= 8) {
