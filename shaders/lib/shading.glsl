@@ -25,7 +25,7 @@ float getBlockerDepth(in vec2 coord, in vec3 unDisShadowPos) {
     float blockerDepth = 0.0;
     int blockers = 0;
 
-    for (int i = 0; i <= 8; i++) {
+    for (int i = 0; i <= 16; i++) {
         vec2 offset = (poissonDisk[i]*8.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
         offset = rotationMatrix * offset;
 
