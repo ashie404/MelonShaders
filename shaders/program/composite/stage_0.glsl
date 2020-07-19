@@ -10,8 +10,9 @@
 
 #ifdef FRAG
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:05 */
 layout (location = 0) out vec4 colorOut;
+layout (location = 1) out vec4 reflectionsOut;
 
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
@@ -167,6 +168,7 @@ void main() {
     if (isEyeInWater != 0) applyFog(viewPos.xyz, worldPos.xyz, depth0, color);
 
     colorOut = vec4(color, 1.0);
+    reflectionsOut = vec4(color, 1.0);
 }
 
 #endif

@@ -13,6 +13,10 @@
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
 
+/*
+const bool colortex5MipmapEnabled = true;
+*/
+
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
@@ -113,7 +117,7 @@ void main() {
 
                 // combine reflections
                 #ifdef SSR
-                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex0);
+                vec4 reflectionColor = reflection(viewPos.xyz, frag.normal, bayer64(gl_FragCoord.xy), colortex5);
                 color += mix(vec3(0.0), mix(mix(vec3(0.0), skyReflection, 0.25), reflectionColor.rgb, reflectionColor.a), 0.5);
                 #else
                 color += mix(vec3(0.0), skyReflection, 0.05);
@@ -145,7 +149,7 @@ void main() {
             }
             #endif
 
-            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy)), roughness*8.0, colortex0);
+            vec4 reflectionColor = roughReflection(viewPos.xyz, frag.normal, fract(frameTimeCounter * 8.0 + bayer64(gl_FragCoord.xy)), roughness*8.0, colortex5);
 
             float fresnel = clamp(fresnel(0.2, 0.1, 1.0, viewPos.xyz, frag.normal)+0.5, 0.15, 1.0);
 
