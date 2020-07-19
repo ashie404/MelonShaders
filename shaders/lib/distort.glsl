@@ -8,7 +8,7 @@ float cubeLength(vec2 v) {
 }
 
 float getDistortFactor(vec2 v) {
-	return cubeLength(v) + 0.05;
+	return cubeLength(v) + 0.075;
 }
 
 vec3 distort(vec3 v, float factor) {
