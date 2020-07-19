@@ -65,10 +65,6 @@ void main() {
     // get normals
 
     vec3 normalData = getTangentNormals(texcoord).xyz;
-
-    // rebuild z component of normal for labpbr packs
-    normalData.z = sqrt(1.0 - dot(normalData.xy, normalData.xy));
-    
     normalData = normalize(normalData * tbn);
     
     // get specular
