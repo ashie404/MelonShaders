@@ -13,10 +13,6 @@
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
 
-/*
-const bool colortex4MipmapEnabled = true;
-*/
-
 in vec2 texcoord;
 
 uniform sampler2D colortex0;

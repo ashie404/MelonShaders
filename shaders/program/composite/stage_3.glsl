@@ -14,10 +14,6 @@
 layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 bloomTileOut;
 
-/*
-const bool colortex4MipmapEnabled = true;
-*/
-
 in vec2 texcoord;
 
 uniform sampler2D colortex0;

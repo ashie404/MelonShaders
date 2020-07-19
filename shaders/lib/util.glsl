@@ -10,6 +10,8 @@ const int colortex4Format = RGBA16F;
 const int colortex5Format = RGBA16F;
 const int colortex6Format = RGBA16F;
 const bool colortex6Clear = false;
+const bool colortex0MipmapEnabled = true;
+const bool colortex4MipmapEnabled = true;
 const float eyeBrightnessSmoothHalflife = 4.0;
 */
 
