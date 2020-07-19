@@ -23,6 +23,7 @@ in vec2 texcoord;
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 
 uniform float viewWidth;
 uniform float viewHeight;
@@ -34,7 +35,7 @@ void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
     #ifdef DOF
-    float currentDepth = texture2D(depthtex0, texcoord).r;
+    float currentDepth = texture2D(depthtex1, texcoord).r;
     vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
 
     int dofSteps = 8*DOF_QUALITY;
