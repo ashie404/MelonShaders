@@ -185,7 +185,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
     );
 
     // apply exposure
-    skyColor = 0.995 - exp(-1.0 * skyColor);
+    skyColor = 0.985 - exp(-1.0 * skyColor);
 
     if (night < 0.95 && night > 0.1) {
         skyColor = mix(skyColor, nightSkyColor, night);
