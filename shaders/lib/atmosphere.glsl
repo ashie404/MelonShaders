@@ -156,8 +156,8 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 }
 
 vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float angle, bool atmosphereOnly, bool sunMoonSpot) {
-    float night = times.w;
-    float noon = times.y;
+    float night = clamp01(times.w);
+    float noon = clamp01(times.y);
 
     vec3 skyPos = worldPos;
     if (atmosphereOnly) {
@@ -185,7 +185,7 @@ vec3 getSkyColor(vec3 worldPos, vec3 viewVec, vec3 sunVec, vec3 moonVec, float a
     );
 
     // apply exposure
-    skyColor = 1.025 - exp(-1.0 * skyColor);
+    skyColor = 0.995 - exp(-1.0 * skyColor);
 
     if (night < 0.95 && night > 0.1) {
         skyColor = mix(skyColor, nightSkyColor, night);

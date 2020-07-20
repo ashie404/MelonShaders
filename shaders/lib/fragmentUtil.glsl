@@ -14,11 +14,10 @@ struct Fragment {
 
 Fragment getFragment(in vec2 coord) {
     Fragment f;
-
-    vec4 tex0 = texture2D(colortex0, coord);
+    
     vec4 tex1 = texture2D(colortex1, coord);
 
-    f.albedo = tex0;
+    f.albedo = texture2D(colortex0, coord);
     f.lightmap = clamp01(decodeLightmaps(tex1.x));
     f.matMask = int((clamp01(decodeLightmaps(tex1.z).x)*10.0)+0.5);
     f.normal = clamp(decodeNormals(tex1.y), -1.0, 1.0);
