@@ -138,8 +138,8 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     vec3 diffuseLight = diffuseStrength * lightColor;
 
     // calculate shadows
-    vec4 shadowLight = vec4(0.0);
-    if (diffuseStrength > 0 || fragment.matMask == 1) shadowLight = getShadows(fragment.coord, undistortedShadowPos);
+    //vec4 shadowLight = vec4(0.0);
+    vec4 shadowLight = getShadows(fragment.coord, undistortedShadowPos);
 
     // combine lighting
     vec3 color = vec3(0.0);
@@ -150,7 +150,15 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     } else {
         color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
     }*/
-    color = (shadowLight.rgb*diffuseLight)+skyLight+blockLight;
+    color = (diffuseLight*shadowLight.rgb)+skyLight+blockLight;
+
+    /*if (shadowLight.a > 0.1) {
+        color = min(diffuseLight, shadowLight.rgb*lightColor)+skyLight+blockLight;
+    } else {
+        color = (shadowLight.rgb*lightColor)+skyLight+blockLight;
+    }*/
+
+    //color = mix(shadowLight.rgb*lightColor, shadowLight.rgb*diffuseLight, clamp01(shadowLight.a))+skyLight+blockLight;
     
     
     // 1 on matmask is hardcoded SSS
@@ -177,13 +185,10 @@ vec3 calculateShading(in Fragment fragment, in PBRData pbrData, in vec3 viewVec,
     #endif
 
     #ifdef SPECULAR
-    // calculate specular highlights if non-shadowed
-    
-    if (shadowLight.a > 0.1) {
-        float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
-        vec3 specularHighlight = specularStrength * lightColor;
-        color += mix(vec3(0.0), specularHighlight, clamp01(shadowLight.a));
-    }
+    // calculate specular highlights
+    float specularStrength = ggx(normalize(fragment.normal), normalize(viewVec), normalize(shadowLightPosition), pbrData);
+    vec3 specularHighlight = specularStrength * lightColor * shadowLight.rgb;
+    color += specularHighlight;
     #endif
 
     #endif
