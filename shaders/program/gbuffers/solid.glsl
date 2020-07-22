@@ -67,14 +67,14 @@ void main() {
     albedo.rgb = toLinear(albedo.rgb);
     // emissive handling
     if (EMISSIVE_MAP == 0) {
-        if      (correctedId == 50 )  albedo.rgb *= clamp01(pow(luminance, 6))*120.0;
-        else if (correctedId == 51 )  albedo.rgb *= clamp01(pow(luminance, 6))*150.0;
-        else if (correctedId == 83 )  albedo.rgb *= clamp01(pow(luminance, 8))*125.0;
-        else if (correctedId == 100)  albedo.rgb *= clamp01(pow(luminance, 8))*200.0;
-        else if (correctedId == 105)  albedo.rgb *= clamp01(pow(luminance, 4))*200.0;
-        else if (correctedId == 110)  albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
-        else if (correctedId == 120)  albedo.rgb *= 50;
-        else if (correctedId == 122)  albedo.rgb *= 25;
+        if      (correctedId == 50 )  albedo.rgb *= clamp01(pow(luminance, 6))*60.0;
+        else if (correctedId == 51 )  albedo.rgb *= clamp01(pow(luminance, 6))*75.0;
+        else if (correctedId == 83 )  albedo.rgb *= clamp01(pow(luminance, 8))*62.5;
+        else if (correctedId == 100)  albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
+        else if (correctedId == 105)  albedo.rgb *= clamp01(pow(luminance, 4))*100.0;
+        else if (correctedId == 110)  albedo.rgb *= clamp01(pow(luminance, 8))*50.0;
+        else if (correctedId == 120)  albedo.rgb *= 25;
+        else if (correctedId == 122)  albedo.rgb *= 12.5;
     } else if (EMISSIVE_MAP == 1 && specularData.b > 0.0) {
         albedo.rgb *= clamp(specularData.b * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
     } else if (EMISSIVE_MAP == 2 && specularData.a < 1.0) {
@@ -82,7 +82,7 @@ void main() {
     }
 
     #ifdef SPIDEREYES
-    albedo.rgb *= 750.0;
+    albedo.rgb *= 375.0;
     #endif
 
 
@@ -157,16 +157,19 @@ out vec3 viewPos;
 #include "/lib/noise.glsl"
 
 void main() {
-	vec4 position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
 	lmcoord  = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
 	glcolor = gl_Color;
     id = mc_Entity.x;
 
     #ifdef WIND
+    vec4 position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
     if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
         position.xz += (sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4)/16)*WIND_STRENGTH;
     }
+    gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
+    #else
+    gl_Position = ftransform();
     #endif
 
     viewPos = (gl_ModelViewMatrix * gl_Vertex).xyz;
@@ -175,7 +178,7 @@ void main() {
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
 
-    gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
+    
 }
 
 #endif

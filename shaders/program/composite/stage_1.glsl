@@ -88,8 +88,8 @@ void main() {
 
     float depth0 = texture2D(depthtex0, texcoord).r;
 
-    vec4 screenPos = vec4(vec3(texcoord, depth0) * 2.0 - 1.0, 1.0);
-    vec4 viewPos = gbufferProjectionInverse * screenPos;
+    vec4 screenPos = vec4(texcoord, depth0, 1.0) * 2.0 - 1.0;
+	vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
     
