@@ -91,6 +91,8 @@
 
 //#define WHITEWORLD
 
+//#define XBRZ_UPSCALE // Upscale textures using the 4xBRZ pixel art upscaling algorithm.
+
 // water visual settings
 
 #define WAVE_FOAM // Whether to have water foam or not.

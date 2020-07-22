@@ -104,6 +104,8 @@ option.REFRACTION_STRENGTH=Refraction Strength
 option.BLUR_TRANSLUCENT=Blur Translucents
 option.TRANS_COMPAT=Translucents Compat Mode
 
+option.XBRZ_UPSCALE=xBRZ Upscaling
+
 #debug
 option.DEBUG_MODE=Debug Mode
 value.DEBUG_MODE.0=Off

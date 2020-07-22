@@ -35,7 +35,11 @@ in mat3 tbn;
 in vec3 viewPos;
 in vec3 normal;
 
+in vec2 mintex;
+in vec2 maxtex;
+
 #include "/lib/dirLightmap.glsl"
+#include "/lib/xbrz.glsl"
 
 vec3 toLinear(vec3 srgb) {
     return mix(
@@ -60,7 +64,17 @@ void main() {
 
     // get albedo
 
+    #ifdef XBRZ_UPSCALE
+    #ifndef WEATHER
+    vec2 textureResolution = textureSize(texture, 0);
+    vec4 albedo = four_xBRZ(textureResolution, texcoord, texture, mintex, maxtex);
+    #else
     vec4 albedo = texture2D(texture, texcoord);
+    #endif
+    #else
+    vec4 albedo = texture2D(texture, texcoord);
+    #endif
+
     float luminance = luma(albedo);
 
     albedo *= glcolor;
@@ -141,6 +155,9 @@ out vec4 glcolor;
 out mat3 tbn;
 out float id;
 
+out vec2 mintex;
+out vec2 maxtex;
+
 // uniforms
 attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
@@ -178,7 +195,10 @@ void main() {
     vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
 
-    
+    vec2 textureSize = abs(texcoord - mc_midTexCoord.xy);
+
+    mintex = mc_midTexCoord.xy - textureSize;
+	maxtex = mc_midTexCoord.xy + textureSize;
 }
 
 #endif

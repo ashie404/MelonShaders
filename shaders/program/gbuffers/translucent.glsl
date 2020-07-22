@@ -28,6 +28,9 @@ in vec2 lmcoord;
 in vec4 glcolor;
 in mat3 tbn;
 
+in vec2 mintex;
+in vec2 maxtex;
+
 vec3 toLinear(vec3 srgb) {
     return mix(
         srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
@@ -41,9 +44,18 @@ vec4 getTangentNormals(vec2 coord) {
     return normal;
 }
 
+#include "/lib/xbrz.glsl"
+
 void main() {
     // get albedo
+    
+    #ifdef XBRZ_UPSCALE
+    vec2 textureResolution = textureSize(texture, 0);
+    vec4 albedo = four_xBRZ(textureResolution, texcoord, texture, mintex, maxtex) * glcolor;
+    #else
     vec4 albedo = texture2D(texture, texcoord) * glcolor;
+    #endif
+
     albedo.rgb = toLinear(albedo.rgb);
 
     // correct floating point precision errors
@@ -95,6 +107,9 @@ out vec4 glcolor;
 out mat3 tbn;
 out float id;
 
+out vec2 mintex;
+out vec2 maxtex;
+
 // uniforms
 uniform float frameTimeCounter;
 
@@ -106,6 +121,7 @@ uniform mat4 gbufferProjection;
 uniform mat4 gbufferProjectionInverse;
 
 attribute vec3 mc_Entity;
+attribute vec3 mc_midTexCoord;
 attribute vec4 at_tangent;
 
 void main() {
@@ -119,6 +135,11 @@ void main() {
     vec3 tangent = normalize(gl_NormalMatrix * (at_tangent.xyz));
 
     tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
+
+    vec2 textureSize = abs(texcoord - mc_midTexCoord.xy);
+
+    mintex = mc_midTexCoord.xy - textureSize;
+	maxtex = mc_midTexCoord.xy + textureSize;
 }
 
 #endif
