@@ -1,7 +1,7 @@
 // From Raspberry Shaders https://rutherin.netlify.app
 
-#include "/lib/aces/ACESSPL.glsl"
-#include "/lib/aces/ACEST.glsl"
+#include "/lib/post/aces/ACESSPL.glsl"
+#include "/lib/post/aces/ACEST.glsl"
 
 struct ColorCorrection {
 	float saturation;
