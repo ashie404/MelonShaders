@@ -2,4 +2,4 @@
 
 #define FSH
 #define WORLD 0
-#include "/program/gbuffers/basic.glsl"
+#include "/program/gbuffers/shadow.glsl"

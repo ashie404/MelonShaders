@@ -11,8 +11,9 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:01 */
 layout (location = 0) out vec4 albedoOut;
+layout (location = 1) out vec4 dataOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -23,11 +24,7 @@ in vec4 glcolor;
 
 // Uniforms
 uniform sampler2D texture;
-
-
-// Includes
-
-
+uniform sampler2D specular;
 
 // other stuff
 vec3 toLinear(vec3 srgb) {
@@ -39,15 +36,29 @@ vec3 toLinear(vec3 srgb) {
 }
 
 void main() {
+
+    int idCorrected = int(id + 0.5);
+
     // get albedo
     vec4 albedo = texture2D(texture, texcoord) * glcolor;
 
     albedo.rgb = toLinear(albedo.rgb);
 
-    int idCorrected = int(id + 0.5);
+    // get specular
+    vec4 specularData = texture2D(specular, texcoord);
+
+    // get material mask
+
+    int matMask = 0;
 
     // output everything
 	albedoOut = albedo;
+    dataOut = vec4(
+        encodeLightmaps(lmcoord), // lightmap
+        encodeNormals(normal), // normal
+        encodeLightmaps(vec2(matMask/10.0, albedo.a)), // material mask, albedo alpha
+        encodeSpecular(specularData.rgb) // specular
+    );
 }
 
 #endif
@@ -64,12 +75,7 @@ out float id;
 out vec4 glcolor;
 
 // Uniforms
-
 attribute vec3 mc_Entity;
-
-// Includes
-
-
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;

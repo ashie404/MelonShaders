@@ -17,14 +17,8 @@ layout (location = 1) out vec4 dataOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
-in vec2 lmcoord;
 in vec3 normal;
-in float id;
 in vec4 glcolor;
-
-// Uniforms
-uniform sampler2D texture;
-uniform sampler2D specular;
 
 // other stuff
 vec3 toLinear(vec3 srgb) {
@@ -36,28 +30,18 @@ vec3 toLinear(vec3 srgb) {
 }
 
 void main() {
-
-    int idCorrected = int(id + 0.5);
-
     // get albedo
-    vec4 albedo = texture2D(texture, texcoord) * glcolor;
+    vec4 albedo = glcolor;
 
     albedo.rgb = toLinear(albedo.rgb);
-
-    // get specular
-    vec4 specularData = texture2D(specular, texcoord);
-
-    // get material mask
-
-    int matMask = 0;
 
     // output everything
 	albedoOut = albedo;
     dataOut = vec4(
-        encodeLightmaps(lmcoord), // lightmap
+        encodeLightmaps(vec2(0.0, 1.0)), // lightmap
         encodeNormals(normal), // normal
-        encodeLightmaps(vec2(matMask/10.0, albedo.a)), // material mask, albedo alpha
-        encodeSpecular(specularData.rgb) // specular
+        encodeLightmaps(vec2(0.0, 1.0)), // material mask, albedo alpha
+        encodeSpecular(vec3(0.0)) // specular
     );
 }
 
@@ -69,21 +53,13 @@ void main() {
 
 // Outputs to fragment shader
 out vec2 texcoord;
-out vec2 lmcoord;
 out vec3 normal;
-out float id;
 out vec4 glcolor;
-
-// Uniforms
-attribute vec3 mc_Entity;
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-    lmcoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
 
     normal = normalize(gl_NormalMatrix * gl_Normal);
-
-    id = mc_Entity.x;
 
     glcolor = gl_Color;
 
