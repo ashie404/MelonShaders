@@ -24,7 +24,7 @@ uniform sampler2D colortex1;
 
 // Includes
 #include "/lib/fragment/fraginfo.glsl"
-
+#include "/lib/fragment/shading.glsl"
 
 void main() {
     FragInfo info = getFragInfo(texcoord);

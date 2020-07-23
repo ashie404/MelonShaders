@@ -1,3 +1,9 @@
+/*
+    Melon Shaders
+    By June (juniebyte)
+    https://juniebyte.cf
+*/
+
 struct FragInfo {
     vec4 albedo;
     vec3 specular;
