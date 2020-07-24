@@ -11,9 +11,10 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:01 */
+/* DRAWBUFFERS:014 */
 layout (location = 0) out vec4 albedoOut;
 layout (location = 1) out vec4 dataOut;
+layout (location = 2) out vec4 normalOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -42,10 +43,11 @@ void main() {
 	albedoOut = albedo;
     dataOut = vec4(
         encodeLightmaps(vec2(0.0, 1.0)), // lightmap
-        encodeNormals(mat3(gbufferModelViewInverse)*normal), // normal
-        encodeLightmaps(vec2(0.0, 1.0)), // material mask, albedo alpha
+        0.0, // material mask
+        1.0, // albedo alpha
         encodeSpecular(vec3(0.0)) // specular
     );
+    normalOut = vec4(normal, 1.0);
 }
 
 #endif

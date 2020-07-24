@@ -23,6 +23,7 @@ in vec3 ambientColor;
 // Uniforms
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
+uniform sampler2D colortex4;
 
 uniform sampler2D depthtex0;
 
@@ -72,7 +73,11 @@ void main() {
     vec3 color = info.albedo.rgb;
 
     if (info.matMask == 3) {
+        #ifdef SSR
         vec4 reflectionColor = reflection(viewPos.xyz, info.normal, bayer64(gl_FragCoord.xy), colortex0);
+        #else
+        vec4 reflectionColor = vec4(0.0);
+        #endif
         vec3 skyReflectionColor = vec3(0.0);
         if (reflectionColor.a < 0.5 && isEyeInWater == 0) {
             skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));

@@ -41,6 +41,9 @@ const float sunPathRotation = -40.0;
 #define FOG
 #define FOG_DENSITY 1.0 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
+// visual settings
+#define SSR // Screenspace reflections.
+
 // water settings
 #define WAVE_FOAM
 #define WAVE_CAUSTICS

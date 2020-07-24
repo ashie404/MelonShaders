@@ -9,6 +9,7 @@ const int colortex0Format = RGBA16F;
 const int colortex1Format = RGBA32F;
 const int colortex2Format = RGBA16F;
 const int colortex3Format = RGBA16F;
+const int colortex4Format = RGBA16F;
 */
 
 #define clamp01(p) (clamp(p, 0.0, 1.0))
