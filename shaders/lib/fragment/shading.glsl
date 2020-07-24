@@ -111,7 +111,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     // sky light & blocklight
     vec3 skyLight = ambientColor * info.lightmap.y;
-    vec3 blockLight = vec3(0.9, 0.4, 0.1) * info.lightmap.x;
+    vec3 blockLight = (vec3(0.9, 0.3, 0.1) * 2.0) * pow(info.lightmap.x, 4.0);
 
     // combine lighting
     vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
@@ -134,8 +134,8 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
             visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
         }
-
-        color += lightColor*clamp01(visibility-depth);
+        color /= 2.0;
+        color += lightColor*clamp01(visibility-depth)/2.0;
     }
     #endif
 
