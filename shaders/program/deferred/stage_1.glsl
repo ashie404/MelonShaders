@@ -52,6 +52,8 @@ uniform float frameTimeCounter;
 
 uniform float eyeAltitude;
 
+uniform int isEyeInWater;
+
 // Includes
 #include "/lib/fragment/fraginfo.glsl"
 #include "/lib/vertex/distortion.glsl"

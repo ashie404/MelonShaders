@@ -117,11 +117,17 @@ void main() {
                 worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
                 #endif
 
-                worldPosCamera.y += frameTimeCounter;
+                worldPosCamera.y += frameTimeCounter*0.5;
                 color += vec3(pow(cellular(worldPosCamera), 8.0)) * 0.75 * foamBrightness;
                 #endif
             }
         }
+    }
+
+    // draw water fog
+    if (isEyeInWater == 1) {
+        vec3 transmittance = exp(-vec3(1.0, 0.2, 0.1) * length(viewPos.xyz));
+        color *= transmittance;
     }
     
     colorOut = vec4(color, 1.0);
