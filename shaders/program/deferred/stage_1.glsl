@@ -36,7 +36,9 @@ uniform sampler2D shadowtex1;
 uniform sampler2D shadowcolor0;
 
 uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferProjection;
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
 
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
@@ -81,19 +83,7 @@ void main() {
     } else {
         color = texture2D(colortex2, texcoord/4.0).rgb;
 
-        #ifdef STARS
-        float starNoise = cellular(normalize(worldPos.xyz)*32);
-        if (starNoise <= 0.05) {
-            color += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos.xyz)*16.0)), clamp01(1.0-starNoise)), clamp01(times.w));
-        }
-        #endif
-
-        vec4 sunSpot = calculateSunSpot(normalize(viewPos.xyz), normalize(sunPosition), 0.35);
-        vec4 moonSpot = calculateMoonSpot(normalize(viewPos.xyz), normalize(moonPosition), 0.5);
-
-        // add sun and moon spots
-        color += sunSpot.rgb*color;
-        color += moonSpot.rgb;
+        color += calculateCelestialBodies(viewPos.xyz, worldPos.xyz);
     }
     
     colorOut = vec4(color, 1.0);

@@ -11,8 +11,8 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:2 */
-layout (location = 0) out vec4 atmosphereOut;
+/* DRAWBUFFERS:0 */
+layout (location = 0) out vec4 colorOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -33,7 +33,9 @@ uniform sampler2D shadowtex1;
 uniform sampler2D shadowcolor0;
 
 uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferProjection;
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
 
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
@@ -49,19 +51,38 @@ uniform float frameTimeCounter;
 
 uniform float eyeAltitude;
 
+uniform int isEyeInWater;
+
 // Includes
+#include "/lib/fragment/fraginfo.glsl"
+#include "/lib/fragment/reflection.glsl"
 #include "/lib/util/noise.glsl"
 #include "/lib/fragment/atmosphere.glsl"
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
 
+    FragInfo info = getFragInfo(texcoord);
+
     vec4 screenPos = vec4(texcoord, depth0, 1.0) * 2.0 - 1.0;
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
-    
-    atmosphereOut = vec4(getSkyColor(viewPos.xyz), 1.0);
+
+    vec3 color = info.albedo.rgb;
+
+    if (info.matMask == 3) {
+        vec4 reflectionColor = reflection(viewPos.xyz, info.normal, bayer64(gl_FragCoord.xy), colortex0);
+        vec3 skyReflectionColor = vec3(0.0);
+        if (reflectionColor.a < 0.5 && isEyeInWater == 0) {
+            skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
+            skyReflectionColor += calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal));
+        }
+        float fresnel = clamp01(fresnel(0.2, 0.1, 1.0, viewPos.xyz, info.normal));
+        color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.15));
+    }
+
+    colorOut = vec4(color, 1.0);
 }
 
 #endif

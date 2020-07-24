@@ -8,6 +8,7 @@
 const int colortex0Format = RGBA16F;
 const int colortex1Format = RGBA32F;
 const int colortex2Format = RGBA16F;
+const int colortex3Format = RGBA16F;
 */
 
 #define clamp01(p) (clamp(p, 0.0, 1.0))
@@ -59,6 +60,12 @@ void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpo
     } else {
       light = nightLightColor*clamp(1.0-rain, 0.1, 1.0);
     }
+}
+
+// fresnel
+float fresnel(float bias, float scale, float power, vec3 I, vec3 N)
+{
+    return bias + scale * pow(1.0 + dot(I, N), power);
 }
 
 // Encoding & Decoding functions

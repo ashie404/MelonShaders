@@ -175,17 +175,35 @@ vec4 calculateMoonSpot(vec3 viewVector, vec3 moonVector, float radius) {
     return vec4(moonDisk, float(cosTheta > cos(moonAngularRadius)));
 }
 
-vec3 getSkyColor(vec3 viewPos, vec3 worldPos) {
+vec3 getSkyColor(vec3 viewPos) {
     vec3 skyColor = vec3(0.1);
 
     vec2 pid = vec2(0.0);
     vec3 skyTransmittance = vec3(0.0);
-
-    worldPos.y = max(worldPos.y, 0.5);
 
     skyColor = calculateAtmosphere(skyColor, normalize(viewPos), normalize(upPosition), normalize(sunPosition), normalize(moonPosition), pid, skyTransmittance, 15);
 
     skyColor = 1.0 - exp(-0.05 * skyColor);
 
     return skyColor;
+}
+
+vec3 calculateCelestialBodies(vec3 viewPos, vec3 worldPos) {
+    vec3 color = vec3(0.0);
+
+    #ifdef STARS
+    float starNoise = cellular(normalize(worldPos.xyz)*32);
+    if (starNoise <= 0.05) {
+        color += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos.xyz)*16.0)), clamp01(1.0-starNoise)), clamp01(times.w));
+    }
+    #endif
+
+    vec4 sunSpot = calculateSunSpot(normalize(viewPos.xyz), normalize(sunPosition), 0.35);
+    vec4 moonSpot = calculateMoonSpot(normalize(viewPos.xyz), normalize(moonPosition), 0.5);
+
+    // add sun and moon spots
+    color += sunSpot.rgb;
+    color += moonSpot.rgb;
+
+    return color;
 }

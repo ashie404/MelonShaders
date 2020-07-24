@@ -20,6 +20,9 @@ in vec2 texcoord;
 in vec3 normal;
 in vec4 glcolor;
 
+// Uniforms
+uniform mat4 gbufferModelViewInverse;
+
 // other stuff
 vec3 toLinear(vec3 srgb) {
     return mix(
@@ -39,7 +42,7 @@ void main() {
 	albedoOut = albedo;
     dataOut = vec4(
         encodeLightmaps(vec2(0.0, 1.0)), // lightmap
-        encodeNormals(normal), // normal
+        encodeNormals(mat3(gbufferModelViewInverse)*normal), // normal
         encodeLightmaps(vec2(0.0, 1.0)), // material mask, albedo alpha
         encodeSpecular(vec3(0.0)) // specular
     );
