@@ -38,3 +38,10 @@ const float sunPathRotation = -40.0;
 
 // sky settings
 #define STARS
+
+
+// water settings
+#define WAVE_FOAM
+#define WAVE_CAUSTICS
+#define WAVE_PIXEL
+#define WAVE_PIXEL_R 16.0 //[4.0 8.0 16.0 32.0 64.0 128.0]

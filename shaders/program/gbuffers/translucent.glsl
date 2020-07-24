@@ -49,7 +49,11 @@ void main() {
 
     // get material mask
 
-    int matMask = 0;
+    int matMask = 2;
+
+    if (idCorrected == 8) {
+        matMask = 3;
+    } 
 
     // output everything
 	albedoOut = albedo;
