@@ -11,8 +11,9 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:02 */
 layout (location = 0) out vec4 colorOut;
+layout (location = 1) out vec4 bloomOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -88,6 +89,11 @@ void main() {
     }
 
     colorOut = vec4(color, 1.0);
+
+    #ifdef BLOOM
+    vec3 bloomSample = color.rgb;// * clamp01(pow(luma(color.rgb), 4.0));
+    bloomOut = vec4(bloomSample, 1.0);
+    #endif
 }
 
 #endif

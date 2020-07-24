@@ -33,6 +33,14 @@ float bayer2(vec2 a){
 #define bayer128(a) (bayer64( 0.5 * (a)) * 0.25 + bayer2(a))
 #define bayer256(a) (bayer128(0.5 * (a)) * 0.25 + bayer2(a))
 
+// luma functions
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+float luma(vec4 color) {
+  return dot(color.rgb, vec3(0.299, 0.587, 0.114));
+}
 
 // light color
 void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpos, out vec3 ambient, out vec3 light, out vec4 times) {

@@ -49,3 +49,7 @@ const float sunPathRotation = -40.0;
 #define WAVE_CAUSTICS
 #define WAVE_PIXEL
 #define WAVE_PIXEL_R 16.0 // Resolution of wave pixelization. [4.0 8.0 16.0 32.0 64.0 128.0]
+
+// post processing settings
+#define BLOOM
+#define BLOOM_STRENGTH 0.1 // Strength of bloom [0.025 0.05 0.075 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]

@@ -1,7 +1,10 @@
+/*
+    Melon Shaders
+    By June (juniebyte)
+    https://juniebyte.cf
+*/
+
 // Raytracing code from BSL Shaders ( https://bitslablab.com/ )
-
-// raytracing code based on BSL shaders by capt tatsu
-
 
 vec3 nvec3(vec4 pos){
     return pos.xyz/pos.w;
