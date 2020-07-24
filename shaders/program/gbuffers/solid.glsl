@@ -45,7 +45,20 @@ void main() {
     // get albedo
     vec4 albedo = texture2D(texture, texcoord) * glcolor;
 
+    float luminance = luma(albedo.rgb);
+
     albedo.rgb = toLinear(albedo.rgb);
+
+    // emissives handling
+
+    if      (idCorrected == 50 )  albedo.rgb *= clamp01(pow(luminance, 6))*60.0;
+    else if (idCorrected == 51 )  albedo.rgb *= clamp01(pow(luminance, 6))*75.0;
+    else if (idCorrected == 83 )  albedo.rgb *= clamp01(pow(luminance, 8))*62.5;
+    else if (idCorrected == 100)  albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
+    else if (idCorrected == 105)  albedo.rgb *= clamp01(pow(luminance, 4))*100.0;
+    else if (idCorrected == 110)  albedo.rgb *= clamp01(pow(luminance, 8))*50.0;
+    else if (idCorrected == 120)  albedo.rgb *= 25;
+    else if (idCorrected == 122)  albedo.rgb *= 12.5;
 
     // get specular
     vec4 specularData = texture2D(specular, texcoord);
