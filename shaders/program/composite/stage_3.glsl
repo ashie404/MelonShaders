@@ -11,6 +11,10 @@
 
 #ifdef FSH
 
+/*
+const bool colortex2MipmapEnabled = true;
+*/
+
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
 

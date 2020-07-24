@@ -1,3 +1,60 @@
+option.MELONINFO=§aMelon Shaders
+value.MELONINFO.0=§bBy June
+value.MELONINFO.1=§dV2.0
+
+screen.POST=Post Processing
+screen.SKY=Sky
+screen.LIGHTING=Lighting
+screen.TWEAKS=Tweaks
+
+option.BLOOM=Bloom
+option.BLOOM_STRENGTH=Bloom Strength
+
+option.TAA=Temporal Anti-Aliasing
+option.LUT=Color LUT
+option.LUTV=LUT
+value.LUTV.0=Kingdom Come
+value.LUTV.1=Kodak DSCS 3151
+value.LUTV.2=Agfachrome RSX2 050
+value.LUTV.3=Fujifilm F400
+value.LUTV.4=Night City Punk
+
+screen.ACES_SETTINGS=ACES Settings
+
+option.sunPathRotation=Sun Path Rotation
+option.STARS=Stars
+
+option.FOG=Fog
+option.FOG_DENSITY=Fog Density
+
+option.SSR=Reflections
+
+option.SSS=Subsurface Scattering
+
+screen.SHADOWS=Shadows
+option.shadowMapResolution=Shadow Resolution
+option.shadowDistance=Shadow Distance
+option.SHADOW_SOFTNESS=Shadow Softness
+
+screen.BLOCKLIGHT=Blocklight
+option.BLOCKLIGHT_R=§4Red
+option.BLOCKLIGHT_G=§2Green
+option.BLOCKLIGHT_B=§1Blue
+option.BLOCKLIGHT_I=Intensity
+
+option.WHITEWORLD=Whiteworld
+
+screen.WATER=Water
+
+option.WAVE_FOAM=Water Foam
+option.WAVE_CAUSTICS=Water Caustics
+option.WAVE_PIXEL=Pixelate Water Patterns
+option.WAVE_PIXEL_R=Pixelation Resolution
+option.WAVE_SPEED=Water Pattern Speed
+option.WAVE_BRIGHTNESS=Water Foam/Pattern Brightness
+
+screen.VISUAL=Visual
+
 #ACES
 option.SAT_MOD=Saturation
 option.VIB_MOD=Vibrance

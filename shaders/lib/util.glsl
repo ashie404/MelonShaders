@@ -8,7 +8,6 @@
 const int colortex0Format = RGBA16F;
 const int colortex1Format = RGBA32F;
 const int colortex2Format = RGBA16F;
-const bool colortex2MipmapEnabled = true;
 const int colortex3Format = RGBA16F;
 const int colortex4Format = RGBA16F;
 const int colortex6Format = RGBA16F;

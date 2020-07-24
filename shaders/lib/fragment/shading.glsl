@@ -140,7 +140,9 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
     #endif
 
     // multiply by albedo to get final color
+    #ifndef WHITEWORLD
     color *= info.albedo.rgb;
+    #endif
 
     return color;
 }

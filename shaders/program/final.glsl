@@ -11,20 +11,60 @@
 
 #ifdef FSH
 
+#define MELONINFO 0 // Melon Shaders by June. V2.0. [0 1]
+
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 screenOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
 
-
 // Uniforms
 uniform sampler2D colortex0;
-
+uniform sampler2D colortex7;
 
 // Includes
 #include "/lib/post/aces/ACES.glsl"
 
+// other stuff
+vec3 lookup(in vec3 textureColor) {
+    #ifndef LUT
+    return textureColor;
+    #endif
+    
+    textureColor = clamp(textureColor, 0.0, 1.0);
+    float blueColor = textureColor.b * 63.0;
+
+    vec2 quad1;
+    quad1.y = floor(floor(blueColor) / 8.0);
+    quad1.x = floor(blueColor) - (quad1.y * 8.0);
+
+    vec2 quad2;
+    quad2.y = floor(ceil(blueColor) / 8.0);
+    quad2.x = ceil(blueColor) - (quad2.y * 8.0);
+
+    vec2 texPos1;
+    texPos1.x = (quad1.x * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.r);
+    texPos1.y = (quad1.y * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.g);
+
+    vec2 texPos2;
+    texPos2.x = (quad2.x * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.r);
+    texPos2.y = (quad2.y * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.g);
+
+    float voffset = (LUTV*512.0)/2560.0;
+
+    texPos1.y /= 5.0;
+    texPos2.y /= 5.0;
+
+    texPos1.y += voffset;
+    texPos2.y += voffset;
+
+    vec4 newColor1 = texture2D(colortex7, texPos1);
+    vec4 newColor2 = texture2D(colortex7, texPos2);
+
+    vec4 newColor = mix(newColor1, newColor2, fract(blueColor));
+    return vec3(newColor.rgb);
+}
 
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
@@ -55,6 +95,10 @@ void main() {
     color = color * sRGB_2_AP1;
     #endif
 
+    #ifdef LUT
+    color = lookup(color);
+    #endif
+
     screenOut = vec4(color, 1.0);
 }
 
@@ -66,15 +110,6 @@ void main() {
 
 // Outputs to fragment shader
 out vec2 texcoord;
-
-
-// Uniforms
-
-
-
-// Includes
-
-
 
 void main() {
     gl_Position = ftransform();

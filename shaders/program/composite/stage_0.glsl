@@ -11,6 +11,10 @@
 
 #ifdef FSH
 
+/*
+const bool colortex2MipmapEnabled = true;
+*/
+
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
 
@@ -104,12 +108,12 @@ void main() {
                 color = color * transmittance;
 
                 // calculate water foam/lines color
-                vec3 foamBrightness = ambientColor;
+                vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;
 
                 // water foam
                 #ifdef WAVE_FOAM
                 if (depthcomp <= 0.15) {
-		            color += vec3(0.75) * foamBrightness;
+		            color += vec3(0.75) * foamColor;
 		        } 
                 #endif
 
@@ -120,8 +124,8 @@ void main() {
                 worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
                 #endif
 
-                worldPosCamera.y += frameTimeCounter*0.5;
-                color += vec3(pow(cellular(worldPosCamera), 8.0)) * 0.75 * foamBrightness;
+                worldPosCamera.y += frameTimeCounter*WAVE_SPEED;
+                color += vec3(pow(cellular(worldPosCamera), 8.0)) * 0.75 * foamColor;
                 #endif
             }
         }

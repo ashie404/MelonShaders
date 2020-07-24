@@ -28,7 +28,8 @@
 
 const int noiseTextureResolution = 512;
 const int shadowMapResolution = 2048; // [1024 2048 4096 8192]
-const float sunPathRotation = -40.0;
+const int shadowDistance = 128; // [128 256 512 1024]
+const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]
 
 // shadows
 #define PCSS // Percentage-closer soft shadowing. Makes shadows hard at the contact point, and softer farther away.
@@ -43,18 +44,24 @@ const float sunPathRotation = -40.0;
 
 // visual settings
 #define SSR // Screenspace reflections.
+//#define WHITEWORLD
 
 // water settings
 #define WAVE_FOAM
 #define WAVE_CAUSTICS
 #define WAVE_PIXEL
 #define WAVE_PIXEL_R 16.0 // Resolution of wave pixelization. [4.0 8.0 16.0 32.0 64.0 128.0]
+#define WAVE_SPEED 0.5 // Speed of water patterns. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
+#define WAVE_BRIGHTNESS 1.0 // Brightness of wave foam and patterns. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
 // post processing settings
 #define BLOOM
 #define BLOOM_STRENGTH 0.1 // Strength of bloom [0.025 0.05 0.075 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
 #define TAA
+
+#define LUT // Color lookup table. Adjusts the overall look of colors.
+#define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4]
 
 // tweaks
 #define BLOCKLIGHT_R 0.9 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
