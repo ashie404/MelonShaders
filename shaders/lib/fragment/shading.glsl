@@ -25,7 +25,7 @@ float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos) {
     float blockerDepth = 0.0;
     int blockers = 0;
 
-    for (int i = 0; i <= 16; i++) {
+    for (int i = 0; i <= 8; i++) {
         vec2 offset = (poissonDisk[i]*4.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
         offset = rotationMatrix * offset;
 
@@ -54,7 +54,7 @@ vec4 getShadows(in vec2 coord, in vec3 undistortedShadowPos)
     float softness = clamp(blockerDepth*80.0, 0.0, 4.0);
     #endif
 
-    for (int i = 0; i <= 16; i++) {
+    for (int i = 0; i <= 8; i++) {
         #ifdef PCSS
         vec2 offset = (poissonDisk[i]*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #else
@@ -76,7 +76,7 @@ vec4 getShadows(in vec2 coord, in vec3 undistortedShadowPos)
             shadowCol += mix(vec3(0.0), vec3(1.0), visibility);
         }
     }
-    return vec4((shadowCol / 128.0), visibility);
+    return vec4((shadowCol / 64.0), visibility);
 }
 
 float OrenNayar(vec3 v, vec3 l, vec3 n, float r) {

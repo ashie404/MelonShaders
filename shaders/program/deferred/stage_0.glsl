@@ -11,8 +11,9 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:02 */
 layout (location = 0) out vec4 colorOut;
+layout (location = 1) out vec4 noTranslucentsOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -69,6 +70,7 @@ void main() {
     }
     
     colorOut = vec4(color, 1.0);
+    noTranslucentsOut = vec4(color, 1.0);
 }
 
 #endif
