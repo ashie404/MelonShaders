@@ -51,6 +51,10 @@ void main() {
 
     int matMask = 0;
 
+    if (idCorrected == 20 || idCorrected == 21 || idCorrected == 23) {
+        matMask = 1;
+    }
+
     // output everything
 	albedoOut = albedo;
     dataOut = vec4(

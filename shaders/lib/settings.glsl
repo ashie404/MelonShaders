@@ -34,3 +34,4 @@ const float sunPathRotation = -40.0;
 #define PCSS
 #define SHADOW_SOFTNESS 1.0
 #define SHADOW_BIAS 0.00035
+#define SSS

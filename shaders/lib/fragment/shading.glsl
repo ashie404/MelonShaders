@@ -73,10 +73,10 @@ vec4 getShadows(in vec2 coord, in vec3 undistortedShadowPos)
             vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy).rgb; // sample shadow color
             shadowCol += colorSample*2.0;
         } else {
-            shadowCol += mix(vec3(shadowMapSample), vec3(1.0), visibility);
+            shadowCol += mix(vec3(0.0), vec3(1.0), visibility);
         }
     }
-    return vec4((shadowCol / 128.0) * clamp01(visibility), visibility);
+    return vec4((shadowCol / 128.0), visibility);
 }
 
 float OrenNayar(vec3 v, vec3 l, vec3 n, float r) {
@@ -103,10 +103,41 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     vec4 shadowLight = vec4(0.0);
 
+    #ifdef SSS
+    if (diffuseStrength > 0.0 || info.matMask == 1) shadowLight = getShadows(info.coord, undistortedShadowPos);
+    #else
     if (diffuseStrength > 0.0) shadowLight = getShadows(info.coord, undistortedShadowPos);
+    #endif
+
+    // sky light & blocklight
+    vec3 skyLight = ambientColor * info.lightmap.y;
+    vec3 blockLight = vec3(0.9, 0.4, 0.1) * info.lightmap.x;
 
     // combine lighting
-    vec3 color = (diffuseLight*shadowLight.rgb);
+    vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
+
+    // subsurface scattering
+    #ifdef SSS
+    if (info.matMask == 1) {
+        float depth = length(normalize(viewPos));
+        float visibility = 0.0;
+
+        mat2 rotationMatrix = getRotationMatrix(info.coord);
+
+        for (int i = 0; i <= 8; i++) {
+            vec2 offset = (poissonDisk[i]*12.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
+            offset = rotationMatrix * offset;
+
+            // sample shadow map
+            vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
+            float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
+
+            visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
+        }
+
+        color += lightColor*clamp01(visibility-depth);
+    }
+    #endif
 
     // multiply by albedo to get final color
     color *= info.albedo.rgb;

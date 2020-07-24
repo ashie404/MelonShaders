@@ -16,7 +16,9 @@ layout (location = 0) out vec4 colorOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
-
+in vec4 times;
+in vec3 lightColor;
+in vec3 ambientColor;
 
 // Uniforms
 uniform sampler2D colortex0;
@@ -77,19 +79,20 @@ void main() {
 
 // Outputs to fragment shader
 out vec2 texcoord;
-
+out vec4 times;
+out vec3 lightColor;
+out vec3 ambientColor;
 
 // Uniforms
-
-
-
-// Includes
-
-
+uniform float sunAngle;
+uniform float rainStrength;
+uniform vec3 sunPosition;
+uniform vec3 shadowLightPosition;
 
 void main() {
     gl_Position = ftransform();
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+    calcLightingColor(sunAngle, rainStrength, sunPosition, shadowLightPosition, ambientColor, lightColor, times);
 }
 
 #endif

@@ -28,6 +28,36 @@ float bayer2(vec2 a){
 #define bayer128(a) (bayer64( 0.5 * (a)) * 0.25 + bayer2(a))
 #define bayer256(a) (bayer128(0.5 * (a)) * 0.25 + bayer2(a))
 
+
+// light color
+void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpos, out vec3 ambient, out vec3 light, out vec4 times) {
+
+    float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
+    float noon     = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
+    float sunset   = ((clamp(angle, 0.35, 0.48)-0.35) / 0.13   - (clamp(angle, 0.50, 0.53)-0.50) / 0.03);
+    float night    = ((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03);\
+
+    times = vec4(sunrise, noon, sunset, night);
+
+    vec3 sunriseAmbColor = vec3(0.33, 0.28, 0.23)*0.5;
+    vec3 noonAmbColor    = vec3(0.37, 0.39, 0.58)*0.75;
+    vec3 sunsetAmbColor  = vec3(0.33, 0.28, 0.23)*0.5;
+    vec3 nightAmbColor   = vec3(0.19, 0.21, 0.29)*0.075;
+
+    vec3 sunriseLightColor = vec3(1.5, 0.6, 0.15)*2.5;
+    vec3 noonLightColor    = vec3(1.0, 0.99, 0.96)*5.0;
+    vec3 sunsetLightColor  = vec3(1.5, 0.6, 0.15)*2.5;
+    vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.15;
+
+    ambient = ((sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor)) + (night * nightAmbColor);
+
+    if (all(equal(slpos, spos))) {
+      light = ((sunrise * sunriseLightColor) + (noon * noonLightColor) + (sunset * sunsetLightColor) + (night * nightLightColor)) * clamp(1.0-rain, 0.1, 1.0);
+    } else {
+      light = nightLightColor*clamp(1.0-rain, 0.1, 1.0);
+    }
+}
+
 // Encoding & Decoding functions
 
 #ifdef FSH
