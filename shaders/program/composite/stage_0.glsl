@@ -136,7 +136,7 @@ void main() {
         color *= transmittance;
     }
     #ifdef FOG 
-    else if (isEyeInWater == 0) {
+    else if (isEyeInWater == 0 && depth0 != 1.0) {
         color += texture2DLod(colortex2, texcoord/4.0, 6.0).rgb*clamp01(length(viewPos.xyz)/128.0*FOG_DENSITY);
     }
     #endif
