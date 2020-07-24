@@ -31,17 +31,18 @@ const int shadowMapResolution = 2048; // [1024 2048 4096 8192]
 const float sunPathRotation = -40.0;
 
 // shadows
-#define PCSS
-#define SHADOW_SOFTNESS 1.0
+#define PCSS // Percentage-closer soft shadowing. Makes shadows hard at the contact point, and softer farther away.
+#define SHADOW_SOFTNESS 1.0 // Shadow softness. Has no effect if PCSS is on. [0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0]
 #define SHADOW_BIAS 0.00035
-#define SSS
+#define SSS // Subsurface scattering.
 
 // sky settings
 #define STARS
-
+#define FOG
+#define FOG_DENSITY 1.0 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
 // water settings
 #define WAVE_FOAM
 #define WAVE_CAUSTICS
 #define WAVE_PIXEL
-#define WAVE_PIXEL_R 16.0 //[4.0 8.0 16.0 32.0 64.0 128.0]
+#define WAVE_PIXEL_R 16.0 // Resolution of wave pixelization. [4.0 8.0 16.0 32.0 64.0 128.0]

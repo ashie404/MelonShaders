@@ -14,6 +14,10 @@
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 colorOut;
 
+/*
+const bool colortex2MipmapEnabled = true;
+*/
+
 // Inputs from vertex shader
 in vec2 texcoord;
 in vec4 times;
@@ -23,6 +27,7 @@ in vec3 ambientColor;
 // Uniforms
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
+uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 
 uniform sampler2D depthtex0;
@@ -130,6 +135,11 @@ void main() {
         vec3 transmittance = exp(-vec3(1.0, 0.2, 0.1) * length(viewPos.xyz));
         color *= transmittance;
     }
+    #ifdef FOG 
+    else if (isEyeInWater == 0) {
+        color += texture2DLod(colortex2, texcoord/4.0, 6.0).rgb*clamp01(length(viewPos.xyz)/128.0*FOG_DENSITY);
+    }
+    #endif
     
     colorOut = vec4(color, 1.0);
 }
