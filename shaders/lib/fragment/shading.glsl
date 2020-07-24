@@ -111,7 +111,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     // sky light & blocklight
     vec3 skyLight = ambientColor * info.lightmap.y;
-    vec3 blockLight = (vec3(0.9, 0.3, 0.1) * 2.0) * pow(info.lightmap.x, 4.0);
+    vec3 blockLight = (vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B) * 2.0 * BLOCKLIGHT_I) * pow(info.lightmap.x, 4.0);
 
     // combine lighting
     vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
@@ -124,7 +124,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
         mat2 rotationMatrix = getRotationMatrix(info.coord);
 
-        for (int i = 0; i <= 8; i++) {
+        for (int i = 0; i <= 4; i++) {
             vec2 offset = (poissonDisk[i]*12.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
             offset = rotationMatrix * offset;
 

@@ -55,3 +55,9 @@ const float sunPathRotation = -40.0;
 #define BLOOM_STRENGTH 0.1 // Strength of bloom [0.025 0.05 0.075 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
 #define TAA
+
+// tweaks
+#define BLOCKLIGHT_R 0.9 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define BLOCKLIGHT_G 0.3 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define BLOCKLIGHT_B 0.1 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define BLOCKLIGHT_I 1.0 // Intensity of blocklight. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
