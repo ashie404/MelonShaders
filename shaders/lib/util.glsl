@@ -7,12 +7,15 @@
 /*
 const int colortex0Format = RGBA16F;
 const int colortex1Format = RGBA32F;
+const int colortex2Format = RGBA16F;
 */
 
 #define clamp01(p) (clamp(p, 0.0, 1.0))
 #define log10(x) log(x) / log(10.0)
 
 const float PI = 3.1415926535897;
+const float rPI = 1.0 / PI;
+const float rLOG2 = 1.0 / log(2.0);
 
 // Dithering functions
 float bayer2(vec2 a){
@@ -42,11 +45,11 @@ void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpo
     vec3 sunriseAmbColor = vec3(0.33, 0.28, 0.23)*0.35;
     vec3 noonAmbColor    = vec3(0.37, 0.39, 0.58)*0.65;
     vec3 sunsetAmbColor  = vec3(0.33, 0.28, 0.23)*0.35;
-    vec3 nightAmbColor   = vec3(0.19, 0.21, 0.29)*0.005;
+    vec3 nightAmbColor   = vec3(0.19, 0.21, 0.29)*0.035;
 
-    vec3 sunriseLightColor = vec3(1.5, 0.6, 0.15)*1.5;
+    vec3 sunriseLightColor = vec3(1.5, 0.3, 0.15)*1.5;
     vec3 noonLightColor    = vec3(1.0, 0.99, 0.96)*3.0;
-    vec3 sunsetLightColor  = vec3(1.5, 0.6, 0.15)*1.5;
+    vec3 sunsetLightColor  = vec3(1.5, 0.3, 0.15)*1.5;
     vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.05;
 
     ambient = ((sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor)) + (night * nightAmbColor);
