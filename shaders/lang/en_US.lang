@@ -29,7 +29,9 @@ option.FOG_DENSITY=Fog Density
 
 option.REFLECTIONS=Reflections
 option.SSR=Screen Space Reflections
-option.SPEC_REFLECTIONS=Specular Reflections
+option.SPEC_REFLECTIONS=Specular Reflections"
+
+option.NIGHT_DESAT=Night Desaturation
 
 option.SSS=Subsurface Scattering
 option.SPECULAR=Specular
