@@ -37,6 +37,7 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 #define SHADOW_BIAS 0.00035
 #define SSS // Subsurface scattering.
 #define SPECULAR // Specular highlights.
+#define SPEC_REFLECTIONS // Specular reflections. Has no effect if reflections are disabled.
 
 // sky settings
 #define STARS
@@ -44,7 +45,8 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 #define FOG_DENSITY 1.0 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
 // visual settings
-#define SSR // Screenspace reflections.
+#define REFLECTIONS // Enables sky reflections. 
+#define SSR // Screenspace reflections. Has no effect if reflections are disabled.
 //#define WHITEWORLD
 
 // water settings
