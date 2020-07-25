@@ -30,6 +30,7 @@ option.FOG_DENSITY=Fog Density
 option.SSR=Reflections
 
 option.SSS=Subsurface Scattering
+option.SPECULAR=Specular
 
 screen.SHADOWS=Shadows
 option.shadowMapResolution=Shadow Resolution

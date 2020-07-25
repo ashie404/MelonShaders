@@ -97,6 +97,23 @@ float OrenNayar(vec3 v, vec3 l, vec3 n, float r) {
 
 }
 
+// specular shading
+float ggx(vec3 normal, vec3 svec, vec3 lvec, float f0, float smoothness) {
+    float roughness = pow(1.0 - smoothness, 2.0);
+
+    vec3 h      = lvec - svec;
+    float hn    = inversesqrt(dot(h, h));
+    float hDotL = clamp01(dot(h, lvec)*hn);
+    float hDotN = clamp01(dot(h, normal)*hn);
+    float nDotL = clamp01(dot(normal, lvec));
+    float denom = (hDotN * roughness - hDotN) * hDotN + 1.0;
+    float D     = roughness / (PI * denom * denom);
+    float F     = f0 + (1.0-f0) * exp2((-5.55473*hDotL-6.98316)*hDotL);
+    float k2    = 0.25 * roughness;
+
+    return nDotL * D * F / (hDotL * hDotL * (1.0-k2) + k2);
+}
+
 vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
     float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), info.normal, 1.0);
     vec3 diffuseLight = vec3(diffuseStrength);
@@ -115,6 +132,11 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     // combine lighting
     vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
+
+    #ifdef SPECULAR
+    float specularStrength = ggx(info.normal, normalize(viewPos), normalize(shadowLightPosition), info.specular.g <= 0.898039 ? info.specular.g : 0.0, info.specular.r);
+    color += (lightColor * specularStrength) * min(diffuseLight, shadowLight.rgb);
+    #endif
 
     // subsurface scattering
     #ifdef SSS
