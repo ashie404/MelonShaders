@@ -49,6 +49,8 @@ uniform vec3 moonPosition;
 uniform vec3 upPosition;
 uniform vec3 cameraPosition;
 
+uniform vec3 fogColor;
+
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float frameTimeCounter;

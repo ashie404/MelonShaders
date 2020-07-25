@@ -115,6 +115,16 @@ float ggx(vec3 normal, vec3 svec, vec3 lvec, float f0, float smoothness) {
 }
 
 vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
+    // sky light & blocklight
+    vec3 skyLight = ambientColor * info.lightmap.y;
+    vec3 blockLight = (vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B) * 2.0 * BLOCKLIGHT_I) * pow(info.lightmap.x, 4.0);
+
+    #if WORLD == -1
+
+    vec3 color = (fogColor*0.25)+blockLight;
+
+    #elif WORLD == 0
+
     float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), info.normal, 1.0);
     vec3 diffuseLight = vec3(diffuseStrength);
 
@@ -125,10 +135,6 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
     #else
     if (diffuseStrength > 0.0) shadowLight = getShadows(info.coord, undistortedShadowPos);
     #endif
-
-    // sky light & blocklight
-    vec3 skyLight = ambientColor * info.lightmap.y;
-    vec3 blockLight = (vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B) * 2.0 * BLOCKLIGHT_I) * pow(info.lightmap.x, 4.0);
 
     // combine lighting
     vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
@@ -159,6 +165,8 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
         color /= clamp(clamp01(visibility-depth)*2.0, 1.0, 2.0);
         color += lightColor*clamp01(visibility-depth)/2.0;
     }
+    #endif
+
     #endif
 
     // multiply by albedo to get final color

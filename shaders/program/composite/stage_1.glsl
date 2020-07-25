@@ -53,6 +53,8 @@ uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 uniform vec3 upPosition;
 
+uniform vec3 fogColor;
+
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float frameTimeCounter;
@@ -132,6 +134,8 @@ void main() {
         color *= transmittance;
     }
     #ifdef FOG 
+
+    #if WORLD == 0
     else if (isEyeInWater == 0 && depth0 != 1.0) {
         vec3 fogCol = texture2DLod(colortex2, texcoord/4.0, 6.0).rgb;
         if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
@@ -141,6 +145,12 @@ void main() {
         }
         color += fogCol*clamp01(length(viewPos.xyz)/128.0*FOG_DENSITY);
     }
+    #elif WORLD == -1
+    else if (isEyeInWater == 0 && depth0 != 1.0) {
+        color += fogColor*clamp01(length(viewPos.xyz)/128.0*FOG_DENSITY);
+    }
+    #endif
+
     #endif
 
     colorOut = vec4(color, 1.0);

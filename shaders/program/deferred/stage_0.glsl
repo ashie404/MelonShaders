@@ -43,6 +43,8 @@ uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 uniform vec3 upPosition;
 
+uniform vec3 fogColor;
+
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float frameTimeCounter;
@@ -61,7 +63,11 @@ void main() {
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
     
+    #if WORLD == 0
     atmosphereOut = vec4(getSkyColor(viewPos.xyz), 1.0);
+    #elif WORLD == -1
+    atmosphereOut = vec4(fogColor, 1.0);
+    #endif
 }
 
 #endif
