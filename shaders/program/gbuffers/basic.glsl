@@ -47,7 +47,7 @@ void main() {
         1.0, // albedo alpha
         encodeSpecular(vec3(0.0)) // specular
     );
-    normalOut = vec4(normal, 1.0);
+    normalOut = vec4(normal * 2.0 - 1.0, 1.0);
 }
 
 #endif

@@ -20,12 +20,14 @@ layout (location = 2) out vec4 normalOut;
 in vec2 texcoord;
 in vec2 lmcoord;
 in vec3 normal;
+in mat3 tbn;
 in float id;
 in vec4 glcolor;
 
 // Uniforms
 uniform sampler2D texture;
 uniform sampler2D specular;
+uniform sampler2D normals;
 
 uniform mat4 gbufferModelViewInverse;
 
@@ -63,6 +65,10 @@ void main() {
     // get specular
     vec4 specularData = texture2D(specular, texcoord);
 
+    // get normal map
+    vec3 normalData = texture2D(normals, texcoord).xyz * 2.0 - 1.0;
+    normalData = normalize(normalData * tbn);
+
     // get material mask
 
     int matMask = 0;
@@ -79,7 +85,7 @@ void main() {
         albedo.a, // albedo alpha
         encodeSpecular(specularData.rgb) // specular
     );
-    normalOut = vec4(normal, 1.0);
+    normalOut = vec4(normalData * 0.5 + 0.5, 1.0);
 }
 
 #endif
@@ -92,17 +98,21 @@ void main() {
 out vec2 texcoord;
 out vec2 lmcoord;
 out vec3 normal;
+out mat3 tbn;
 out float id;
 out vec4 glcolor;
 
 // Uniforms
 attribute vec3 mc_Entity;
+attribute vec4 at_tangent;
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
     lmcoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
 
     normal = normalize(gl_NormalMatrix * gl_Normal);
+    vec3 tangent = gl_NormalMatrix * (at_tangent.xyz / at_tangent.w);
+    tbn = transpose(mat3(tangent, cross(tangent, normal), normal));
 
     id = mc_Entity.x;
 

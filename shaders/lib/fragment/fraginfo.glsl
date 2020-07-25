@@ -20,7 +20,7 @@ FragInfo getFragInfo(vec2 coord) {
 
     f.albedo = vec4(texture2D(colortex0, coord).rgb, tex1.z);
     f.specular = decodeSpecular(tex1.w);
-    f.normal = texture2D(colortex4, coord).xyz;
+    f.normal = texture2D(colortex4, coord).xyz * 2.0 - 1.0;
     f.matMask = int((tex1.y*10.0)+0.5);
     f.lightmap = decodeLightmaps(tex1.x);
     f.coord = coord;

@@ -21,6 +21,7 @@ in vec2 texcoord;
 
 // Uniforms
 uniform sampler2D colortex0;
+uniform sampler2D colortex4;
 uniform sampler2D colortex7;
 
 // Includes
