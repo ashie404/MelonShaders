@@ -158,7 +158,7 @@ vec4 calculateSunSpot(vec3 viewVector, vec3 sunVector, float radius) {
 
     float x = clamp(1.0 - ((sunAngularRadius * 0.6) - acos(cosTheta)) / (sunAngularRadius * 0.6), 0.0, 1.0);
     vec3 sunDisk = vec3(0.0);
-    sunDisk = (lightColor*15.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
+    sunDisk = (lightColor*100.0) * exp2(log2(-x * x + 1.0) * halfa) / normalizationConst;
 
     return vec4(sunDisk, float(cosTheta > cos(sunAngularRadius)));
 }
@@ -188,9 +188,7 @@ vec3 getSkyColor(vec3 viewPos) {
     return skyColor;
 }
 
-vec3 calculateCelestialBodies(vec3 viewPos, vec3 worldPos) {
-    vec3 color = vec3(0.0);
-
+void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 color) {
     #ifdef STARS
     float starNoise = cellular(normalize(worldPos.xyz)*32);
     if (starNoise <= 0.05) {
@@ -202,8 +200,6 @@ vec3 calculateCelestialBodies(vec3 viewPos, vec3 worldPos) {
     vec4 moonSpot = calculateMoonSpot(normalize(viewPos.xyz), normalize(moonPosition), 0.5);
 
     // add sun and moon spots
-    color += sunSpot.rgb;
+    color += sunSpot.rgb*color;
     color += moonSpot.rgb;
-
-    return color;
 }

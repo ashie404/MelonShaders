@@ -83,8 +83,7 @@ void main() {
         color = calculateShading(info, viewPos.xyz, shadowPos.xyz);
     } else {
         color = texture2D(colortex2, texcoord/4.01).rgb;
-
-        color += calculateCelestialBodies(viewPos.xyz, worldPos.xyz);
+        calculateCelestialBodies(viewPos.xyz, worldPos.xyz, color);
     }
     
     colorOut = vec4(color, 1.0);

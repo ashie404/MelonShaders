@@ -92,7 +92,7 @@ void main() {
             vec3 skyReflectionColor = vec3(0.0);
             if (reflectionColor.a < 0.5 && isEyeInWater == 0) {
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
-                skyReflectionColor += calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal));
+                calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                     skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
                 } else if (eyeBrightnessSmooth.y <= 8) {
@@ -112,7 +112,7 @@ void main() {
             vec3 skyReflectionColor = vec3(0.0);
             if (reflectionColor.a < 0.5) {
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
-                skyReflectionColor += calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal));
+                calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                     skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
                 } else if (eyeBrightnessSmooth.y <= 8) {
@@ -146,7 +146,7 @@ void main() {
     colorOut = vec4(color, 1.0);
 
     #ifdef BLOOM
-    vec3 bloomSample = color.rgb;// * clamp01(pow(luma(color.rgb), 4.0));
+    vec3 bloomSample = color.rgb * clamp01(pow(luma(color.rgb), 4.0));
     bloomOut = vec4(bloomSample, 1.0);
     #endif
 }
