@@ -43,9 +43,9 @@ void main() {
 	albedoOut = albedo;
     dataOut = vec4(
         encodeLightmaps(vec2(0.0, 1.0)), // lightmap
-        0.0, // material mask
-        1.0, // albedo alpha
-        encodeSpecular(vec3(0.0)) // specular
+        encodeLightmaps(vec2(0.0, albedo.a)), // material mask and albedo alpha
+        encodeLightmaps(vec2(0.0)), // specular green and blue channel
+        0.0 // specular red channel
     );
     normalOut = vec4(normal * 2.0 - 1.0, 1.0);
 }
