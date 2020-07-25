@@ -45,6 +45,9 @@ option.BLOCKLIGHT_G=§2Green
 option.BLOCKLIGHT_B=§1Blue
 option.BLOCKLIGHT_I=Intensity
 
+option.WIND=Wind
+option.WIND_STRENGTH=Wind Strength
+
 option.WHITEWORLD=Whiteworld
 
 screen.WATER=Water

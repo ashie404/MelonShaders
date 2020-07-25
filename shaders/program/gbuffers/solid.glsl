@@ -104,7 +104,18 @@ out vec4 glcolor;
 
 // Uniforms
 attribute vec3 mc_Entity;
+attribute vec3 mc_midTexCoord;
 attribute vec4 at_tangent;
+
+uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
+
+uniform vec3 cameraPosition;
+
+uniform float frameTimeCounter;
+
+// Includes
+#include "/lib/util/noise.glsl"
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
@@ -119,6 +130,14 @@ void main() {
     glcolor = gl_Color;
 
     gl_Position = ftransform();
+
+    #ifdef WIND
+    if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 21.0) {
+        vec4 position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
+        position.xz += (sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4.0)/16.0)*WIND_STRENGTH;
+        gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
+    }
+    #endif
 }
 
 #endif

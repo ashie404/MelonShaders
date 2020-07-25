@@ -47,14 +47,34 @@ out float water;
 
 // Uniforms
 attribute vec3 mc_Entity;
+attribute vec3 mc_midTexCoord;
+
+uniform mat4 shadowModelView;
+uniform mat4 shadowProjection;
+uniform mat4 shadowModelViewInverse;
+uniform mat4 shadowProjectionInverse;
+
+uniform vec3 cameraPosition;
+
+uniform float frameTimeCounter;
 
 // Includes
 #include "/lib/vertex/distortion.glsl"
-
+#include "/lib/util/noise.glsl"
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
     glcolor = gl_Color;
+
+	gl_Position = ftransform();
+
+	#ifdef WIND
+    if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
+		vec4 position = shadowModelViewInverse * shadowProjectionInverse * ftransform();
+        position.xz += (sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4)/16)*WIND_STRENGTH;
+		gl_Position = shadowProjection * shadowModelView * position;
+    }
+    #endif
 
     if (mc_Entity.x == 8.0) {
 		water = 1.0;
@@ -62,7 +82,6 @@ void main() {
 		water = 0.0;
 	}
 
-    gl_Position = ftransform();
     gl_Position.xyz = distortShadow(gl_Position.xyz);
 }
 
