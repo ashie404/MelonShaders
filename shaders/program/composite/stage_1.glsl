@@ -93,6 +93,8 @@ void main() {
             #endif
             vec3 skyReflectionColor = vec3(0.0);
             if (reflectionColor.a < 0.5 && isEyeInWater == 0) {
+                #if WORLD == 0
+
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
                 calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
@@ -100,6 +102,8 @@ void main() {
                 } else if (eyeBrightnessSmooth.y <= 8) {
                     skyReflectionColor *= 0.0;
                 }
+
+                #endif
             }
             float fresnel = clamp01(fresnel(0.2, 0.1, 1.0, viewPos.xyz, info.normal));
             color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.15));
@@ -113,12 +117,16 @@ void main() {
             #endif
             vec3 skyReflectionColor = vec3(0.0);
             if (reflectionColor.a < 0.5) {
+                #if WORLD == 0
+
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                     skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
                 } else if (eyeBrightnessSmooth.y <= 8) {
                     skyReflectionColor *= 0.0;
                 }
+
+                #endif
             }
             float fresnel = clamp01(fresnel(0.2, 0.1, 1.0, viewPos.xyz, info.normal));
             color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.2-(roughness*2.0)));
