@@ -140,7 +140,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
     vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
 
     #ifdef SPECULAR
-    float specularStrength = ggx(info.normal, normalize(viewPos), normalize(shadowLightPosition), info.specular.g <= 0.898039 ? info.specular.g : 0.0, info.specular.r);
+    float specularStrength = ggx(info.normal, normalize(viewPos), normalize(shadowLightPosition), clamp(info.specular.g, 0.0, 0.898039), info.specular.r);
     color += (lightColor * specularStrength) * min(diffuseLight, shadowLight.rgb);
     #endif
 
