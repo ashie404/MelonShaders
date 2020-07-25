@@ -50,6 +50,8 @@ option.WIND_STRENGTH=Wind Strength
 
 option.WHITEWORLD=Whiteworld
 
+option.TRANS_COMPAT=Translucents Compatibility
+
 screen.WATER=Water
 
 option.WAVE_FOAM=Water Foam

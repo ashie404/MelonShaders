@@ -48,6 +48,7 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 #define REFLECTIONS // Enables sky reflections. 
 #define SSR // Screenspace reflections. Has no effect if reflections are disabled.
 //#define WHITEWORLD
+//#define TRANS_COMPAT // Translucents compatibility mode. Changes the blending mode of translucents from multiply to mix (more like vanilla). Can fix certain mods that use translucents, or resource packs.
 
 // water settings
 #define WAVE_FOAM
