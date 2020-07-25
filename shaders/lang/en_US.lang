@@ -45,6 +45,13 @@ option.BLOCKLIGHT_G=§2Green
 option.BLOCKLIGHT_B=§1Blue
 option.BLOCKLIGHT_I=Intensity
 
+option.EMISSIVE_MAP=Emissive Maps
+value.EMISSIVE_MAP.0=Off
+value.EMISSIVE_MAP.1=OldPBR/Blue Channel
+value.EMISSIVE_MAP.2=LabPBR/Alpha Channel
+
+option.EMISSIVE_STRENGTH=Emissive Strength
+
 option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
 

@@ -28,6 +28,7 @@ in vec4 glcolor;
 uniform sampler2D texture;
 uniform sampler2D specular;
 uniform sampler2D normals;
+uniform float sunAngle;
 
 uniform mat4 gbufferModelViewInverse;
 
@@ -51,19 +52,32 @@ void main() {
 
     albedo.rgb = toLinear(albedo.rgb);
 
-    // emissives handling
-
-    if      (idCorrected == 50 )  albedo.rgb *= clamp01(pow(luminance, 6))*60.0;
-    else if (idCorrected == 51 )  albedo.rgb *= clamp01(pow(luminance, 6))*75.0;
-    else if (idCorrected == 83 )  albedo.rgb *= clamp01(pow(luminance, 8))*62.5;
-    else if (idCorrected == 100)  albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
-    else if (idCorrected == 105)  albedo.rgb *= clamp01(pow(luminance, 4))*100.0;
-    else if (idCorrected == 110)  albedo.rgb *= clamp01(pow(luminance, 8))*50.0;
-    else if (idCorrected == 120)  albedo.rgb *= 25;
-    else if (idCorrected == 122)  albedo.rgb *= 12.5;
-
     // get specular
     vec4 specularData = texture2D(specular, texcoord);
+
+    // emissives handling
+
+    float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
+    float emissionMult = mix(0.5, 1.5, night)*EMISSIVE_STRENGTH;
+
+    #if EMISSIVE_MAP == 0
+        if      (idCorrected == 50 ) albedo.rgb *= clamp01(pow(luminance, 6))* 60.0*emissionMult;
+        else if (idCorrected == 51 ) albedo.rgb *= clamp01(pow(luminance, 6))* 75.0*emissionMult;
+        else if (idCorrected == 83 ) albedo.rgb *= clamp01(pow(luminance, 8))* 62.5*emissionMult;
+        else if (idCorrected == 100) albedo.rgb *= clamp01(pow(luminance, 8))*100.0*emissionMult;
+        else if (idCorrected == 105) albedo.rgb *= clamp01(pow(luminance, 4))*100.0*emissionMult;
+        else if (idCorrected == 110) albedo.rgb *= clamp01(pow(luminance, 8))* 50.0*emissionMult;
+        else if (idCorrected == 120) albedo.rgb *= 25*emissionMult;
+        else if (idCorrected == 122) albedo.rgb *= 12.5*emissionMult;
+    #elif EMISSIVE_MAP == 1
+        if (specularData.b > 0.0) albedo.rgb *= clamp(specularData.b * 50.0, 1.0, 50.0)*emissionMult;
+    #elif EMISSIVE_MAP == 2
+        if (specularData.a < 1.0) albedo.rgb *= clamp(specularData.a * 50.0, 1.0, 50.0)*emissionMult;
+    #endif
+
+    #ifdef SPIDEREYES
+    albedo.rgb *= 500.0*emissionMult;
+    #endif
 
     // get normal map
     vec3 normalData = texture2D(normals, texcoord).xyz * 2.0 - 1.0;
