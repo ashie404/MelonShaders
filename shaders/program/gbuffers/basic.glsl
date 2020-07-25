@@ -47,7 +47,7 @@ void main() {
         encodeLightmaps(vec2(0.0)), // specular green and blue channel
         0.0 // specular red channel
     );
-    normalOut = vec4(normal * 2.0 - 1.0, 1.0);
+    normalOut = vec4(normal * 0.5 + 0.5, 1.0);
 }
 
 #endif
