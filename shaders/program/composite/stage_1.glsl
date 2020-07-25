@@ -114,7 +114,6 @@ void main() {
             vec3 skyReflectionColor = vec3(0.0);
             if (reflectionColor.a < 0.5) {
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
-                calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                     skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
                 } else if (eyeBrightnessSmooth.y <= 8) {
