@@ -15,24 +15,29 @@
 layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 taaOut;
 
+// Inputs from vertex shader
 in vec2 texcoord;
 
+// Uniforms
 uniform sampler2D colortex0;
 uniform sampler2D colortex6;
 
 uniform sampler2D depthtex0;
 
-uniform float viewWidth;
-uniform float viewHeight;
-uniform int frameCounter;
-
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferModelViewInverse;
-uniform vec3 cameraPosition;
-uniform vec3 previousCameraPosition;
 uniform mat4 gbufferPreviousModelView;
 uniform mat4 gbufferPreviousProjection;
 
+uniform vec3 cameraPosition;
+uniform vec3 previousCameraPosition;
+
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
+
+// Includes
 #include "/lib/post/taaUtil.glsl"
 
 void main() {

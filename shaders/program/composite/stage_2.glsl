@@ -19,14 +19,17 @@ const bool colortex2MipmapEnabled = true;
 layout (location = 0) out vec4 colorOut;
 layout (location = 1) out vec4 bloomTileOut;
 
+// Inputs from vertex shader
 in vec2 texcoord;
 
+// Uniforms
 uniform sampler2D colortex0;
 uniform sampler2D colortex2;
 
 uniform float viewWidth;
 uniform float viewHeight;
 
+// Includes
 #include "/lib/post/bloom.glsl"
 
 void main() {
