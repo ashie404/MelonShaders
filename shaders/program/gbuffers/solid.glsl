@@ -57,8 +57,12 @@ void main() {
 
     // emissives handling
 
+    #if WORLD == 0
     float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
     float emissionMult = mix(0.5, 1.5, night)*EMISSIVE_STRENGTH;
+    #elif WORLD == -1
+    float emissionMult = EMISSIVE_STRENGTH;
+    #endif
 
     #if EMISSIVE_MAP == 0
         if      (idCorrected == 50 ) albedo.rgb *= clamp01(pow(luminance, 6))* 60.0*emissionMult;
