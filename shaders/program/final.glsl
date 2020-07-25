@@ -94,9 +94,13 @@ void main() {
     color = linearToSrgb(color);
 
     #ifdef NIGHT_DESAT
+
+    #if WORLD == 0
     float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
 
     color = mix(color, vec3(luma(color)), mix(0.0, 0.5, clamp01(night-pow(luma(color), 3.0)*8.0)));
+    #endif
+
     #endif
 
     #ifdef COLOR_AP1
