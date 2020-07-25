@@ -80,7 +80,11 @@ void main() {
     #endif
 
     // get normal map
-    vec3 normalData = texture2D(normals, texcoord).xyz * 2.0 - 1.0;
+    vec3 normalData = texture2D(normals, texcoord).xyz;
+    #ifdef REBUILD_Z
+    normalData.z = sqrt(1.0 - dot(normalData.xy, normalData.xy));
+    #endif
+    normalData = normalData * 2.0 - 1.0;
     normalData = normalize(normalData * tbn);
 
     // get material mask

@@ -55,6 +55,8 @@ option.EMISSIVE_STRENGTH=Emissive Strength
 option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
 
+option.REBUILD_Z=Rebuild Normal Z
+
 option.WHITEWORLD=Whiteworld
 
 option.TRANS_COMPAT=Translucents Compatibility
