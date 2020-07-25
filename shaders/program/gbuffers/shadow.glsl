@@ -69,7 +69,7 @@ void main() {
 	gl_Position = ftransform();
 
 	#ifdef WIND
-    if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
+    if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 21) {
 		vec4 position = shadowModelViewInverse * shadowProjectionInverse * ftransform();
         position.xz += (sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4)/16)*WIND_STRENGTH;
 		gl_Position = shadowProjection * shadowModelView * position;
