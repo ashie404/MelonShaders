@@ -105,7 +105,7 @@ void main() {
         #ifdef SPEC_REFLECTIONS
         else if (roughness <= 0.15) {
             #ifdef SSR
-            vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, bayer64(gl_FragCoord.xy), roughness*8.0, colortex0);
+            vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, bayer64(gl_FragCoord.xy), roughness*4.0, colortex0);
             #else
             vec4 reflectionColor = vec4(0.0);
             #endif
@@ -120,7 +120,7 @@ void main() {
                 }
             }
             float fresnel = clamp01(fresnel(0.2, 0.1, 1.0, viewPos.xyz, info.normal));
-            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.5-(roughness+0.05)));
+            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.2-(roughness*2.0)));
         }
         #endif
     }
