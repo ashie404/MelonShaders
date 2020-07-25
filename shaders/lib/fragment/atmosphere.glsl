@@ -189,6 +189,8 @@ vec3 getSkyColor(vec3 viewPos) {
 }
 
 void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 color) {
+	#if WORLD == 0
+
     #ifdef STARS
     float starNoise = cellular(normalize(worldPos.xyz)*32);
     if (starNoise <= 0.05) {
@@ -202,4 +204,6 @@ void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 colo
     // add sun and moon spots
     color += sunSpot.rgb*color;
     color += moonSpot.rgb;
+	
+	#endif
 }
