@@ -129,6 +129,12 @@ vec3 decodeSpecular(float a) {
 
 #endif
 
+float interleavedGradientNoise(vec2 position_screen)
+{
+  vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+  return fract(magic.z * fract(dot(position_screen, magic.xy)));
+}
+
 vec2 vogelDiskSample(int sampleIndex, int samplesCount, float phi)
 {
   float r = sqrt(sampleIndex + 0.5) / sqrt(samplesCount);
