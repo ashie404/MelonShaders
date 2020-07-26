@@ -41,6 +41,9 @@ option.REFLECTIONS=Reflections
 option.SSR=Screen Space Reflections
 option.SPEC_REFLECTIONS=Specular Reflections
 
+option.RAIN_PUDDLES=Rain Puddles
+option.POROSITY=Porosity
+
 option.NIGHT_DESAT=Night Desaturation
 
 option.SSS=Subsurface Scattering

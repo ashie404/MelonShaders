@@ -48,6 +48,8 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 // visual settings
 #define REFLECTIONS // Enables sky reflections. 
 #define SSR // Screenspace reflections. Has no effect if reflections are disabled.
+#define RAIN_PUDDLES // When rainy, objects will appear more wet. Requires specular and reflections to be enabled to work.
+#define POROSITY // Enables LabPBR porosity for resource packs that support it. Blue channel emissives have to be disabled for this to work. Rain puddles have to be enabled for this to work.
 //#define WHITEWORLD
 #define NIGHT_DESAT // Whether to desaturate colors at night or not.
 //#define TRANS_COMPAT // Translucents compatibility mode. Changes the blending mode of translucents from multiply to mix (more like vanilla). Can fix certain mods that use translucents, or resource packs.

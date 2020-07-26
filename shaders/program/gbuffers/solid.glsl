@@ -23,6 +23,7 @@ in vec3 normal;
 in mat3 tbn;
 in float id;
 in vec4 glcolor;
+in vec4 worldPos;
 
 // Uniforms
 uniform sampler2D texture;
@@ -30,7 +31,14 @@ uniform sampler2D specular;
 uniform sampler2D normals;
 uniform float sunAngle;
 
+uniform float rainStrength;
+
+uniform vec3 cameraPosition;
+
 uniform mat4 gbufferModelViewInverse;
+
+// Includes
+#include "/lib/util/noise.glsl"
 
 // other stuff
 vec3 toLinear(vec3 srgb) {
@@ -54,6 +62,21 @@ void main() {
 
     // get specular
     vec4 specularData = texture2D(specular, texcoord);
+
+    #ifdef RAIN_PUDDLES
+    if (rainStrength > 0.0) {
+        #ifdef POROSITY
+        if (specularData.b <= 0.2509 && EMISSIVE_MAP != 1) {
+            albedo.rgb = mix(albedo.rgb, mix(albedo.rgb, mix(vec3(luma(albedo.rgb)), albedo.rgb, 2.0+(1.0-clamp01(cellular(worldPos.xyz + cameraPosition)*3.0))), specularData.b/0.2509), rainStrength);
+            specularData.r = mix(specularData.r, mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos.xyz + cameraPosition)*3.0)), specularData.b/0.2509), rainStrength);
+        } else {
+            specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos.xyz + cameraPosition)*1.25)), rainStrength);
+        }
+        #else
+        specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos.xyz + cameraPosition)*1.25)), rainStrength);
+        #endif
+    }
+    #endif
 
     // emissives handling
 
@@ -125,6 +148,7 @@ void main() {
 out vec2 texcoord;
 out vec2 lmcoord;
 out vec3 normal;
+out vec4 worldPos;
 out mat3 tbn;
 out float id;
 out vec4 glcolor;
@@ -157,10 +181,11 @@ void main() {
     glcolor = gl_Color;
 
     gl_Position = ftransform();
+    worldPos = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
 
     #ifdef WIND
     if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 21.0) {
-        vec4 position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
+        vec4 position = worldPos;
         position.x += (sin((frameTimeCounter*2.0*WIND_STRENGTH)+cellular(position.xyz+cameraPosition+(frameTimeCounter/8.0))*4.0)/12.0);
         position.z += (sin((frameTimeCounter/2.0*WIND_STRENGTH)+cellular(position.xyz+cameraPosition+(frameTimeCounter/8.0))*4.0)/12.0);
         gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
