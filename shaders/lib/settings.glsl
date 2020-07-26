@@ -27,16 +27,18 @@
 #define COLOR_AP1 // Whether to use the AP1 color space or not. Makes colors look more natural.
 
 const int noiseTextureResolution = 512;
-const int shadowMapResolution = 2048; // [1024 2048 4096 8192]
-const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]
 
 // lighting settings
-#define PCSS // Percentage-closer soft shadowing. Makes shadows hard at the contact point, and softer farther away.
-#define SHADOW_SOFTNESS 1.0 // Shadow softness. Has no effect if PCSS is on. [0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0]
 #define SSS // Subsurface scattering.
 #define SPECULAR // Specular highlights.
 #define SPEC_REFLECTIONS // Specular reflections. Has no effect if reflections are disabled.
+
+// shadow settings
+#define PCSS // Percentage-closer soft shadowing. Makes shadows hard at the contact point, and softer farther away.
+#define SHADOW_SOFTNESS 1.0 // Shadow softness. If PCSS is on, affects how quickly the shadows get soft. [0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0]
+const int shadowMapResolution = 2048; // [1024 2048 4096 8192]
+const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 
 // sky settings
 #define STARS

@@ -51,7 +51,7 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
 
     #ifdef PCSS
     float blockerDepth = clamp01(getBlockerDepth(coord, undistortedShadowPos));
-    float softness = clamp(blockerDepth*80.0, 0.0, 4.0);
+    float softness = clamp(blockerDepth*80.0*SHADOW_SOFTNESS, 0.0, 4.0);
     #endif
 
     float shadowBias = getShadowBias(viewPos, sunAngle);
