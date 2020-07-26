@@ -15,8 +15,9 @@
 const bool colortex2MipmapEnabled = true;
 */
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:02 */
 layout (location = 0) out vec3 colorOut;
+layout (location = 1) out vec3 bloomTileOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -35,15 +36,14 @@ void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
 
     #ifdef BLOOM
-    // get all bloom tiles
-    vec3 bloom = vec3(0.0);
-    bloom += getBloomTile(vec2(0.0,0.0), 2.0, texcoord);
-    bloom += getBloomTile(vec2(0.3,0.0), 3.0, texcoord);
-    bloom += getBloomTile(vec2(0.3,0.3), 4.0, texcoord);
-    bloom += getBloomTile(vec2(0.6,0.3), 5.0, texcoord);
-    bloom += getBloomTile(vec2(0.6,0.6), 6.0, texcoord);
-    bloom /= 5.0;
-    color += mix(vec3(0.0), bloom, clamp01(BLOOM_STRENGTH));
+    // calculate all bloom tiles
+    vec3 bloomTiles = vec3(0.0);
+    bloomTiles += calcBloomTile(vec2(0.0,0.0), 2.0);
+    bloomTiles += calcBloomTile(vec2(0.3,0.0), 3.0);
+    bloomTiles += calcBloomTile(vec2(0.3,0.3), 4.0);
+    bloomTiles += calcBloomTile(vec2(0.6,0.3), 5.0);
+    bloomTiles += calcBloomTile(vec2(0.6,0.6), 6.0);
+    bloomTileOut = bloomTiles;
     #endif
 
     colorOut = color;

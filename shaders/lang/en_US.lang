@@ -19,6 +19,10 @@ value.LUTV.2=Agfachrome RSX2 050
 value.LUTV.3=Fujifilm F400
 value.LUTV.4=Night City Punk
 
+screen.CAMERA=Camera Settings
+option.APERTURE=Aperture
+option.DOF=Depth of Field
+
 screen.ACES_SETTINGS=ACES Settings
 
 option.sunPathRotation=Sun Path Rotation
