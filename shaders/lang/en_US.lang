@@ -22,6 +22,7 @@ value.LUTV.4=Night City Punk
 screen.CAMERA=Camera Settings
 option.APERTURE=Aperture
 option.DOF=Depth of Field
+option.CHROM_ABB=Chromatic Aberration
 
 screen.ACES_SETTINGS=ACES Settings
 

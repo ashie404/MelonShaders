@@ -71,6 +71,8 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 #define DOF
 #define APERTURE 1.0 // How blurry the DOF is. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
+#define CHROM_ABB // Chromatic aberration.
+
 // tweaks
 #define EMISSIVE_MAP 0 // Emissive map setting. [0 1 2]
 #define EMISSIVE_STRENGTH 1.0 // Strength of emissives. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.25 1.5 1.75 2.0 2.5 3.0 3.5 4.0 4.5 5.0 6.0 7.0 8.0 9.0 10.0]

@@ -45,24 +45,34 @@ void main() {
     if (currentDepth >= texture2D(depthtex2, texcoord).r || currentDepth != texture2D(depthtex0, texcoord).r) {
         vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
 
-        // distance blur
         if (currentDepth >= centerDepthSmooth) {
+            // distance blur
             vec3 blurred = vec3(0.0);
             float blurSize = clamp((currentDepth-centerDepthSmooth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
             for (int i = 0; i <= 8; i++) {
                 vec2 offset = vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
+                #ifdef CHROM_ABB
+                float g = texture2D(colortex0, texcoord + (offset*0.5)).g;
+                vec2 rb = texture2D(colortex0, texcoord + offset).rb;
+                blurred += vec3(rb.x, g, rb.y);
+                #else
                 blurred += texture2D(colortex0, texcoord+offset).rgb;
+                #endif
             }
             color = blurred / 8.0;
-        }
-
-        // close blur
-        if (currentDepth <= centerDepthSmooth) {
+        } else if (currentDepth <= centerDepthSmooth) {
+            // close up blur
             vec3 blurred = vec3(0.0);
             float blurSize = clamp((centerDepthSmooth-currentDepth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
             for (int i = 0; i <= 8; i++) {
                 vec2 offset = vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
+                #ifdef CHROM_ABB
+                float b = texture2D(colortex0, texcoord + (offset*0.5)).b;
+                vec2 rg = texture2D(colortex0, texcoord + offset).rg;
+                blurred += vec3(rg, b);
+                #else
                 blurred += texture2D(colortex0, texcoord+offset).rgb;
+                #endif
             }
             color = blurred / 8.0;
         }
