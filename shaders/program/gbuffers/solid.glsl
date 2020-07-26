@@ -71,9 +71,9 @@ void main() {
         worldPos.y = 0.0;
         #endif
         #ifdef POROSITY
-        if (specularData.b <= 0.2509 && EMISSIVE_MAP != 1) {
-            albedo.rgb = mix(albedo.rgb, mix(albedo.rgb, mix(vec3(luma(albedo.rgb)), albedo.rgb, 2.0+(1.0-clamp01(cellular(worldPos)*PUDDLE_MULT))), specularData.b/0.2509), rainStrength);
-            specularData.r = mix(specularData.r, mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), specularData.b/0.2509), rainStrength);
+        if (specularData.b <= 0.251 && EMISSIVE_MAP != 1) {
+            albedo.rgb = mix(albedo.rgb, mix(albedo.rgb, mix(vec3(luma(albedo.rgb*0.75)), albedo.rgb*0.75, 1.0+(1.0-clamp01(cellular(worldPos)*PUDDLE_MULT))), specularData.b/0.251), rainStrength);
+            specularData.r = mix(specularData.r, mix(clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), specularData.r, specularData.b/0.251), rainStrength);
         } else {
             specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), rainStrength);
         }
