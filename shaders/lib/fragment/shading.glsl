@@ -26,7 +26,7 @@ float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos) {
     int blockers = 0;
 
     for (int i = 0; i <= 4; i++) {
-        vec2 offset = (vogelDiskSample(i, 4, bayer64(gl_FragCoord.xy))*8.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        vec2 offset = (vogelDiskSample(i, 4, bayer64(gl_FragCoord.xy))*4.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
         offset = rotationMatrix * offset;
 
         vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
