@@ -129,6 +129,17 @@ vec3 decodeSpecular(float a) {
 
 #endif
 
+vec2 vogelDiskSample(int sampleIndex, int samplesCount, float phi)
+{
+  float r = sqrt(sampleIndex + 0.5) / sqrt(samplesCount);
+  float theta = sampleIndex * 2.4 + phi;
+
+  float sinTheta = sin(theta);
+  float cosTheta = cos(theta);
+  
+  return vec2(r * cosTheta, r * sinTheta);
+}
+
 // poisson disk
 
 const vec2 poissonDisk[64] = vec2[64](

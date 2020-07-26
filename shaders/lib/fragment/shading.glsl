@@ -25,8 +25,8 @@ float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos) {
     float blockerDepth = 0.0;
     int blockers = 0;
 
-    for (int i = 0; i <= 8; i++) {
-        vec2 offset = (poissonDisk[i]*4.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
+    for (int i = 0; i <= 16; i++) {
+        vec2 offset = (vogelDiskSample(i, 16, bayer64(gl_FragCoord.xy))*8.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
         offset = rotationMatrix * offset;
 
         vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
@@ -56,9 +56,9 @@ vec4 getShadows(in vec2 coord, in vec3 undistortedShadowPos)
 
     for (int i = 0; i <= 8; i++) {
         #ifdef PCSS
-        vec2 offset = (poissonDisk[i]*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        vec2 offset = (vogelDiskSample(i, 8, bayer64(gl_FragCoord.xy))*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #else
-        vec2 offset = (poissonDisk[i]*SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        vec2 offset = (vogelDiskSample(i, 8, bayer64(gl_FragCoord.xy))*SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #endif
         offset = rotationMatrix * offset;
 
