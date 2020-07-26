@@ -56,6 +56,7 @@ uniform float viewHeight;
 uniform float frameTimeCounter;
 
 uniform float eyeAltitude;
+uniform float sunAngle;
 
 uniform int isEyeInWater;
 

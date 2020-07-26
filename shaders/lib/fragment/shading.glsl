@@ -54,7 +54,7 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
     float softness = clamp(blockerDepth*80.0, 0.0, 4.0);
     #endif
 
-    float shadowBias = getShadowBias(viewPos);
+    float shadowBias = getShadowBias(viewPos, sunAngle);
 
     for (int i = 0; i <= 8; i++) {
         
@@ -151,7 +151,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
         mat2 rotationMatrix = getRotationMatrix(info.coord);
 
-        float shadowBias = getShadowBias(viewPos);
+        float shadowBias = getShadowBias(viewPos, sunAngle);
 
         for (int i = 0; i <= 8; i++) {
             vec2 offset = (vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*8.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
