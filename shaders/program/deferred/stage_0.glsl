@@ -12,7 +12,7 @@
 #ifdef FSH
 
 /* DRAWBUFFERS:2 */
-layout (location = 0) out vec4 atmosphereOut;
+layout (location = 0) out vec3 atmosphereOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -64,9 +64,9 @@ void main() {
     vec4 worldPos = gbufferModelViewInverse * viewPos;
     
     #if WORLD == 0
-    atmosphereOut = vec4(getSkyColor(viewPos.xyz), 1.0);
+    atmosphereOut = getSkyColor(viewPos.xyz);
     #elif WORLD == -1
-    atmosphereOut = vec4(fogColor, 1.0);
+    atmosphereOut = fogColor;
     #endif
 }
 

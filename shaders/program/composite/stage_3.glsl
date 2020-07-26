@@ -16,7 +16,7 @@ const bool colortex2MipmapEnabled = true;
 */
 
 /* DRAWBUFFERS:0 */
-layout (location = 0) out vec4 colorOut;
+layout (location = 0) out vec3 colorOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -46,7 +46,7 @@ void main() {
     color += mix(vec3(0.0), bloom, clamp01(BLOOM_STRENGTH));
     #endif
 
-    colorOut = vec4(color, 1.0);
+    colorOut = color;
 }
 
 #endif

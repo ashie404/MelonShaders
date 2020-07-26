@@ -12,8 +12,8 @@
 #ifdef FSH
 
 /* DRAWBUFFERS:06 */
-layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 taaOut;
+layout (location = 0) out vec3 colorOut;
+layout (location = 1) out vec3 taaOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -67,11 +67,11 @@ void main() {
 
     history = YCoCgToRGB(history);
 
-    colorOut = vec4(mix(texture2D(colortex0, texcoord).rgb, history, 0.85), 1.0);
+    colorOut = mix(YCoCgToRGB(current), history, 0.85);
     
-    taaOut = vec4(mix(texture2D(colortex0, texcoord+jitter()).rgb, history, 0.95), 1.0);
+    taaOut = mix(texture2D(colortex0, texcoord+jitter()).rgb, history, 0.95);
     #else
-    colorOut = texture2D(colortex0, texcoord);
+    colorOut = texture2D(colortex0, texcoord).rgb;
     #endif
 }
 

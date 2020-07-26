@@ -12,8 +12,8 @@
 #ifdef FSH
 
 /* DRAWBUFFERS:03 */
-layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 noTranslucentsOut;
+layout (location = 0) out vec3 colorOut;
+layout (location = 1) out vec3 noTranslucentsOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -88,8 +88,8 @@ void main() {
         calculateCelestialBodies(viewPos.xyz, worldPos.xyz, color);
     }
     
-    colorOut = vec4(color, 1.0);
-    noTranslucentsOut = vec4(color, 1.0);
+    colorOut = color;
+    noTranslucentsOut = color;
 }
 
 #endif

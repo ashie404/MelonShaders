@@ -5,12 +5,12 @@
 */
 
 /*
-const int colortex0Format = RGBA16F;
-const int colortex1Format = RGBA32F;
-const int colortex2Format = RGBA16F;
-const int colortex3Format = RGBA16F;
-const int colortex4Format = RGBA16F;
-const int colortex6Format = RGBA16F;
+const int colortex0Format = R11F_G11F_B10F; // Color buffer
+const int colortex1Format = RGBA32F; // Lightmaps, material mask, albedo alpha, specular map (gbuffers->final)
+const int colortex2Format = R11F_G11F_B10F; // Atmosphere (deferred->composite1), bloom (composite1->final)
+const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1->final)
+const int colortex4Format = RGB16F; // Normals (gbuffers->final)
+const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
 const bool colortex6Clear = false;
 const float eyeBrightnessSmoothHalflife = 4.0;
 */

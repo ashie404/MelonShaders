@@ -17,8 +17,8 @@ const bool colortex2MipmapEnabled = true;
 */
 
 /* DRAWBUFFERS:02 */
-layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 bloomOut;
+layout (location = 0) out vec3 colorOut;
+layout (location = 1) out vec3 bloomOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -160,11 +160,11 @@ void main() {
 
     #endif
 
-    colorOut = vec4(color, 1.0);
+    colorOut = color;
 
     #ifdef BLOOM
     vec3 bloomSample = color.rgb * clamp01(pow(luma(color.rgb), 4.0));
-    bloomOut = vec4(bloomSample, 1.0);
+    bloomOut = bloomSample;
     #endif
 }
 
