@@ -47,7 +47,8 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
-    float visibility = 0;
+    float visibility = 0.0; // visibility
+    float visibilityWT = 0.0; // visibility w/ translucents
 
     #ifdef PCSS
     float blockerDepth = clamp01(getBlockerDepth(coord, undistortedShadowPos));
@@ -67,12 +68,14 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
 
         // sample shadow map
         vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
-        float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
 
-        visibility += step(shadowPos.z - shadowMapSample, shadowBias);
+        float shadowtex0Sample = texture2D(shadowtex0, shadowPos.xy).r;
+        float shadowtex1Sample = texture2D(shadowtex1, shadowPos.xy).r;
+
+        visibility += step(shadowPos.z - shadowtex1Sample, shadowBias);
+        visibilityWT += step(shadowPos.z - shadowtex0Sample, shadowBias);
         
-        // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
-        if (shadowMapSample < texture2D(shadowtex1, shadowPos.xy).r) {
+        if (visibilityWT < visibility) {
             vec3 colorSample = texture2D(shadowcolor0, shadowPos.xy).rgb; // sample shadow color
             shadowCol += colorSample*2.0;
         } else {
