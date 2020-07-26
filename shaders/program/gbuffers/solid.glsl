@@ -75,6 +75,8 @@ void main() {
         #else
         specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos.xyz + cameraPosition)*1.25)), rainStrength);
         #endif
+
+        specularData.r = clamp01(specularData.r);
     }
     #endif
 
