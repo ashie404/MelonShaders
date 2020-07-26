@@ -43,7 +43,7 @@ float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos) {
 }
 
 // shadowmap sampling
-vec4 getShadows(in vec2 coord, in vec3 undistortedShadowPos)
+vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
 {
     vec3 shadowCol = vec3(0.0); // shadow color
     mat2 rotationMatrix = getRotationMatrix(coord); // rotation matrix for shadow
@@ -54,7 +54,10 @@ vec4 getShadows(in vec2 coord, in vec3 undistortedShadowPos)
     float softness = clamp(blockerDepth*80.0, 0.0, 4.0);
     #endif
 
+    float shadowBias = getShadowBias(viewPos);
+
     for (int i = 0; i <= 8; i++) {
+        
         #ifdef PCSS
         vec2 offset = (vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #else
@@ -66,7 +69,7 @@ vec4 getShadows(in vec2 coord, in vec3 undistortedShadowPos)
         vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
         float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
 
-        visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
+        visibility += step(shadowPos.z - shadowMapSample, shadowBias);
         
         // check if shadow color should be sampled, if yes, sample and add colored shadow, if no, just add the shadow map sample
         if (shadowMapSample < texture2D(shadowtex1, shadowPos.xy).r) {
@@ -130,11 +133,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     vec4 shadowLight = vec4(0.0);
 
-    #ifdef SSS
-    if (diffuseStrength > 0.0 || info.matMask == 1) shadowLight = getShadows(info.coord, undistortedShadowPos);
-    #else
-    if (diffuseStrength > 0.0) shadowLight = getShadows(info.coord, undistortedShadowPos);
-    #endif
+    if (diffuseStrength > 0.0) shadowLight = getShadows(info.coord, viewPos, undistortedShadowPos);
 
     // combine lighting
     vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
@@ -152,6 +151,8 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
         mat2 rotationMatrix = getRotationMatrix(info.coord);
 
+        float shadowBias = getShadowBias(viewPos);
+
         for (int i = 0; i <= 8; i++) {
             vec2 offset = (vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*8.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
             offset = rotationMatrix * offset;
@@ -160,9 +161,8 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
             vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
             float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r; // sampling shadow map
 
-            visibility += step(shadowPos.z - shadowMapSample, SHADOW_BIAS);
+            visibility += step(shadowPos.z - shadowMapSample, shadowBias);
         }
-        color /= clamp(clamp01(visibility-depth)*2.0, 1.0, 2.0);
         color += lightColor*clamp01(visibility-depth)/2.0;
     }
     #endif

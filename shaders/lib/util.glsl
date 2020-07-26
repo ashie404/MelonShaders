@@ -146,6 +146,10 @@ vec2 vogelDiskSample(int sampleIndex, int samplesCount, float phi)
   return vec2(r * cosTheta, r * sinTheta);
 }
 
+float getShadowBias(vec3 viewPos) {
+    return mix(0.000005, 0.00035, clamp01(length(viewPos)/12.0));
+}
+
 // poisson disk
 
 const vec2 poissonDisk[64] = vec2[64](
