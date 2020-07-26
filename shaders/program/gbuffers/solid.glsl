@@ -78,7 +78,7 @@ void main() {
             specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), rainStrength);
         }
         #else
-        specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos))), rainStrength);
+        specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), rainStrength);
         #endif
 
         specularData.r = clamp01(specularData.r);
