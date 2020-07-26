@@ -45,12 +45,14 @@ void main() {
     if (currentDepth >= texture2D(depthtex2, texcoord).r || currentDepth != texture2D(depthtex0, texcoord).r) {
         vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
 
+        int dofQuality = DOF_QUALITY*4;
+
         if (currentDepth >= centerDepthSmooth) {
             // distance blur
             vec3 blurred = vec3(0.0);
             float blurSize = clamp((currentDepth-centerDepthSmooth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
-            for (int i = 0; i <= 8; i++) {
-                vec2 offset = vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
+            for (int i = 0; i <= dofQuality; i++) {
+                vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
                 #ifdef CHROM_ABB
                 float g = texture2D(colortex0, texcoord + (offset*0.5)).g;
                 vec2 rb = texture2D(colortex0, texcoord + offset).rb;
@@ -59,13 +61,13 @@ void main() {
                 blurred += texture2D(colortex0, texcoord+offset).rgb;
                 #endif
             }
-            color = blurred / 8.0;
+            color = blurred / dofQuality;
         } else if (currentDepth <= centerDepthSmooth) {
             // close up blur
             vec3 blurred = vec3(0.0);
             float blurSize = clamp((centerDepthSmooth-currentDepth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
-            for (int i = 0; i <= 8; i++) {
-                vec2 offset = vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
+            for (int i = 0; i <= dofQuality; i++) {
+                vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
                 #ifdef CHROM_ABB
                 float b = texture2D(colortex0, texcoord + (offset*0.5)).b;
                 vec2 rg = texture2D(colortex0, texcoord + offset).rg;
@@ -74,7 +76,7 @@ void main() {
                 blurred += texture2D(colortex0, texcoord+offset).rgb;
                 #endif
             }
-            color = blurred / 8.0;
+            color = blurred / dofQuality;
         }
     }
 
