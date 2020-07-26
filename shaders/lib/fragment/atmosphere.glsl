@@ -170,13 +170,13 @@ vec4 calculateMoonSpot(vec3 viewVector, vec3 moonVector, float radius) {
 
     float x = clamp(1.0 - ((moonAngularRadius * 0.6) - acos(cosTheta)) / (moonAngularRadius * 0.6), 0.0, 1.0);
     vec3 moonDisk = vec3(0.0);
-    moonDisk = (vec3(0.15, 0.15, 0.15)*5.0) * exp2(log2(-x * x + 1.0));
+    moonDisk = (vec3(0.15, 0.15, 0.15)*25.0) * exp2(log2(-x * x + 1.0));
 
     return vec4(moonDisk, float(cosTheta > cos(moonAngularRadius)));
 }
 
 vec3 getSkyColor(vec3 viewPos) {
-    vec3 skyColor = vec3(0.1);
+    vec3 skyColor = vec3(0.05, 0.1, 0.2);
 
     vec2 pid = vec2(0.0);
     vec3 skyTransmittance = vec3(0.0);
@@ -192,9 +192,9 @@ void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 colo
 	#if WORLD == 0
 
     #ifdef STARS
-    float starNoise = cellular(normalize(worldPos.xyz)*32);
+    float starNoise = cellular(normalize(worldPos.xyz)*32.0);
     if (starNoise <= 0.05) {
-        color += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos.xyz)*16.0)), clamp01(1.0-starNoise)), clamp01(times.w));
+        color += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos.xyz)*16.0)), clamp01(1.0-starNoise)), clamp01(times.w))*4.0;
     }
     #endif
 
