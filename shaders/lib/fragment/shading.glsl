@@ -153,7 +153,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
         mat2 rotationMatrix = getRotationMatrix(info.coord);
 
         for (int i = 0; i <= 4; i++) {
-            vec2 offset = (poissonDisk[i]*4.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
+            vec2 offset = (vogelDiskSample(i, 4, bayer64(gl_FragCoord.xy))*4.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
             offset = rotationMatrix * offset;
 
             // sample shadow map
