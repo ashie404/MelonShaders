@@ -41,8 +41,11 @@ option.REFLECTIONS=Reflections
 option.SSR=Screen Space Reflections
 option.SPEC_REFLECTIONS=Specular Reflections
 
+screen.RAIN=Rain Effects
 option.RAIN_PUDDLES=Rain Puddles
-option.POROSITY=Porosity
+option.PUDDLE_MULT=Puddles Multiplier
+option.STRETCH_PUDDLES_Y=Stretch Y Puddles
+option.POROSITY=LabPBR Porosity
 
 option.NIGHT_DESAT=Night Desaturation
 
