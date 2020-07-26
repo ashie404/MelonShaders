@@ -54,10 +54,15 @@ void main() {
 
     // get normal map
     vec3 normalData = texture2D(normals, texcoord).xyz * 2.0 - 1.0;
-    #ifdef REBUILD_Z
-    normalData.z = sqrt(clamp01(1.0 - dot(normalData.xy, normalData.xy)));
-    #endif
-    normalData = normalize(normalData * tbn);
+    if (all(equal(normalData, vec3(0.0, 0.0, 0.0)))) {
+        // invalid normal, reset to default normal
+        normalData = normal;
+    } else {
+        #ifdef REBUILD_Z
+        normalData.z = sqrt(clamp01(1.0 - dot(normalData.xy, normalData.xy)));
+        #endif
+        normalData = normalize(normalData * tbn);
+    }
 
     // get material mask
 
