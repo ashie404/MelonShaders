@@ -40,9 +40,9 @@ void main() {
 
     #ifdef DOF
 
-    float currentDepth = texture2D(depthtex0, texcoord).r;
+    float currentDepth = texture2D(depthtex1, texcoord).r;
 
-    if (currentDepth >= texture2D(depthtex2, texcoord).r || currentDepth != texture2D(depthtex1, texcoord).r) {
+    if (currentDepth >= texture2D(depthtex2, texcoord).r || currentDepth != texture2D(depthtex0, texcoord).r) {
         vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
 
         // distance blur
