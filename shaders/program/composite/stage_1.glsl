@@ -143,7 +143,7 @@ void main() {
 
     #if WORLD == 0
     else if (isEyeInWater == 0 && depth0 != 1.0) {
-        vec3 fogCol = texture2DLod(colortex2, texcoord*0.09, 6.0).rgb*2.0;
+        vec3 fogCol = texture2DLod(colortex2, texcoord*0.1, 6.0).rgb*2.0;
         if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
             fogCol = mix(vec3(0.1), fogCol, clamp01((eyeBrightnessSmooth.y-9)/55.0));
         } else if (eyeBrightnessSmooth.y <= 8) {
