@@ -61,6 +61,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 // water settings
 #define WAVE_FOAM
 #define WAVE_CAUSTICS
+#define WAVE_CAUSTICS_D 1.0 // Density of wave caustics. [0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 #define WAVE_PIXEL
 #define WAVE_PIXEL_R 16.0 // Resolution of wave pixelization. [4.0 8.0 16.0 32.0 64.0 128.0]
 #define WAVE_SPEED 0.5 // Speed of water patterns. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]

@@ -126,7 +126,7 @@ void main() {
                 #endif
 
                 worldPosCamera.y += frameTimeCounter*WAVE_SPEED;
-                color += vec3(pow(cellular(worldPosCamera), 8.0)) * 0.75 * foamColor;
+                color += vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75 * foamColor;
                 #endif
             }
         }
