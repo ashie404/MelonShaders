@@ -83,8 +83,8 @@ option.TRANS_COMPAT=Translucents Compatibility
 screen.WATER=Water
 
 option.WAVE_FOAM=Water Foam
-option.WAVE_CAUSTICS=Water Caustics
-option.WAVE_CAUSTICS_D=Caustics Density
+option.WAVE_CAUSTICS=Water Patterns
+option.WAVE_CAUSTICS_D=Patterns Density
 option.WAVE_PIXEL=Pixelate Water Patterns
 option.WAVE_PIXEL_R=Pixelation Resolution
 option.WAVE_SPEED=Water Pattern Speed
