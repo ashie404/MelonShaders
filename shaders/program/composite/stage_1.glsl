@@ -143,13 +143,13 @@ void main() {
 
     #if WORLD == 0
     else if (isEyeInWater == 0 && depth0 != 1.0) {
-        vec3 fogCol = texture2DLod(colortex2, texcoord/4.5, 6.0).rgb;
+        vec3 fogCol = texture2DLod(colortex2, texcoord/4.5, 6.0).rgb*2.0;
         if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
             fogCol = mix(vec3(0.1), fogCol, clamp01((eyeBrightnessSmooth.y-9)/55.0));
         } else if (eyeBrightnessSmooth.y <= 8) {
             fogCol = vec3(0.1);
         }
-        color += fogCol*clamp01(length(viewPos.xyz)/128.0*FOG_DENSITY);
+        color = mix(color, fogCol, clamp01(length(viewPos.xyz)/196.0*FOG_DENSITY));
     }
     #elif WORLD == -1
     else if (isEyeInWater == 0 && depth0 != 1.0) {
