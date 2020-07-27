@@ -73,7 +73,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define TAA
 
 #define LUT // Color lookup table. Adjusts the overall look of colors.
-#define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4]
+#define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4 5]
 
 // camera settings
 #define DOF
