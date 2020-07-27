@@ -31,6 +31,7 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 
 // lighting settings
 #define SSS // Subsurface scattering.
+#define SSS_SCATTER 1.0 // Subsurface scattering scatter size. [0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 #define SPECULAR // Specular highlights.
 #define SPEC_REFLECTIONS // Specular reflections. Has no effect if reflections are disabled.
 

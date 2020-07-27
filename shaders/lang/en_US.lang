@@ -51,6 +51,7 @@ option.POROSITY=LabPBR Porosity
 option.NIGHT_DESAT=Night Desaturation
 
 option.SSS=Subsurface Scattering
+option.SSS_SCATTER=SSS Scatter Size
 option.SPECULAR=Specular
 
 screen.SHADOWS=Shadows
