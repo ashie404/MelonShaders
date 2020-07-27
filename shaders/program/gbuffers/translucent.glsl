@@ -103,6 +103,14 @@ out vec4 glcolor;
 attribute vec3 mc_Entity;
 attribute vec4 at_tangent;
 
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
+
+// Includes
+#include "/lib/util/taaJitter.glsl"
+
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
     lmcoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
@@ -116,6 +124,10 @@ void main() {
     glcolor = gl_Color;
 
     gl_Position = ftransform();
+
+    #ifdef TAA
+    gl_Position.xy += jitter(2.0);
+    #endif
 }
 
 #endif

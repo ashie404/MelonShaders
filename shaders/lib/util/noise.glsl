@@ -142,4 +142,11 @@ float cellular(vec3 P) {
 	vec3 d = min(min(d1,d2), d3);
 	d.x = min(min(d.x,d.y),d.z);
 	return sqrt(d.x);
+
+#undef K
+#undef Ko
+#undef K2
+#undef Kz
+#undef Kzo
+#undef jitter
 }

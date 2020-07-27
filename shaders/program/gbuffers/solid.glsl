@@ -172,9 +172,14 @@ uniform mat4 gbufferModelView;
 uniform vec3 cameraPosition;
 
 uniform float frameTimeCounter;
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
 
 // Includes
 #include "/lib/util/noise.glsl"
+#include "/lib/util/taaJitter.glsl"
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
@@ -198,6 +203,10 @@ void main() {
         position.z += (sin((frameTimeCounter/2.0*WIND_STRENGTH)+cellular(position.xyz+cameraPosition+(frameTimeCounter/8.0))*4.0)/12.0);
         gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
     }
+    #endif
+
+    #ifdef TAA
+    gl_Position.xy += jitter(2.0);
     #endif
 }
 

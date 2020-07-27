@@ -42,8 +42,13 @@ uniform int frameCounter;
 
 void main() {
     #ifdef TAA
-    vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
-    vec3 current = RGBToYCoCg(texture2D(colortex0, texcoord).rgb);
+    float depth0 = texture2D(depthtex0, texcoord).r;
+
+    vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, depth0));
+    vec3 current = vec3(0.0);
+
+    current = RGBToYCoCg(texture2D(colortex0, texcoord).rgb);
+
     vec3 history = RGBToYCoCg(texture2D(colortex6, reprojectedCoord).rgb);
 
     vec3 colorAvg = current;
@@ -67,9 +72,11 @@ void main() {
 
     history = YCoCgToRGB(history);
 
-    colorOut = mix(YCoCgToRGB(current), history, 0.85);
+    current = YCoCgToRGB(current);
+
+    colorOut = mix(current, history, 0.85);
     
-    taaOut = mix(texture2D(colortex0, texcoord+jitter()).rgb, history, 0.95);
+    taaOut = mix(current, history, 0.95);
     #else
     colorOut = texture2D(colortex0, texcoord).rgb;
     #endif
@@ -84,6 +91,13 @@ void main() {
 out vec2 texcoord;
 
 uniform float sunAngle;
+
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
+
+#include "/lib/util/taaJitter.glsl"
 
 void main() {
 	gl_Position = ftransform();

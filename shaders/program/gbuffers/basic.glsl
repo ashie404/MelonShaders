@@ -61,6 +61,15 @@ out vec2 texcoord;
 out vec3 normal;
 out vec4 glcolor;
 
+// Uniforms
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
+
+// Includes
+#include "/lib/util/taaJitter.glsl"
+
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
 
@@ -69,6 +78,10 @@ void main() {
     glcolor = gl_Color;
 
     gl_Position = ftransform();
+
+    #ifdef TAA
+    gl_Position.xy += jitter(2.0);
+    #endif
 }
 
 #endif
