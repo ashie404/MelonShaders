@@ -51,6 +51,8 @@ uniform vec3 cameraPosition;
 
 uniform vec3 fogColor;
 
+uniform ivec2 eyeBrightnessSmooth;
+
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float frameTimeCounter;
@@ -107,7 +109,7 @@ void main() {
                 color = color * transmittance;
 
                 // calculate water foam/lines color
-                vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;
+                vec3 foamColor = ambientColor*WAVE_BRIGHTNESS*mix(0.25, 1.0, eyeBrightnessSmooth.y/240.0);
 
                 // water foam
                 #ifdef WAVE_FOAM
