@@ -56,7 +56,11 @@ vec4 raytrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither,
 
 vec4 reflection(vec3 viewPos, vec3 normal, float dither, sampler2D reflectionTex) {
 	vec4 outColor = vec4(0.0);
+	#ifdef HQ_REFLECT
+	vec4 rtPos = raytrace(depthtex0, viewPos, normal, dither, 4.0, 0.5, 0.1, 1.5);
+	#else
 	vec4 rtPos = raytrace(depthtex0, viewPos, normal, dither, 4.0, 1.0, 0.1, 2.0);
+	#endif
 	if (rtPos.w <= 100.0 && rtPos.x >= 0.0 && rtPos.x <= 1.0 && rtPos.y >= 0.0 && rtPos.y <= 1.0 && rtPos.z < 1.0 - 1e-5) {
 		outColor = texture2D(reflectionTex, rtPos.xy);
 	}
@@ -65,7 +69,11 @@ vec4 reflection(vec3 viewPos, vec3 normal, float dither, sampler2D reflectionTex
 
 vec4 roughReflection(vec3 viewPos, vec3 normal, float dither, float roughness, sampler2D reflectionTex) {
 	vec4 outColor = vec4(0.0);
+	#ifdef HQ_REFLECT
+	vec4 rtPos = raytrace(depthtex0, viewPos, normal, dither, 4.0, 0.5, 0.1, 1.5);
+	#else
 	vec4 rtPos = raytrace(depthtex0, viewPos, normal, dither, 4.0, 1.0, 0.1, 2.0);
+	#endif
 	float lod = clamp(roughness*12.0, 0.0, 5.0);
 	if (rtPos.w <= 100.0 && rtPos.x >= 0.0 && rtPos.x <= 1.0 && rtPos.y >= 0.0 && rtPos.y <= 1.0 && rtPos.z < 1.0 - 1e-5) {
 		outColor = texture2DLod(reflectionTex, rtPos.xy, lod);

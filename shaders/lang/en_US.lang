@@ -40,6 +40,7 @@ option.FOG_DENSITY=Fog Density
 
 option.REFLECTIONS=Reflections
 option.SSR=Screen Space Reflections
+option.HQ_REFLECT=HQ Reflections
 option.SPEC_REFLECTIONS=Specular Reflections
 
 screen.RAIN=Rain Effects
