@@ -70,7 +70,7 @@ void main() {
 
     current = YCoCgToRGB(current);
 
-    colorOut = mix(current, history, 0.85);
+    colorOut = mix(current, history, 0.95);
     
     taaOut = mix(current, history, 0.95);
     #else

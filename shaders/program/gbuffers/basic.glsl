@@ -80,7 +80,7 @@ void main() {
     gl_Position = ftransform();
 
     #ifdef TAA
-    gl_Position.xy += jitter(2.0);
+    gl_Position.xy += jitter(2.0+gl_Position.z);
     #endif
 }
 
