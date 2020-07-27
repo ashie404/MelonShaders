@@ -85,7 +85,7 @@ void main() {
     if (depth0 != 1.0) {
         color = calculateShading(info, viewPos.xyz, shadowPos.xyz);
     } else {
-        color = texture2D(colortex2, texcoord/4.01).rgb;
+        color = texture2D(colortex2, texcoord*0.09).rgb;
         calculateCelestialBodies(viewPos.xyz, worldPos.xyz, color);
     }
     
