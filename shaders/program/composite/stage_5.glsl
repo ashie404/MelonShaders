@@ -44,6 +44,8 @@ void main() {
     #ifdef TAA
     vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
 
+    #ifdef TAA_NCLAMP
+
     vec3 current = RGBToYCoCg(texture2D(colortex0, texcoord).rgb);
     vec3 history = RGBToYCoCg(texture2D(colortex6, reprojectedCoord).rgb);
 
@@ -70,11 +72,22 @@ void main() {
 
     current = YCoCgToRGB(current);
 
-    colorOut = mix(current, history, 0.95);
-    
-    taaOut = mix(current, history, 0.95);
     #else
+
+    vec3 current = texture2D(colortex0, texcoord).rgb;
+    vec3 history = texture2D(colortex6, reprojectedCoord).rgb;
+
+    #endif
+
+    vec3 outColor = mix(current, history, TAA_BLEND);
+
+    colorOut = outColor;
+    taaOut = outColor;
+
+    #else
+
     colorOut = texture2D(colortex0, texcoord).rgb;
+    
     #endif
 }
 

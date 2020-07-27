@@ -10,7 +10,11 @@ screen.TWEAKS=Tweaks
 option.BLOOM=Bloom
 option.BLOOM_STRENGTH=Bloom Strength
 
+screen.TAA=TAA Settings
 option.TAA=Temporal Anti-Aliasing
+option.TAA_NCLAMP=Neighborhood Clamping
+option.TAA_BLEND=TAA Blending
+
 option.LUT=Color LUT
 option.LUTV=LUT
 value.LUTV.0=Kingdom Come
