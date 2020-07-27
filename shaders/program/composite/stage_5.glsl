@@ -42,13 +42,9 @@ uniform int frameCounter;
 
 void main() {
     #ifdef TAA
-    float depth0 = texture2D(depthtex0, texcoord).r;
+    vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
 
-    vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, depth0));
-    vec3 current = vec3(0.0);
-
-    current = RGBToYCoCg(texture2D(colortex0, texcoord).rgb);
-
+    vec3 current = RGBToYCoCg(texture2D(colortex0, texcoord).rgb);
     vec3 history = RGBToYCoCg(texture2D(colortex6, reprojectedCoord).rgb);
 
     vec3 colorAvg = current;
