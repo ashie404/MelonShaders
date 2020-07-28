@@ -104,8 +104,8 @@ void main() {
 
                 #endif
             }
-            float fresnel = clamp01(fresnel(0.2, 0.1, 1.0, viewPos.xyz, info.normal));
-            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.15));
+            float fresnel = fresnel_schlick(viewPos.xyz, info.normal, 0.02);
+            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, fresnel);
         }
         #ifdef SPEC_REFLECTIONS
         else if (roughness <= 0.15) {
@@ -127,8 +127,8 @@ void main() {
 
                 #endif
             }
-            float fresnel = clamp01(fresnel(0.2, 0.1, 1.0, viewPos.xyz, info.normal));
-            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.2-(roughness*2.0)));
+            float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
+            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.1-(roughness*2.0)));
         }
         #endif
     }
