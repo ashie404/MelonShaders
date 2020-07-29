@@ -12,8 +12,10 @@
 #ifdef FSH
 
 /*
-const bool colortex0MipmapEnabled = true;
 const bool colortex2MipmapEnabled = true;
+#ifndef MICROFACET_REFL
+const bool colortex0MipmapEnabled = true;
+#endif
 */
 
 /* DRAWBUFFERS:0 */
@@ -86,7 +88,7 @@ void main() {
         float roughness = pow(1.0 - info.specular.r, 2.0);
         if (info.matMask == 3) {
             #ifdef SSR
-            vec4 reflectionColor = reflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + interleavedGradientNoise(gl_FragCoord.xy)), colortex0);
+            vec4 reflectionColor = reflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), colortex0);
             #else
             vec4 reflectionColor = vec4(0.0);
             #endif
@@ -108,9 +110,9 @@ void main() {
             color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, fresnel);
         }
         #ifdef SPEC_REFLECTIONS
-        else if (roughness <= 0.15) {
+        else if (roughness <= 0.225) {
             #ifdef SSR
-            vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + interleavedGradientNoise(gl_FragCoord.xy)), roughness*4.0, colortex0);
+            vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness*4.0, colortex0);
             #else
             vec4 reflectionColor = vec4(0.0);
             #endif

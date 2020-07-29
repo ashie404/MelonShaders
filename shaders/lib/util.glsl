@@ -36,6 +36,12 @@ float bayer2(vec2 a){
 #define bayer128(a) (bayer64( 0.5 * (a)) * 0.25 + bayer2(a))
 #define bayer256(a) (bayer128(0.5 * (a)) * 0.25 + bayer2(a))
 
+vec3 hash32(vec2 p) {
+	vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yxz+19.19);
+  return fract((p3.xxy+p3.yzz)*p3.zyx);
+}
+
 // luma functions
 float luma(vec3 color) {
   return dot(color, vec3(0.299, 0.587, 0.114));
