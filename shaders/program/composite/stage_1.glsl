@@ -70,6 +70,8 @@ uniform int isEyeInWater;
 #include "/lib/fragment/reflection.glsl"
 #include "/lib/util/noise.glsl"
 #include "/lib/fragment/atmosphere.glsl"
+#include "/lib/vertex/distortion.glsl"
+#include "/lib/fragment/volumetrics.glsl"
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
@@ -140,18 +142,26 @@ void main() {
     if (isEyeInWater == 1) {
         vec3 transmittance = exp(-vec3(1.0, 0.2, 0.1) * length(viewPos.xyz));
         color *= transmittance;
+        #ifdef VL
+        color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/3.0*mix(1.0, 0.25, clamp01(times.w))*VL_DENSITY);
+        #endif
     }
     #ifdef FOG 
 
     #if WORLD == 0
-    else if (isEyeInWater == 0 && depth0 != 1.0) {
-        vec3 fogCol = texture2DLod(colortex2, texcoord*0.1, 6.0).rgb*2.0;
-        if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-            fogCol = mix(vec3(0.1), fogCol, clamp01((eyeBrightnessSmooth.y-9)/55.0));
-        } else if (eyeBrightnessSmooth.y <= 8) {
-            fogCol = vec3(0.1);
+    else if (isEyeInWater == 0) {
+        if (depth0 != 1.0) {
+            vec3 fogCol = texture2DLod(colortex2, texcoord*0.1, 6.0).rgb*2.0;
+            if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+                fogCol = mix(vec3(0.1), fogCol, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+            } else if (eyeBrightnessSmooth.y <= 8) {
+                fogCol = vec3(0.1);
+            }
+            color = mix(color, fogCol, clamp01(length(viewPos.xyz)/196.0*FOG_DENSITY));
         }
-        color = mix(color, fogCol, clamp01(length(viewPos.xyz)/196.0*FOG_DENSITY));
+        #ifdef VL
+        color += calculateVL(viewPos.xyz, lightColor/16.0*mix(1.0, 0.15, clamp01(times.y))*VL_DENSITY);
+        #endif
     }
     #elif WORLD == -1
     else if (isEyeInWater == 0 && depth0 != 1.0) {

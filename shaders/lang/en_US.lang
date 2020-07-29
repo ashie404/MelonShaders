@@ -42,6 +42,10 @@ option.STARS=Stars
 option.FOG=Fog
 option.FOG_DENSITY=Fog Density
 
+screen.VOLUMETRICS=Volumetrics
+option.VL=Volumetric Lighting
+option.VL_DENSITY=VL Density
+
 option.REFLECTIONS=Reflections
 option.SSR=Screen Space Reflections
 option.MICROFACET_REFL=Microfacet Reflections
