@@ -82,7 +82,7 @@ void main() {
         encodeLightmaps(specularData.gb), // specular green and blue channel
         specularData.r // specular red channel
     );
-    normalOut = normal * 0.5 + 0.5;
+    normalOut = (mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5;
 }
 
 #endif
