@@ -160,12 +160,7 @@ void main() {
             color = mix(color, fogCol, clamp01(length(viewPos.xyz)/196.0*FOG_DENSITY));
         }
         #ifdef VL
-        vec3 vlColor = calculateVL(viewPos.xyz, lightColor/16.0*mix(1.0, 0.15, clamp01(times.y))*VL_DENSITY);
-        if (depth0 == 1.0) {
-            color += mix(vlColor, vec3(0.0), clamp01(worldPos.y/32.0));
-        } else {
-            color += vlColor;
-        }
+        color += calculateVL(viewPos.xyz, lightColor/16.0*mix(1.0, 0.15, clamp01(times.y))*VL_DENSITY);
         #endif
     }
     #elif WORLD == -1
