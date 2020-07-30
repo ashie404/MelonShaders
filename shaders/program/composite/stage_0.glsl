@@ -71,6 +71,7 @@ uniform int isEyeInWater;
 #include "/lib/vertex/distortion.glsl"
 #include "/lib/fragment/shading.glsl"
 #include "/lib/util/noise.glsl"
+#include "/lib/fragment/volumetrics.glsl"
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
@@ -105,7 +106,7 @@ void main() {
             // if eye is not in water, render above-water fog and wave foam
             if (isEyeInWater == 0) {
                 // calculate transmittance
-                vec3 transmittance = exp(-vec3(1.0, 0.2, 0.1) * depthcomp);
+                vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * depthcomp);
                 color = color * transmittance;
 
                 // calculate water foam/lines color
@@ -130,6 +131,15 @@ void main() {
                 #endif
             }
         }
+    }
+
+    // draw water fog
+    if (isEyeInWater == 1) {
+        vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * length(viewPos.xyz));
+        color *= transmittance;
+        #ifdef VL
+        color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/12.0*mix(1.0, 0.15, clamp01(times.w))*VL_DENSITY);
+        #endif
     }
     
     colorOut = color;
