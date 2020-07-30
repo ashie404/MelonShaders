@@ -10,6 +10,7 @@ const int colortex1Format = RGBA32F; // Lightmaps, material mask, albedo alpha, 
 const int colortex2Format = R11F_G11F_B10F; // Atmosphere (deferred->composite1), bloom (composite2->final)
 const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1->final)
 const int colortex4Format = RGB16F; // Normals (gbuffers->final)
+const int colortex5Format = R11F_G11F_B10F; // Albedo buffer (deferred1->final)
 const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
 const bool colortex6Clear = false;
 const float eyeBrightnessSmoothHalflife = 4.0;

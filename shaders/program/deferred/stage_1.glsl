@@ -11,9 +11,10 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:03 */
+/* DRAWBUFFERS:035 */
 layout (location = 0) out vec3 colorOut;
 layout (location = 1) out vec3 noTranslucentsOut;
+layout (location = 2) out vec3 albedoOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -91,6 +92,7 @@ void main() {
     
     colorOut = color;
     noTranslucentsOut = color;
+    albedoOut = info.albedo.rgb;
 }
 
 #endif

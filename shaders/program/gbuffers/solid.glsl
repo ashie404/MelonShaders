@@ -101,7 +101,7 @@ void main() {
 
     #if WORLD == 0
     float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
-    float emissionMult = mix(0.5, 1.5, night)*EMISSIVE_STRENGTH;
+    float emissionMult = mix(0.15, 1.5, clamp01(night+clamp01(1.0-lmcoord.y)))*EMISSIVE_STRENGTH;
     #elif WORLD == -1
     float emissionMult = EMISSIVE_STRENGTH;
     #elif WORLD == 1
