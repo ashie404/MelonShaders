@@ -143,7 +143,7 @@ void main() {
         vec3 transmittance = exp(-vec3(1.0, 0.2, 0.1) * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL
-        color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/3.0*mix(1.0, 0.05, clamp01(times.w))*VL_DENSITY);
+        color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/6.0*mix(1.0, 0.15, clamp01(times.w))*VL_DENSITY);
         #endif
     }
     #ifdef FOG 
