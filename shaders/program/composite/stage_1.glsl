@@ -134,7 +134,7 @@ void main() {
             }
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
             vec3 albedo = texture2D(colortex5, texcoord).rgb;
-            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)))*mix(vec3(1.0), pow(albedo, vec3(2.0)), info.specular.g <= 0.901 ? 0.0 : 1.0);
+            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
             if (isEyeInWater == 1) {
                 vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * length(viewPos.xyz));
                 color *= transmittance;
