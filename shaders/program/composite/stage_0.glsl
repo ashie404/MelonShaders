@@ -134,7 +134,8 @@ void main() {
     }
 
     // draw water fog
-    if (isEyeInWater == 1) {
+    float roughness = pow(1.0 - info.specular.r, 2.0);
+    if (isEyeInWater == 1 && (roughness > 0.225 || depth0 == 1.0)) {
         vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL

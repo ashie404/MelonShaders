@@ -133,6 +133,11 @@ void main() {
             }
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
             color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
+            vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * length(viewPos.xyz));
+            color *= transmittance;
+            #ifdef VL
+            color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/12.0*mix(1.0, 0.15, clamp01(times.w))*VL_DENSITY);
+            #endif
         }
         #endif
     }
