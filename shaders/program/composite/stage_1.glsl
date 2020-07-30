@@ -147,7 +147,7 @@ void main() {
     #ifdef FOG 
 
     #if WORLD == 0
-    else if (isEyeInWater == 0) {
+    if (isEyeInWater == 0) {
         vec3 fogCol = texture2DLod(colortex2, texcoord*0.1, 6.0).rgb*2.0;
         if (depth0 != 1.0) {
             vec3 fogCol2 = fogCol;
@@ -163,11 +163,11 @@ void main() {
         #endif
     }
     #elif WORLD == -1
-    else if (isEyeInWater == 0 && depth0 != 1.0) {
+    if (isEyeInWater == 0 && depth0 != 1.0) {
         color = mix(color, fogColor, clamp01(length(viewPos.xyz)/84.0*FOG_DENSITY));
     }
     #elif WORLD == 1
-    else if (isEyeInWater == 0 && depth0 != 1.0) {
+    if (isEyeInWater == 0 && depth0 != 1.0) {
         color = mix(color, fogColor, clamp01(length(viewPos.xyz)/84.0*FOG_DENSITY));
     }
     #endif
