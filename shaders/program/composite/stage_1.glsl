@@ -168,6 +168,10 @@ void main() {
     else if (isEyeInWater == 0 && depth0 != 1.0) {
         color = mix(color, fogColor, clamp01(length(viewPos.xyz)/84.0*FOG_DENSITY));
     }
+    #elif WORLD == 1
+    else if (isEyeInWater == 0 && depth0 != 1.0) {
+        color = mix(color, fogColor, clamp01(length(viewPos.xyz)/84.0*FOG_DENSITY));
+    }
     #endif
 
     #endif

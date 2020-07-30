@@ -67,6 +67,8 @@ void main() {
     atmosphereOut = getSkyColor(viewPos.xyz);
     #elif WORLD == -1
     atmosphereOut = fogColor;
+    #elif WORLD == 1
+    atmosphereOut = fogColor;
     #endif
 }
 

@@ -129,6 +129,10 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     vec3 color = (fogColor*0.25)+blockLight;
 
+    #elif WORLD == 1
+
+    vec3 color = (fogColor*0.25)+blockLight;
+
     #elif WORLD == 0
 
     float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), info.normal, 1.0);

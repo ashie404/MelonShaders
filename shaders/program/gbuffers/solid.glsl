@@ -104,6 +104,8 @@ void main() {
     float emissionMult = mix(0.5, 1.5, night)*EMISSIVE_STRENGTH;
     #elif WORLD == -1
     float emissionMult = EMISSIVE_STRENGTH;
+    #elif WORLD == 1
+    float emissionMult = EMISSIVE_STRENGTH;
     #endif
 
     #if EMISSIVE_MAP == 0
