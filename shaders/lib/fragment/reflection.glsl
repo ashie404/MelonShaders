@@ -77,9 +77,8 @@ vec4 roughReflection(vec3 viewPos, vec3 normal, float dither, float roughness, s
 
 	#ifdef MICROFACET_REFL
 
-	vec3 normalNoMF = normal;
-	for (int i = 1; i <= 4; i++) {
-		normal = microfacetDistribution(normalNoMF, fract(frameTimeCounter * 4.0 + hash32(gl_FragCoord.xy*i)), roughness*roughness);
+	for (int i = 1; i <= 3; i++) {
+		normal = microfacetDistribution(normal, fract(frameTimeCounter * 4.0 + hash32(uvec2(gl_FragCoord.xy*i))), roughness*roughness);
 
 		vec4 rtPos = raytrace(depthtex0, viewPos, reflect(normalize(viewPos), normalize(normal)), dither, 4.0, 1.0, 0.1, 1.5);
 
@@ -88,14 +87,14 @@ vec4 roughReflection(vec3 viewPos, vec3 normal, float dither, float roughness, s
 		}
 	}
 
-	outColor /= 4.0;
+	outColor /= 3.0;
 
 	#else
 
 	vec4 rtPos = raytrace(depthtex0, viewPos, reflect(normalize(viewPos), normalize(normal)), dither, 4.0, 0.5, 0.1, 1.5);
 	float lod = clamp(roughness*12.0, 0.0, 5.0);
 	if (rtPos.w <= 100.0 && rtPos.x >= 0.0 && rtPos.x <= 1.0 && rtPos.y >= 0.0 && rtPos.y <= 1.0 && rtPos.z < 1.0 - 1e-5) {
-		outColor += texture2DLod(reflectionTex, rtPos.xy, lod);
+		outColor = texture2DLod(reflectionTex, rtPos.xy, lod);
 	}
 
 	#endif

@@ -36,10 +36,20 @@ float bayer2(vec2 a){
 #define bayer128(a) (bayer64( 0.5 * (a)) * 0.25 + bayer2(a))
 #define bayer256(a) (bayer128(0.5 * (a)) * 0.25 + bayer2(a))
 
-vec3 hash32(vec2 p) {
-	vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
-  p3 += dot(p3, p3.yxz+19.19);
-  return fract((p3.xxy+p3.yzz)*p3.zyx);
+//Modified from: iq's "Integer Hash - III" (https://www.shadertoy.com/view/4tXyWN)
+//Faster than "full" xxHash and good quality
+uint baseHash(uvec2 p)
+{
+    p = 1103515245U*((p >> 1U)^(p.yx));
+    uint h32 = 1103515245U*((p.x)^(p.y>>3U));
+    return h32^(h32 >> 16);
+}
+
+vec3 hash32(uvec2 x)
+{
+    uint n = baseHash(x);
+    uvec3 rz = uvec3(n, n*16807U, n*48271U);
+    return vec3((rz >> 1) & uvec3(0x7fffffffU))/float(0x7fffffff);
 }
 
 // luma functions
