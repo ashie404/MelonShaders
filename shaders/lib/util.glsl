@@ -9,7 +9,7 @@ const int colortex0Format = R11F_G11F_B10F; // Color buffer
 const int colortex1Format = RGBA32F; // Lightmaps, material mask, albedo alpha, specular map (gbuffers->final)
 const int colortex2Format = R11F_G11F_B10F; // Atmosphere (deferred->composite1), bloom (composite2->final)
 const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1->final)
-const int colortex4Format = RGB16F; // Normals (gbuffers->final)
+const int colortex4Format = RGBA16F; // Normals (gbuffers->final)
 const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
 const bool colortex6Clear = false;
 const float eyeBrightnessSmoothHalflife = 4.0;
@@ -98,6 +98,24 @@ float encodeLightmaps(vec2 a) {
 vec2 decodeLightmaps(float a) {
     int bf = int(a*65535.0);
     return vec2(bf%256, bf>>8) / 255.0;
+}
+
+const vec3 bits = vec3( 4, 4, 4 );
+const vec3 values = exp2( bits );
+const vec3 rvalues = 1.0 / values;
+const vec3 maxValues = values - 1.0;
+const vec3 rmaxValues = 1.0 / maxValues;
+const vec3 positions = vec3( 1.0, values.x, values.x*values.y );
+const vec3 rpositions = 65536.0 / positions;
+
+// color encoding/decoding
+float encodeColor(vec3 a) {
+    a += (clamp01(bayer16(gl_FragCoord.xy))-0.5) / maxValues;
+    a = clamp(a, 0.0, 1.0);
+    return dot( round( a * maxValues ), positions ) / 65536.0;
+}
+vec3 decodeColor(float a) {
+    return mod( a * rpositions, values ) * rmaxValues;
 }
 
 #endif

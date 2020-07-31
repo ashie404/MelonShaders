@@ -14,7 +14,7 @@
 /* DRAWBUFFERS:014 */
 layout (location = 0) out vec4 albedoOut;
 layout (location = 1) out vec4 dataOut;
-layout (location = 2) out vec3 normalOut;
+layout (location = 2) out vec4 normalOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -82,7 +82,7 @@ void main() {
         encodeLightmaps(specularData.gb), // specular green and blue channel
         specularData.r // specular red channel
     );
-    normalOut = (mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5;
+    normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(albedo.rgb));
 }
 
 #endif
