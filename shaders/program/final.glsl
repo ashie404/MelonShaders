@@ -24,7 +24,6 @@ uniform sampler2D colortex0;
 uniform sampler2D colortex7;
 
 uniform float sunAngle;
-uniform float frameTimeCounter;
 
 // Includes
 #include "/lib/post/aces/ACES.glsl"
