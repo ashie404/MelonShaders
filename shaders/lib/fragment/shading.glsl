@@ -185,14 +185,13 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 }
 
 vec3 calculateTranslucentShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
-    vec3 color = calculateShading(info, viewPos, undistortedShadowPos);
-
     vec3 behind = texture2D(colortex3, info.coord).rgb;
 
     #ifdef TRANS_COMPAT
+    vec3 color = calculateShading(info, viewPos, undistortedShadowPos);
     color = mix(behind, color, info.albedo.a);
     #else
-    color = behind*mix(vec3(1.0), color, clamp01(info.albedo.a*2.0));
+    vec3 color = behind*mix(vec3(1.0), info.albedo.rgb, clamp01(info.albedo.a*2.0));
     #endif
 
     return color;
