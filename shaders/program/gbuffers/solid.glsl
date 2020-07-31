@@ -50,14 +50,14 @@ vec3 toLinear(vec3 srgb) {
 }
 
 void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
-    if      (id == 50 ) albedo *= clamp01(pow(luminance, 6))* 60.0*emissionMult;
-    else if (id == 51 ) albedo *= clamp01(pow(luminance, 6))* 75.0*emissionMult;
-    else if (id == 83 ) albedo *= clamp01(pow(luminance, 8))* 62.5*emissionMult;
-    else if (id == 100) albedo *= clamp01(pow(luminance, 8))*100.0*emissionMult;
-    else if (id == 105) albedo *= clamp01(pow(luminance, 4))*100.0*emissionMult;
-    else if (id == 110) albedo *= clamp01(pow(luminance, 8))* 50.0*emissionMult;
-    else if (id == 120) albedo *= 25*emissionMult;
-    else if (id == 122) albedo *= 12.5*emissionMult;
+    if      (id == 50 ) albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0);
+    else if (id == 51 ) albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0);
+    else if (id == 83 ) albedo *= max(clamp01(pow(luminance, 8))* 62.5*emissionMult, 1.0);
+    else if (id == 100) albedo *= max(clamp01(pow(luminance, 8))*100.0*emissionMult, 1.0);
+    else if (id == 105) albedo *= max(clamp01(pow(luminance, 4))*100.0*emissionMult, 1.0);
+    else if (id == 110) albedo *= max(clamp01(pow(luminance, 8))* 50.0*emissionMult, 1.0);
+    else if (id == 120) albedo *= max(25.0*emissionMult, 1.0);
+    else if (id == 122) albedo *= max(12.5*emissionMult, 1.0);
 }
 
 void main() {
@@ -111,14 +111,14 @@ void main() {
     #if EMISSIVE_MAP == 0
         calculateHardcodedEmissives(idCorrected, luminance, emissionMult, albedo.rgb);
     #elif EMISSIVE_MAP == 1
-        if (specularData.b > 0.0) albedo.rgb *= clamp(specularData.b * 50.0, 1.0, 50.0)*emissionMult;
+        if (specularData.b > 0.0) albedo.rgb *= max(clamp(specularData.b * 50.0, 1.0, 50.0)*emissionMult, 1.0);
         #ifdef EMISSIVE_FALLBACK
         vec3 hardcoded = albedo.rgb;
         calculateHardcodedEmissives(idCorrected, luminance, emissionMult, hardcoded);
         albedo.rgb = mix(hardcoded, albedo.rgb, specularData.b);
         #endif
     #elif EMISSIVE_MAP == 2
-        if (specularData.a < 1.0) albedo.rgb *= clamp(specularData.a * 50.0, 1.0, 50.0)*emissionMult;
+        if (specularData.a < 1.0) albedo.rgb *= max(clamp(specularData.a * 50.0, 1.0, 50.0)*emissionMult, 1.0);
         #ifdef EMISSIVE_FALLBACK
         vec3 hardcoded = albedo.rgb;
         calculateHardcodedEmissives(idCorrected, luminance, emissionMult, hardcoded);
