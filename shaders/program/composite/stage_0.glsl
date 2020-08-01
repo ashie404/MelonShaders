@@ -14,6 +14,10 @@
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec3 colorOut;
 
+/*
+const bool colortex2MipmapEnabled = true;
+*/
+
 // Inputs from vertex shader
 in vec2 texcoord;
 in vec4 times;
@@ -106,7 +110,7 @@ void main() {
             // if eye is not in water, render above-water fog and wave foam
             if (isEyeInWater == 0) {
                 // calculate transmittance
-                vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * depthcomp);
+                vec3 transmittance = exp(-waterCoeff * depthcomp);
                 color = color * transmittance;
 
                 // calculate water foam/lines color
@@ -133,10 +137,11 @@ void main() {
         }
     }
 
+    calculateFog(color, viewPos.xyz, depth0);
+
     // draw water fog
-    float roughness = pow(1.0 - info.specular.r, 2.0);
-    if (isEyeInWater == 1 && (roughness > 0.225 || depth0 == 1.0)) {
-        vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * length(viewPos.xyz));
+    if (isEyeInWater == 1) {
+        vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL
         color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/12.0*mix(1.0, 0.15, clamp01(times.w))*VL_DENSITY);

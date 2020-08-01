@@ -133,53 +133,17 @@ void main() {
                 #endif
             }
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
-            vec3 albedo = texture2D(colortex5, texcoord).rgb;
-
-            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+(skyReflectionColor), clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)))
-            *mix(vec3(1.0), pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(4.0)), info.specular.g <= 0.898039 ? 0.0 : 1.0);
+            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(4.0));
 
             if (isEyeInWater == 1) {
-                vec3 transmittance = exp(-vec3(0.8, 0.2, 0.1) * length(viewPos.xyz));
-                color *= transmittance;
-                #ifdef VL
-                color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/12.0*mix(1.0, 0.15, clamp01(times.w))*VL_DENSITY);
-                #endif
+                skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
             }
-            
+
+            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+(skyReflectionColor), clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)))
+            *mix(vec3(1.0), albedo, info.specular.g <= 0.898039 ? 0.0 : 1.0);
         }
         #endif
     }
-    #endif
-
-    
-    #ifdef FOG 
-
-    #if WORLD == 0
-    if (isEyeInWater == 0) {
-        vec3 fogCol = texture2DLod(colortex2, texcoord*0.1, 6.0).rgb*2.0;
-        if (depth0 != 1.0) {
-            vec3 fogCol2 = fogCol;
-            if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                fogCol2 = mix(vec3(0.1), fogCol2, clamp01((eyeBrightnessSmooth.y-9)/55.0));
-            } else if (eyeBrightnessSmooth.y <= 8) {
-                fogCol2 = vec3(0.1);
-            }
-            color = mix(color, fogCol2, clamp01(length(viewPos.xyz)/196.0*FOG_DENSITY));
-        }
-        #ifdef VL
-        color += calculateVL(viewPos.xyz, lightColor*fogCol/8.0*mix(1.0, 0.15, clamp01(times.y))*VL_DENSITY);
-        #endif
-    }
-    #elif WORLD == -1
-    if (isEyeInWater == 0 && depth0 != 1.0) {
-        color = mix(color, fogColor, clamp01(length(viewPos.xyz)/84.0*FOG_DENSITY));
-    }
-    #elif WORLD == 1
-    if (isEyeInWater == 0 && depth0 != 1.0) {
-        color = mix(color, fogColor, clamp01(length(viewPos.xyz)/84.0*FOG_DENSITY));
-    }
-    #endif
-
     #endif
 
     colorOut = color;
