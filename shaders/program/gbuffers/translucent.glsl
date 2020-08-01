@@ -79,8 +79,8 @@ void main() {
     dataOut = vec4(
         encodeLightmaps(lmcoord), // lightmap
         encodeLightmaps(vec2(matMask/10.0, albedo.a)), // material mask and albedo alpha
-        encodeColor(specularData.rgb), // specular map
-        0.0
+        encodeLightmaps(specularData.gb), // specular green and blue channel
+        specularData.r // specular red channel
     );
     normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(albedo.rgb));
 }
