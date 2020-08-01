@@ -114,7 +114,8 @@ void main() {
                 color = color * transmittance;
 
                 // calculate water foam/lines color
-                vec3 foamColor = ambientColor*WAVE_BRIGHTNESS*mix(0.25, 1.0, eyeBrightnessSmooth.y/240.0);
+                vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;
+                foamColor = mix(vec3(0.05), foamColor, eyeBrightnessSmooth.y/240.0);
 
                 // water foam
                 #ifdef WAVE_FOAM
