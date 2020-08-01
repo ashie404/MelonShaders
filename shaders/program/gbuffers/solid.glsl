@@ -111,14 +111,14 @@ void main() {
     #if EMISSIVE_MAP == 0
         calculateHardcodedEmissives(idCorrected, luminance, emissionMult, albedo.rgb);
     #elif EMISSIVE_MAP == 1
-        if (specularData.b > 0.0) albedo.rgb *= max(clamp(specularData.b * 50.0, 1.0, 50.0)*emissionMult, 1.0);
+        if (specularData.b > 0.0) albedo.rgb *= max(clamp(specularData.b * 15.0, 1.0, 15.0)*emissionMult, 1.0);
         #ifdef EMISSIVE_FALLBACK
         vec3 hardcoded = albedo.rgb;
         calculateHardcodedEmissives(idCorrected, luminance, emissionMult, hardcoded);
         albedo.rgb = mix(hardcoded, albedo.rgb, specularData.b);
         #endif
     #elif EMISSIVE_MAP == 2
-        if (specularData.a < 1.0) albedo.rgb *= max(clamp(specularData.a * 50.0, 1.0, 50.0)*emissionMult, 1.0);
+        if (specularData.a < 1.0) albedo.rgb *= max(clamp(specularData.a * 15.0, 1.0, 15.0)*emissionMult, 1.0);
         #ifdef EMISSIVE_FALLBACK
         vec3 hardcoded = albedo.rgb;
         calculateHardcodedEmissives(idCorrected, luminance, emissionMult, hardcoded);
