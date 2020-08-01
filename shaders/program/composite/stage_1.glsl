@@ -133,7 +133,7 @@ void main() {
                 #endif
             }
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
-            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(4.0));
+            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
 
             if (isEyeInWater == 1) {
                 skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
