@@ -122,7 +122,7 @@ void main() {
         #ifdef EMISSIVE_FALLBACK
         vec3 hardcoded = albedo.rgb;
         calculateHardcodedEmissives(idCorrected, luminance, emissionMult, hardcoded);
-        albedo.rgb = mix(hardcoded, albedo.rgb, specularData.a);
+        albedo.rgb = mix(hardcoded, albedo.rgb, specularData.a < 1.0 ? specularData.a : 0.0);
         #endif
     #endif
 
