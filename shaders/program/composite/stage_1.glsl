@@ -31,6 +31,7 @@ in vec3 ambientColor;
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
+uniform sampler2D colortex3;
 uniform sampler2D colortex4;
 uniform sampler2D colortex5;
 
@@ -63,16 +64,18 @@ uniform float frameTimeCounter;
 uniform ivec2 eyeBrightnessSmooth;
 
 uniform float eyeAltitude;
+uniform float sunAngle;
 
 uniform int isEyeInWater;
 
 // Includes
 #include "/lib/fragment/fraginfo.glsl"
+#include "/lib/vertex/distortion.glsl"
 #include "/lib/fragment/reflection.glsl"
 #include "/lib/util/noise.glsl"
 #include "/lib/fragment/atmosphere.glsl"
-#include "/lib/vertex/distortion.glsl"
 #include "/lib/fragment/volumetrics.glsl"
+#include "/lib/fragment/shading.glsl"
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
@@ -83,6 +86,9 @@ void main() {
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
+
+    vec4 shadowPos = shadowProjection * shadowModelView * worldPos;
+    shadowPos /= shadowPos.w;
 
     vec3 color = info.albedo.rgb;
 
@@ -111,47 +117,63 @@ void main() {
             }
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, 0.02);
             color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, fresnel);
-        }
-        #ifdef SPEC_REFLECTIONS
-        else if (roughness <= 0.225) {
-            #ifdef SSR
-            vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness*4.0, colortex0);
-            #else
-            vec4 reflectionColor = vec4(0.0);
-            #endif
-            vec3 skyReflectionColor = vec3(0.0);
-            if (reflectionColor.a < 0.5) {
-                #if WORLD == 0
+        } 
+        #ifdef SPECULAR
+        else {
+            vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz);
+            float specularStrength = ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), clamp(info.specular.g, 0.0, 0.898039), info.specular.r);
+            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
+            vec3 specularColor = vec3(0.0);
+            if (info.specular.g <= 0.898039) {
+                specularColor = (lightColor * specularStrength) * shadowsDiffuse;
+            } else {
+                specularColor = (lightColor * specularStrength * albedo) * shadowsDiffuse;
+            }
+            
+            color += specularColor;
 
-                skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
-                if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                    skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
-                } else if (eyeBrightnessSmooth.y <= 8) {
-                    skyReflectionColor *= 0.0;
+            #ifdef SPEC_REFLECTIONS
+            if (roughness <= 0.225) {
+                #ifdef SSR
+                vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness*4.0, colortex0);
+                #else
+                vec4 reflectionColor = vec4(0.0);
+                #endif
+                vec3 skyReflectionColor = vec3(0.0);
+                if (reflectionColor.a < 0.5) {
+                    #if WORLD == 0
+
+                    skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
+                    if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+                        skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
+                    } else if (eyeBrightnessSmooth.y <= 8) {
+                        skyReflectionColor *= 0.0;
+                    }
+
+                    #endif
+                }
+                float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
+
+                if (isEyeInWater == 1) {
+                    skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
                 }
 
-                #endif
-            }
-            float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
-            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
+                vec3 reflection = mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a);
 
-            if (isEyeInWater == 1) {
-                skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
+                if (info.specular.g <= 0.898039) {
+                    // dielectric, add reflection color to base color
+                    color += mix(vec3(0.0), reflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
+                } else {
+                    // metal
+                    vec3 metalReflection = reflection*albedo+specularColor;
+                    calculateFog(metalReflection, viewPos.xyz, depth0);
+                    color = mix(color, metalReflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
+                }
             }
-
-            vec3 reflection = mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a);
-
-            if (info.specular.g <= 0.898039) {
-                // dielectric, add reflection color to base color
-                color += mix(vec3(0.0), reflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
-            } else {
-                // metal
-                vec3 metalReflection = reflection*albedo;
-                calculateFog(metalReflection, viewPos.xyz, depth0);
-                color = mix(color, metalReflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
-            }
+            #endif
         }
         #endif
+        
     }
     #endif
 

@@ -120,6 +120,17 @@ float ggx(vec3 normal, vec3 svec, vec3 lvec, float f0, float smoothness) {
     return nDotL * D * F / (hDotL * hDotL * (1.0-k2) + k2);
 }
 
+vec3 getShadowsDiffuse(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
+    float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), info.normal, 1.0);
+    vec3 diffuseLight = vec3(diffuseStrength);
+
+    vec4 shadowLight = vec4(0.0);
+
+    if (diffuseStrength > 0.0) shadowLight = getShadows(info.coord, viewPos, undistortedShadowPos);
+
+    return min(diffuseLight, shadowLight.rgb);
+}
+
 vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
     // sky light & blocklight
     vec3 skyLight = ambientColor * info.lightmap.y;
@@ -135,20 +146,10 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     #elif WORLD == 0
 
-    float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), info.normal, 1.0);
-    vec3 diffuseLight = vec3(diffuseStrength);
-
-    vec4 shadowLight = vec4(0.0);
-
-    if (diffuseStrength > 0.0) shadowLight = getShadows(info.coord, viewPos, undistortedShadowPos);
+    vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos, undistortedShadowPos);
 
     // combine lighting
-    vec3 color = (min(diffuseLight, shadowLight.rgb)*lightColor)+skyLight+blockLight;
-
-    #ifdef SPECULAR
-    float specularStrength = ggx(info.normal, normalize(viewPos), normalize(shadowLightPosition), clamp(info.specular.g, 0.0, 0.898039), info.specular.r);
-    color += (lightColor * specularStrength) * min(diffuseLight, shadowLight.rgb);
-    #endif
+    vec3 color = (shadowsDiffuse*lightColor)+skyLight+blockLight;
 
     // subsurface scattering
     #ifdef SSS
