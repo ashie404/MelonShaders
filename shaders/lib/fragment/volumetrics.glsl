@@ -3,7 +3,7 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color) {
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / 8.0 * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / 8.0 * fract(frameTimeCounter * 4.0 + texture2D(noisetex, gl_FragCoord.xy * (1.0 / vec2(noiseTextureResolution))).r);
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
