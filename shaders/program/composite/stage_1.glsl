@@ -125,9 +125,9 @@ void main() {
             vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
             vec3 specularColor = vec3(0.0);
             if (info.specular.g <= 0.898039) {
-                specularColor = (lightColor * specularStrength) * shadowsDiffuse;
+                specularColor = (lightColor * specularStrength * (isEyeInWater == 1 ? exp(-waterCoeff * length(viewPos.xyz)) : vec3(1.0))) * shadowsDiffuse;
             } else {
-                specularColor = (lightColor * specularStrength * albedo) * shadowsDiffuse;
+                specularColor = (lightColor * specularStrength * albedo * (isEyeInWater == 1 ? exp(-waterCoeff * length(viewPos.xyz)) : vec3(1.0))) * shadowsDiffuse;
             }
             
             color += specularColor;
