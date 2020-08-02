@@ -139,8 +139,15 @@ void main() {
                 skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
             }
 
-            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+(skyReflectionColor), clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)))
-            *mix(vec3(1.0), albedo, info.specular.g <= 0.898039 ? 0.0 : 1.0);
+            vec3 reflection = mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor;
+
+            if (info.specular.g <= 0.898039) {
+                // dielectric, add reflection color to base color
+                color += mix(vec3(0.0), reflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
+            } else {
+                // metal
+                color = mix(color, reflection*albedo, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
+            }
         }
         #endif
     }
