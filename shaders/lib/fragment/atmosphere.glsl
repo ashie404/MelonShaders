@@ -175,13 +175,13 @@ vec4 calculateMoonSpot(vec3 viewVector, vec3 moonVector, float radius) {
     return vec4(moonDisk, float(cosTheta > cos(moonAngularRadius)));
 }
 
-vec3 getSkyColor(vec3 viewPos) {
+vec3 getSkyColor(vec3 viewPos, int atmosSteps) {
     vec3 skyColor = vec3(0.05, 0.1, 0.2);
 
     vec2 pid = vec2(0.0);
     vec3 skyTransmittance = vec3(0.0);
 
-    skyColor = calculateAtmosphere(skyColor, normalize(viewPos), normalize(upPosition), normalize(sunPosition), normalize(moonPosition), pid, skyTransmittance, 15);
+    skyColor = calculateAtmosphere(skyColor, normalize(viewPos), normalize(upPosition), normalize(sunPosition), normalize(moonPosition), pid, skyTransmittance, atmosSteps);
 
     skyColor = 1.0 - exp(-0.05 * skyColor);
 

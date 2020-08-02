@@ -105,7 +105,7 @@ void main() {
             if (reflectionColor.a < 0.5 && isEyeInWater == 0) {
                 #if WORLD == 0
 
-                skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
+                skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
                 calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
                 if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                     skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
@@ -120,6 +120,8 @@ void main() {
         } 
         #ifdef SPECULAR
         else {
+
+            // SPECULAR HIGHLIGHTS //
             vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz);
             float specularStrength = ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), clamp(info.specular.g, 0.0, 0.898039), info.specular.r);
             vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
@@ -132,18 +134,22 @@ void main() {
             
             color += specularColor;
 
+            // SPECULAR REFLECTIONS //
             #ifdef SPEC_REFLECTIONS
             if (roughness <= 0.225) {
+                // screenspace reflection calculation
                 #ifdef SSR
                 vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness*4.0, colortex0);
                 #else
                 vec4 reflectionColor = vec4(0.0);
                 #endif
+
+                // sky reflection calculation
                 vec3 skyReflectionColor = vec3(0.0);
                 if (reflectionColor.a < 0.5) {
                     #if WORLD == 0
 
-                    skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal));
+                    skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
                     if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
                         skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
                     } else if (eyeBrightnessSmooth.y <= 8) {
@@ -152,11 +158,12 @@ void main() {
 
                     #endif
                 }
-                float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
-
                 if (isEyeInWater == 1) {
                     skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
                 }
+
+                // combine reflection
+                float fresnel = fresnel_schlick(viewPos.xyz, info.normal, clamp(info.specular.g, 0.0, 0.898039));
 
                 vec3 reflection = mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a);
 
