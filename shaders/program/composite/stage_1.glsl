@@ -122,9 +122,10 @@ void main() {
         else {
 
             // SPECULAR HIGHLIGHTS //
+            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
+            #if WORLD == 0
             vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz);
             float specularStrength = ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), clamp(info.specular.g, 0.0, 0.898039), info.specular.r);
-            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
             vec3 specularColor = vec3(0.0);
             if (info.specular.g <= 0.898039) {
                 specularColor = (lightColor * specularStrength * (isEyeInWater == 1 ? exp(-waterCoeff * length(viewPos.xyz)) : vec3(1.0))) * shadowsDiffuse;
@@ -133,6 +134,7 @@ void main() {
             }
             
             color += specularColor;
+            #endif
 
             // SPECULAR REFLECTIONS //
             #ifdef SPEC_REFLECTIONS
@@ -172,7 +174,11 @@ void main() {
                     color += mix(vec3(0.0), reflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
                 } else {
                     // metal
+                    #if WORLD == 0
                     vec3 metalReflection = reflection*albedo+specularColor;
+                    #else
+                    vec3 metalReflection = reflection*albedo;
+                    #endif
                     calculateFog(metalReflection, viewPos.xyz, depth0);
                     color = mix(color, metalReflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
                 }
