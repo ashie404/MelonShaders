@@ -113,10 +113,14 @@ void main() {
                     skyReflectionColor *= 0.0;
                 }
 
+                #else
+                
+                skyReflectionColor = fogColor*0.5;
+
                 #endif
             }
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, 0.02);
-            color += mix(vec3(0.0), mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor, fresnel);
+            color += mix(vec3(0.0), mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a), fresnel);
         } 
         #ifdef SPECULAR
         else {
@@ -157,6 +161,10 @@ void main() {
                     } else if (eyeBrightnessSmooth.y <= 8) {
                         skyReflectionColor *= 0.0;
                     }
+
+                    #else
+
+                    skyReflectionColor = fogColor*0.5;
 
                     #endif
                 }
