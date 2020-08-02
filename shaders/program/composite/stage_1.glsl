@@ -146,7 +146,9 @@ void main() {
                 color += mix(vec3(0.0), reflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
             } else {
                 // metal
-                color = mix(color, reflection*albedo, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
+                vec3 metalReflection = reflection*albedo;
+                calculateFog(metalReflection, viewPos.xyz, depth0);
+                color = mix(color, metalReflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
             }
         }
         #endif

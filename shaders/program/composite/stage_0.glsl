@@ -139,15 +139,6 @@ void main() {
     }
 
     calculateFog(color, viewPos.xyz, depth0);
-
-    // draw water fog
-    if (isEyeInWater == 1) {
-        vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
-        color *= transmittance;
-        #ifdef VL
-        color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/12.0*mix(1.0, 0.15, clamp01(times.w))*VL_DENSITY);
-        #endif
-    }
     
     colorOut = color;
 }
