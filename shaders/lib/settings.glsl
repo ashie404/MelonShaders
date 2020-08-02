@@ -86,7 +86,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define TAA_BLEND 0.95 // How much to blend between current frame info and TAA history. Higher numbers will make the image smoother, but blurrier in motion. [0.0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
 
 // camera settings
-#define DOF
+//#define DOF
 #define DOF_QUALITY 2 // Quality of depth of field. Higher quality is laggier. [1 2 4 8]  
 #define APERTURE 1.0 // How blurry the DOF is. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
