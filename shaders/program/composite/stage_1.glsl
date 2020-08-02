@@ -139,7 +139,7 @@ void main() {
                 skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
             }
 
-            vec3 reflection = mix(vec3(0.0), reflectionColor.rgb, reflectionColor.a)+skyReflectionColor;
+            vec3 reflection = mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a);
 
             if (info.specular.g <= 0.898039) {
                 // dielectric, add reflection color to base color
