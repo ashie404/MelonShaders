@@ -83,7 +83,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 
 #define TAA // Temporal anti-aliasing. Helps smooth out jagged edges and reduce noise in noisy effects. Not recommended to turn off.
 #define TAA_NCLAMP // TAA neighborhood clamping. Prevents ghosting. Not recommended to turn off.
-#define TAA_BLEND 0.95 // How much to blend between current frame info and TAA history. Higher numbers will make the image smoother, but blurrier in motion. [0.0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
+#define TAA_BLEND 0.8 // How much to blend between current frame info and TAA history. Higher numbers will make the image smoother, but blurrier in motion. [0.0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
 
 // camera settings
 //#define DOF
