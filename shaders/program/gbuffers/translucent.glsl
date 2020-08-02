@@ -50,7 +50,7 @@ void main() {
     albedo.rgb = toLinear(albedo.rgb);
 
     // get specular
-    vec4 specularData = texture2D(specular, texcoord);
+    vec4 specularData = texture2DLod(specular, texcoord, 0.0);
 
     // get normal map
     vec3 normalData = texture2D(normals, texcoord).xyz * 2.0 - 1.0;

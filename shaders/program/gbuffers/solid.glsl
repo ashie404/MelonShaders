@@ -72,7 +72,7 @@ void main() {
     albedo.rgb = toLinear(albedo.rgb);
 
     // get specular
-    vec4 specularData = texture2D(specular, texcoord);
+    vec4 specularData = texture2DLod(specular, texcoord, 0.0);
 
     #ifndef NO_PUDDLES
     #ifdef RAIN_PUDDLES
