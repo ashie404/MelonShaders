@@ -115,7 +115,7 @@ void main() {
 
                 // calculate water foam/lines color
                 vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;
-                foamColor = mix(vec3(0.05), foamColor, eyeBrightnessSmooth.y/240.0);
+                foamColor = mix(vec3(0.025), foamColor, info.lightmap.y);
 
                 // water foam
                 #ifdef WAVE_FOAM

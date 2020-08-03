@@ -107,11 +107,7 @@ void main() {
 
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
                 calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
-                if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                    skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
-                } else if (eyeBrightnessSmooth.y <= 8) {
-                    skyReflectionColor *= 0.0;
-                }
+                skyReflectionColor *= info.lightmap.y;
 
                 #else
                 
@@ -156,11 +152,7 @@ void main() {
                     #if WORLD == 0
 
                     skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
-                    if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                        skyReflectionColor *= clamp01((eyeBrightnessSmooth.y-9)/55.0);
-                    } else if (eyeBrightnessSmooth.y <= 8) {
-                        skyReflectionColor *= 0.0;
-                    }
+                    skyReflectionColor *= info.lightmap.y;
 
                     #else
 
