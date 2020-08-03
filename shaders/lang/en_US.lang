@@ -51,6 +51,8 @@ option.SSR=Screen Space Reflections
 option.MICROFACET_REFL=Microfacet Reflections
 option.SPEC_REFLECTIONS=Specular Reflections
 
+option.HEAT_DISTORT=Heat Distortion
+
 screen.RAIN=Rain Effects
 option.RAIN_PUDDLES=Rain Puddles
 option.PUDDLE_MULT=Puddles Multiplier

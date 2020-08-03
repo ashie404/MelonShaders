@@ -56,6 +56,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 //#define WHITEWORLD
 #define NIGHT_DESAT // Whether to desaturate colors at night or not.
 //#define TRANS_COMPAT // Translucents compatibility mode. Changes the blending mode of translucents from multiply to mix (more like vanilla). Can fix certain mods that use translucents, or resource packs.
+#define HEAT_DISTORT // Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.
 
 // rain effects
 #define RAIN_PUDDLES // When rainy, objects will appear more wet. Requires specular and reflections to be enabled to work.

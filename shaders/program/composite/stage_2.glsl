@@ -31,19 +31,49 @@ uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 uniform sampler2D depthtex2;
 
+uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferModelViewInverse;
+
+uniform vec3 cameraPosition;
+
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float frameTimeCounter;
 uniform float centerDepthSmooth;
+
+// Includes
+#include "/lib/util/noise.glsl"
 
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
+    vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
+    float depth0 = texture2D(depthtex0, texcoord).r;
+
+    vec4 screenPos = vec4(texcoord, depth0, 1.0) * 2.0 - 1.0;
+    vec4 viewPos = gbufferProjectionInverse * screenPos;
+    viewPos /= viewPos.w;
+    vec4 worldPos = gbufferModelViewInverse * viewPos;
+
+    #ifndef DOF
+    #ifdef HEAT_DISTORT
+
+    #if WORLD == -1
+    float distortionLevel = clamp(length(viewPos.xyz)/2.0, 0.0, 12.0);
+    float distortionNoise = Perlin3D((worldPos.xyz+cameraPosition)+(frameTimeCounter/2.0));
+    vec2 distortedCoord = texcoord+(distortionNoise*oneTexel*distortionLevel);
+    if (texture2D(depthtex0, distortedCoord).r >= depth0-0.0005 && texture2D(depthtex0, distortedCoord).r <= depth0+0.0005) {
+        color = texture2D(colortex0, distortedCoord).rgb;
+    } 
+    #endif
+
+    #endif
+    #endif
 
     #ifdef DOF
 
     float currentDepth = texture2D(depthtex1, texcoord).r;
 
-    if (currentDepth >= texture2D(depthtex2, texcoord).r || currentDepth != texture2D(depthtex0, texcoord).r) {
-        vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
+    if (currentDepth >= texture2D(depthtex2, texcoord).r || currentDepth != depth0) {
 
         int dofQuality = DOF_QUALITY*4;
 
