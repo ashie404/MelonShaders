@@ -58,10 +58,12 @@ void main() {
     #ifdef HEAT_DISTORT
 
     #if WORLD == -1
-    float distortionLevel = clamp(length(viewPos.xyz)/2.0, 0.0, 12.0);
+    float distortionLevel = clamp(length(viewPos.xyz), 0.0, 4.0);
     float distortionNoise = Perlin3D((worldPos.xyz+cameraPosition)+(frameTimeCounter/2.0));
-    vec2 distortedCoord = texcoord+(distortionNoise*oneTexel*distortionLevel);
-    if (texture2D(depthtex0, distortedCoord).r >= depth0-0.0005 && texture2D(depthtex0, distortedCoord).r <= depth0+0.0005) {
+    vec2 distortedCoord = texcoord+(distortionNoise*oneTexel*distortionLevel*(vec2(viewWidth, viewHeight)/vec2(1280.0, 720.0)));
+
+    float distortedDepth = texture2D(depthtex0, distortedCoord).r;
+    if (distortedDepth >= depth0-0.0005 && distortedDepth <= depth0+0.0005) {
         color = texture2D(colortex0, distortedCoord).rgb;
     } 
     #endif
