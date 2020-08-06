@@ -36,7 +36,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
             color = mix(color, fogCol2, clamp01(length(viewPos)/196.0*FOG_DENSITY));
         }
         #ifdef VL
-        color += calculateVL(viewPos, lightColor*fogCol/8.0*mix(1.0, 0.15, clamp01(times.y))*VL_DENSITY);
+        color += calculateVL(viewPos, lightColor*fogCol/12.0*mix(1.0, 0.05, clamp01(times.y))*VL_DENSITY);
         #endif
     }
     #elif WORLD == -1
