@@ -58,6 +58,7 @@ option.REFLECTIONS=Reflections
 option.SSR=Screen Space Reflections
 option.MICROFACET_REFL=Microfacet Reflections
 option.SPEC_REFLECTIONS=Specular Reflections
+option.ROUGH_REFL_SAMPLES=Rough Reflection Samples
 
 option.HEAT_DISTORT=Heat Distortion
 

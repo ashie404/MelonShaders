@@ -58,6 +58,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define REFLECTIONS // Enables sky reflections. 
 #define SSR // Screenspace reflections. Has no effect if reflections are disabled.
 #define MICROFACET_REFL // Whether to use microfacet distribution on rough reflections or not. When off, uses LODs for rough reflections (will perform slightly better, but won't look as good)
+#define ROUGH_REFL_SAMPLES 2 // When microfacet rough reflections are enabled, this controls how many samples there are. [1 2 3 4 5 6]
 //#define WHITEWORLD
 #define NIGHT_DESAT // Whether to desaturate colors at night or not.
 //#define TRANS_COMPAT // Translucents compatibility mode. Changes the blending mode of translucents from multiply to mix (more like vanilla). Can fix certain mods that use translucents, or resource packs.
