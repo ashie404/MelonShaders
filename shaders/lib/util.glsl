@@ -1,19 +1,28 @@
 /*
-    Melon Shaders by June
+    Melon Shaders
+    By June (juniebyte)
     https://juniebyte.cf
 */
 
 /*
-const int colortex0Format = RGBA16F;
-const int colortex1Format = RGBA32F;
-const int colortex4Format = RGBA16F;
-const int colortex5Format = RGBA16F;
-const int colortex6Format = RGBA16F;
+const int colortex0Format = R11F_G11F_B10F; // Color buffer
+const int colortex1Format = RGBA16; // Lightmaps, material mask, albedo alpha, specular map (gbuffers->final)
+const int colortex2Format = R11F_G11F_B10F; // Atmosphere (deferred->composite1), bloom (composite2->final)
+const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1->final)
+const int colortex4Format = RGBA16; // Normals (gbuffers->final)
+const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
 const bool colortex6Clear = false;
-const bool colortex4MipmapEnabled = true;
 const float eyeBrightnessSmoothHalflife = 4.0;
 */
 
+#define clamp01(p) (clamp(p, 0.0, 1.0))
+#define log10(x) log(x) / log(10.0)
+
+const float PI = 3.1415926535897;
+const float rPI = 1.0 / PI;
+const float rLOG2 = 1.0 / log(2.0);
+
+// Dithering functions
 float bayer2(vec2 a){
     a = floor(a);
     return fract(dot(a, vec2(0.5, a.y * 0.75)));
@@ -27,40 +36,23 @@ float bayer2(vec2 a){
 #define bayer128(a) (bayer64( 0.5 * (a)) * 0.25 + bayer2(a))
 #define bayer256(a) (bayer128(0.5 * (a)) * 0.25 + bayer2(a))
 
-#define clamp01(p) (clamp(p, 0.0, 1.0))
-#define log10(x) log(x) / log(10.0)
-
-uniform float screenBrightness;
-const float PI = 3.1415926535897;
-
-void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpos, out vec3 ambient, out vec3 light, out vec4 times) {
-
-    float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
-    float noon     = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
-    float sunset   = ((clamp(angle, 0.35, 0.48)-0.35) / 0.13   - (clamp(angle, 0.50, 0.53)-0.50) / 0.03);
-    float night    = ((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03);\
-
-    times = vec4(sunrise, noon, sunset, night);
-
-    vec3 sunriseAmbColor = vec3(0.33, 0.28, 0.23)*0.5;
-    vec3 noonAmbColor    = vec3(0.37, 0.39, 0.58)*0.75;
-    vec3 sunsetAmbColor  = vec3(0.33, 0.28, 0.23)*0.5;
-    vec3 nightAmbColor   = vec3(0.19, 0.21, 0.29)*0.075;
-
-    vec3 sunriseLightColor = vec3(1.5, 0.6, 0.15)*2.5;
-    vec3 noonLightColor    = vec3(1.0, 0.99, 0.96)*5.0;
-    vec3 sunsetLightColor  = vec3(1.5, 0.6, 0.15)*2.5;
-    vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.15;
-
-    ambient = ((sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor)) + (night * nightAmbColor);
-
-    if (all(equal(slpos, spos))) {
-      light = ((sunrise * sunriseLightColor) + (noon * noonLightColor) + (sunset * sunsetLightColor) + (night * nightLightColor)) * clamp(1.0-rain, 0.1, 1.0);
-    } else {
-      light = nightLightColor*clamp(1.0-rain, 0.1, 1.0);
-    }
+//Modified from: iq's "Integer Hash - III" (https://www.shadertoy.com/view/4tXyWN)
+//Faster than "full" xxHash and good quality
+uint baseHash(uvec2 p)
+{
+    p = 1103515245U*((p >> 1U)^(p.yx));
+    uint h32 = 1103515245U*((p.x)^(p.y>>3U));
+    return h32^(h32 >> 16);
 }
 
+vec3 hash32(uvec2 x)
+{
+    uint n = baseHash(x);
+    uvec3 rz = uvec3(n, n*16807U, n*48271U);
+    return vec3((rz >> 1) & uvec3(0x7fffffffU))/float(0x7fffffff);
+}
+
+// luma functions
 float luma(vec3 color) {
   return dot(color, vec3(0.299, 0.587, 0.114));
 }
@@ -73,54 +65,91 @@ float remap(float val, float min1, float max1, float min2, float max2) {
   return min2 + (val - min1) * (max2 - min2) / (max1 - min1);
 }
 
-float fresnel(float bias, float scale, float power, vec3 I, vec3 N)
+// light color
+void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpos, out vec3 ambient, out vec3 light, out vec4 times) {
+
+    float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
+    float noon     = ((clamp(angle, 0.02, 0.15)-0.02) / 0.13   - (clamp(angle, 0.35, 0.48)-0.35) / 0.13);
+    float sunset   = ((clamp(angle, 0.35, 0.48)-0.35) / 0.13   - (clamp(angle, 0.50, 0.53)-0.50) / 0.03);
+    float night    = ((clamp(angle, 0.50, 0.53)-0.50) / 0.03   - (clamp(angle, 0.96, 1.00)-0.96) / 0.03);
+
+    times = vec4(sunrise, noon, sunset, night);
+
+    vec3 sunriseAmbColor = vec3(0.33, 0.28, 0.23)*0.5;
+    vec3 noonAmbColor    = vec3(0.37, 0.39, 0.58)*0.95;
+    vec3 sunsetAmbColor  = vec3(0.33, 0.28, 0.23)*0.5;
+    vec3 nightAmbColor   = vec3(0.19, 0.21, 0.29)*0.1;
+
+    vec3 sunriseLightColor = vec3(1.5, 0.5, 0.15)*2.5;
+    vec3 noonLightColor    = vec3(1.0, 0.99, 0.96)*4.0;
+    vec3 sunsetLightColor  = vec3(1.5, 0.5, 0.15)*2.5;
+    vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.1;
+
+    ambient = ((sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor)) + (night * nightAmbColor);
+
+    if (all(equal(slpos, spos))) {
+      light = ((sunrise * sunriseLightColor) + (noon * noonLightColor) + (sunset * sunsetLightColor) + (night * nightLightColor)) * clamp(1.0-rain, 0.1, 1.0);
+    } else {
+      light = nightLightColor*clamp(1.0-rain, 0.1, 1.0);
+    }
+}
+
+// fresnel
+float fresnel_schlick(in vec3 viewPos, in vec3 normal, in float F0)
 {
-    return bias + scale * pow(1.0 + dot(I, N), power);
+    return F0 + (1.0 - F0) * pow(1.0 - clamp01(dot(normal, reflect(normalize(viewPos), normal))), 5.0);
 }
 
-// encoding/decoding
+// Encoding & Decoding functions
 
-#ifdef FRAG
-float encodeNormals(vec3 a) {
-    vec2 spheremap = a.xy / sqrt( a.z * 8.0 + 8.0 ) + 0.5;
-    ivec2 bf = ivec2(spheremap*255.0);
-    return float( bf.x|(bf.y<<8) ) / 65535.0;
+#ifdef FSH
+
+// lightmap encoding/decoding
+float encodeLightmaps(vec2 a){
+    ivec2 bf = ivec2(a*255.);
+    return float( bf.x|(bf.y<<8) ) / 65535.;
 }
 
-vec3 decodeNormals(float a) {
-    int bf = int(a*65535.0);
-    vec2 b = vec2(bf%256, bf>>8) / 63.75 - 2.0;
-    float c = dot(b, b);
-    return vec3( b * sqrt(1.0-c*0.25), 1.0 - c * 0.5 );
+vec2 decodeLightmaps(float a){
+    int bf = int(a*65535.);
+    return vec2(bf%256, bf>>8) / 255.;
 }
 
-float encodeLightmaps(vec2 a) {
-    ivec2 bf = ivec2(a*255.0);
-    return float( bf.x|(bf.y<<8) ) / 65535.0;
+// color encoding/decoding
+#define m vec3(31,63,31)
+float encodeColor(vec3 a){
+    a += (clamp01(bayer16(gl_FragCoord.xy))-.5) / m;
+    a = clamp(a, 0., 1.);
+    ivec3 b = ivec3(a*m);
+    return float( b.r|(b.g<<5)|(b.b<<11) ) / 65535.;
+}
+#undef m
+vec3 decodeColor(float a){
+    int bf = int(a*65535.);
+    return vec3(bf%32, (bf>>5)%64, bf>>11) / vec3(31,63,31);
 }
 
-vec2 decodeLightmaps(float a) {
-    int bf = int(a*65535.0);
-    return vec2(bf%256, bf>>8) / 255.0;
-}
-
-const vec3 bits = vec3( 5, 6, 5 );
-const vec3 values = exp2( bits );
-const vec3 rvalues = 1.0 / values;
-const vec3 maxValues = values - 1.0;
-const vec3 rmaxValues = 1.0 / maxValues;
-const vec3 positions = vec3( 1.0, values.x, values.x*values.y );
-const vec3 rpositions = 65535.0 / positions;
-
-// vec3 encoding/decoding
-
-float encodeVec3(vec3 a) {
-    a += (clamp01(bayer4(gl_FragCoord.xy))-0.5) / maxValues;
-    a = clamp(a, 0.0, 1.0);
-    return dot( round( a * maxValues ), positions ) / 65535.0;
-}
-
-vec3 decodeVec3(float a) {
-    return mod( a * rpositions, values ) * rmaxValues;
-}
 #endif
+
+float interleavedGradientNoise(vec2 position_screen)
+{
+  vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+  return fract(magic.z * fract(dot(position_screen, magic.xy)));
+}
+
+vec2 vogelDiskSample(int sampleIndex, int samplesCount, float phi)
+{
+  float r = sqrt(sampleIndex + 0.5) / sqrt(samplesCount);
+  float theta = sampleIndex * 2.4 + phi;
+
+  float sinTheta = sin(theta);
+  float cosTheta = cos(theta);
+  
+  return vec2(r * cosTheta, r * sinTheta);
+}
+
+float getShadowBias(vec3 viewPos, float angle) {
+  float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
+  float sunset   = ((clamp(angle, 0.35, 0.48)-0.35) / 0.13   - (clamp(angle, 0.50, 0.53)-0.50) / 0.03);
+  return mix(0.0001, 0.0005, clamp01((length(viewPos)/32.0)+clamp01(sunrise/2.0+sunset/2.0)));
+}

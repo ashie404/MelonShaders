@@ -1,5 +1,6 @@
-/* 
-    Melon Shaders by June
+/*
+    Melon Shaders
+    By June (juniebyte)
     https://juniebyte.cf
 */
 
@@ -8,29 +9,33 @@
 
 // FRAGMENT SHADER //
 
-#ifdef FRAG
+#ifdef FSH
+
+/*
+const bool colortex2MipmapEnabled = true;
+*/
 
 /* DRAWBUFFERS:0 */
-layout (location = 0) out vec4 colorOut;
+layout (location = 0) out vec3 colorOut;
 
+// Inputs from vertex shader
 in vec2 texcoord;
 
+// Uniforms
 uniform sampler2D colortex0;
-uniform sampler2D colortex4;
-uniform sampler2D colortex6;
-
-uniform sampler2D depthtex0;
+uniform sampler2D colortex2;
 
 uniform float viewWidth;
 uniform float viewHeight;
 
-#include "/lib/post/bloomTiles.glsl"
+// Includes
+#include "/lib/post/bloom.glsl"
 
 void main() {
-    vec4 color = texture2D(colortex0, texcoord);
+    vec3 color = texture2D(colortex0, texcoord).rgb;
 
     #ifdef BLOOM
-    // get all bloom tiles and calculate them with final color
+    // get all bloom tiles
     vec3 bloom = vec3(0.0);
     bloom += getBloomTile(vec2(0.0,0.0), 2.0, texcoord);
     bloom += getBloomTile(vec2(0.3,0.0), 3.0, texcoord);
@@ -38,7 +43,7 @@ void main() {
     bloom += getBloomTile(vec2(0.6,0.3), 5.0, texcoord);
     bloom += getBloomTile(vec2(0.6,0.6), 6.0, texcoord);
     bloom /= 5.0;
-    color.rgb = mix(color.rgb, bloom, clamp01(BLOOM_STRENGTH));
+    color += mix(vec3(0.0), bloom, clamp01(BLOOM_STRENGTH));
     #endif
 
     colorOut = color;
@@ -48,7 +53,7 @@ void main() {
 
 // VERTEX SHADER //
 
-#ifdef VERT
+#ifdef VSH
 
 out vec2 texcoord;
 

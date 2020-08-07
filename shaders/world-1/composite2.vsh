@@ -1,10 +1,5 @@
 #version 450 compatibility
 
-/* 
-    Melon Shaders by June
-    https://juniebyte.cf
-*/
-
-#define VERT
+#define VSH
 #define WORLD -1
 #include "/program/composite/stage_2.glsl"

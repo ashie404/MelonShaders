@@ -1,5 +1,6 @@
-/* 
-    Melon Shaders by June
+/*
+    Melon Shaders
+    By June (juniebyte)
     https://juniebyte.cf
 */
 
@@ -8,39 +9,38 @@
 
 // FRAGMENT SHADER //
 
-#ifdef FRAG
+#ifdef FSH
 
-/* DRAWBUFFERS:01 */
-layout (location = 0) out vec4 albedoOut; // albedo output
-layout (location = 1) out vec4 lmNormalMatSpecOut; // lightmap, normal map, material mask, and specular map output
+/* DRAWBUFFERS:014 */
+layout (location = 0) out vec4 albedoOut;
+layout (location = 1) out vec4 dataOut;
+layout (location = 2) out vec4 normalOut;
 
-// uniforms
+// Inputs from vertex shader
+in vec2 texcoord;
+in vec2 lmcoord;
+in vec3 normal;
+in mat3 tbn;
+in float id;
+in vec4 glcolor;
+in vec4 worldSpace;
+
+// Uniforms
 uniform sampler2D texture;
-uniform sampler2D normals;
 uniform sampler2D specular;
+uniform sampler2D normals;
+uniform float sunAngle;
 
 uniform float rainStrength;
-uniform float sunAngle;
-uniform float viewWidth;
-uniform float viewHeight;
+
+uniform vec3 cameraPosition;
 
 uniform mat4 gbufferModelViewInverse;
 
-// inputs from vertex
-in float id;
-in vec2 texcoord;
-in vec2 lmcoord;
-in vec4 glcolor;
-in mat3 tbn;
-in vec3 viewPos;
-in vec3 normal;
+// Includes
+#include "/lib/util/noise.glsl"
 
-in vec2 mintex;
-in vec2 maxtex;
-
-#include "/lib/dirLightmap.glsl"
-#include "/lib/xbrz.glsl"
-
+// other stuff
 vec3 toLinear(vec3 srgb) {
     return mix(
         srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
@@ -49,156 +49,181 @@ vec3 toLinear(vec3 srgb) {
     );
 }
 
-vec4 getTangentNormals(vec2 coord) {
-    vec4 normal = texture2D(normals, coord) * 2.0 - 1.0;
-    return normal;
+void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
+    if      (id == 50 ) albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0);
+    else if (id == 51 ) albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0);
+    else if (id == 83 ) albedo *= max(clamp01(pow(luminance, 8))* 62.5*emissionMult, 1.0);
+    else if (id == 100) albedo *= max(clamp01(pow(luminance, 8))*100.0*emissionMult, 1.0);
+    else if (id == 105) albedo *= max(clamp01(pow(luminance, 4))*100.0*emissionMult, 1.0);
+    else if (id == 110) albedo *= max(clamp01(pow(luminance, 8))* 50.0*emissionMult, 1.0);
+    else if (id == 120) albedo *= max(25.0*emissionMult, 1.0);
+    else if (id == 122) albedo *= max(12.5*emissionMult, 1.0);
 }
 
 void main() {
-    // correct floating point precision errors
-    int correctedId = int(id + 0.5);
 
-    // get specular
-
-    vec4 specularData = texture2D(specular, texcoord);
+    int idCorrected = int(id + 0.5);
 
     // get albedo
+    vec4 albedo = texture2D(texture, texcoord) * glcolor;
 
-    #ifdef XBRZ_UPSCALE
-    #ifndef WEATHER
-    vec2 textureResolution = textureSize(texture, 0);
-    vec4 albedo = four_xBRZ(textureResolution, texcoord, texture, mintex, maxtex);
-    #else
-    vec4 albedo = texture2D(texture, texcoord);
-    #endif
-    #else
-    vec4 albedo = texture2D(texture, texcoord);
-    #endif
+    float luminance = luma(albedo.rgb);
 
-    float luminance = luma(albedo);
-
-    albedo *= glcolor;
     albedo.rgb = toLinear(albedo.rgb);
-    // emissive handling
-    if (EMISSIVE_MAP == 0) {
-        if      (correctedId == 50 )  albedo.rgb *= clamp01(pow(luminance, 6))*60.0;
-        else if (correctedId == 51 )  albedo.rgb *= clamp01(pow(luminance, 6))*75.0;
-        else if (correctedId == 83 )  albedo.rgb *= clamp01(pow(luminance, 8))*62.5;
-        else if (correctedId == 100)  albedo.rgb *= clamp01(pow(luminance, 8))*100.0;
-        else if (correctedId == 105)  albedo.rgb *= clamp01(pow(luminance, 4))*100.0;
-        else if (correctedId == 110)  albedo.rgb *= clamp01(pow(luminance, 8))*50.0;
-        else if (correctedId == 120)  albedo.rgb *= 25;
-        else if (correctedId == 122)  albedo.rgb *= 12.5;
-    } else if (EMISSIVE_MAP == 1 && specularData.b > 0.0) {
-        albedo.rgb *= clamp(specularData.b * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
-    } else if (EMISSIVE_MAP == 2 && specularData.a < 1.0) {
-        albedo.rgb *= clamp(specularData.a * (100*EMISSIVE_MAP_STRENGTH), 1.0, 100.0*EMISSIVE_MAP_STRENGTH);
+
+    // get specular
+    vec4 specularData = texture2DLod(specular, texcoord, 0.0);
+
+    #ifndef NO_PUDDLES
+    #ifdef RAIN_PUDDLES
+    if (rainStrength > 0.0 && lmcoord.y > 0.25) {
+        vec3 worldPos = worldSpace.xyz+cameraPosition;
+        #ifdef STRETCH_PUDDLES_Y
+        worldPos.y = 0.0;
+        #endif
+        #ifdef POROSITY
+        if (specularData.b <= 0.251 && EMISSIVE_MAP != 1) {
+            albedo.rgb = mix(albedo.rgb, mix(albedo.rgb, mix(vec3(luma(albedo.rgb*0.75)), albedo.rgb*0.75, 1.0+(1.0-clamp01(cellular(worldPos)*PUDDLE_MULT))), specularData.b/0.251), rainStrength);
+            specularData.r = mix(specularData.r, mix(clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), specularData.r, specularData.b/0.251), rainStrength);
+        } else {
+            specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), rainStrength);
+        }
+        #else
+        specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), rainStrength);
+        #endif
+
+        specularData.r = clamp01(specularData.r);
     }
+    #endif
+    #endif
+
+    // emissives handling
+
+    #if WORLD == 0
+    float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
+    float emissionMult = mix(0.15, 1.5, clamp01(night+clamp01(1.0-lmcoord.y)))*EMISSIVE_STRENGTH;
+    #elif WORLD == -1
+    float emissionMult = EMISSIVE_STRENGTH;
+    #elif WORLD == 1
+    float emissionMult = EMISSIVE_STRENGTH;
+    #endif
+
+    #if EMISSIVE_MAP == 0
+        calculateHardcodedEmissives(idCorrected, luminance, emissionMult, albedo.rgb);
+    #elif EMISSIVE_MAP == 1
+        if (specularData.b > 0.0) albedo.rgb *= max(clamp(specularData.b * 15.0, 1.0, 15.0)*emissionMult, 1.0);
+        #ifdef EMISSIVE_FALLBACK
+        vec3 hardcoded = albedo.rgb;
+        calculateHardcodedEmissives(idCorrected, luminance, emissionMult, hardcoded);
+        albedo.rgb = mix(hardcoded, albedo.rgb, specularData.b);
+        #endif
+    #elif EMISSIVE_MAP == 2
+        if (specularData.a < 1.0) albedo.rgb *= max(clamp(specularData.a * 15.0, 1.0, 15.0)*emissionMult, 1.0);
+        #ifdef EMISSIVE_FALLBACK
+        vec3 hardcoded = albedo.rgb;
+        calculateHardcodedEmissives(idCorrected, luminance, emissionMult, hardcoded);
+        albedo.rgb = mix(hardcoded, albedo.rgb, specularData.a < 1.0 ? specularData.a : 0.0);
+        #endif
+    #endif
 
     #ifdef SPIDEREYES
-    albedo.rgb *= 375.0;
+    albedo.rgb *= 500.0*emissionMult;
     #endif
 
-
-    // determine material mask
-    
-    float matMask = 0.0;
-    // subsurf scattering id is 20, 21 and 23
-    if (correctedId == 20 || correctedId == 21 || correctedId == 23) {
-        matMask = 1.0;
-    } else if (correctedId == 50||correctedId == 51||correctedId == 83||correctedId == 100||correctedId == 105||correctedId == 110||correctedId == 120||correctedId == 122) {
-        // emissive material mask
-        matMask = 4.0;
-    } else if ((EMISSIVE_MAP == 1 && specularData.b > 0.0) || (EMISSIVE_MAP == 2 && specularData.a < 1.0)) {
-        matMask = 4.0;
+    // get normal map
+    vec3 normalData = texture2D(normals, texcoord).xyz * 2.0 - 1.0;
+    if (all(equal(normalData, vec3(0.0)))) {
+        // invalid normal, reset to default normal
+        normalData = normal;
+    } else {
+        #ifdef REBUILD_Z
+        normalData.z = sqrt(clamp01(1.0 - dot(normalData.xy, normalData.xy)));
+        #endif
+        normalData = normalize(normalData * tbn);
     }
     
-    // get normals
 
-    #ifdef NO_NORMALMAP
-    vec3 normalData = normal;
-    #else
-    vec3 normalData = getTangentNormals(texcoord).xyz;
-    normalData = normalize(normalData * tbn);
-    #endif
+    // get material mask
 
-    // get lightmap
-    vec2 lm = lmcoord.xy;
-    #ifdef DIRECTIONAL_LIGHTMAP
-    mat3 lmtbn = getLightmapTBN(viewPos);
+    int matMask = 0;
 
-    lm.x = directionalLightmap(lm.x, normalData, lmtbn);
-    lm.y = directionalLightmap(lm.y, normalData, lmtbn);
-    #endif
+    if (idCorrected == 20 || idCorrected == 21 || idCorrected == 23) {
+        matMask = 1;
+    }
 
     // output everything
-
-    albedoOut = albedo;
-    lmNormalMatSpecOut = vec4(
-        encodeLightmaps(clamp01(lm)), 
-        encodeNormals(clamp(normalData, -1.0, 1.0)), 
-        encodeLightmaps(vec2(matMask/10.0, 1.0)), 
-        encodeVec3(specularData.rgb)
+	albedoOut = albedo;
+    dataOut = vec4(
+        encodeLightmaps(clamp01(lmcoord-0.03125)), // lightmap
+        encodeLightmaps(vec2(matMask/10.0, albedo.a)), // material mask and albedo alpha
+        encodeLightmaps(specularData.gb), // specular green and blue channel
+        specularData.r // specular red channel
     );
+    normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(albedo.rgb));
 }
 
 #endif
 
 // VERTEX SHADER //
 
-#ifdef VERT
+#ifdef VSH
 
-// outputs to fragment
-out vec2 lmcoord;
+// Outputs to fragment shader
 out vec2 texcoord;
-out vec4 glcolor;
+out vec2 lmcoord;
+out vec3 normal;
+out vec4 worldSpace;
 out mat3 tbn;
 out float id;
+out vec4 glcolor;
 
-out vec2 mintex;
-out vec2 maxtex;
-
-// uniforms
+// Uniforms
 attribute vec3 mc_Entity;
-attribute vec4 at_tangent;
 attribute vec3 mc_midTexCoord;
+attribute vec4 at_tangent;
 
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
+
 uniform vec3 cameraPosition;
+
 uniform float frameTimeCounter;
+uniform float viewWidth;
+uniform float viewHeight;
 
-out vec3 normal;
-out vec3 viewPos;
+uniform int frameCounter;
 
-#include "/lib/noise.glsl"
+// Includes
+#include "/lib/util/noise.glsl"
+#include "/lib/util/taaJitter.glsl"
 
 void main() {
-	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-	lmcoord  = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
-	glcolor = gl_Color;
+    texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+    lmcoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
+
+    normal = normalize(gl_NormalMatrix * gl_Normal);
+    vec3 tangent = gl_NormalMatrix * (at_tangent.xyz / at_tangent.w);
+    tbn = transpose(mat3(tangent, cross(tangent, normal), normal));
+
     id = mc_Entity.x;
 
-    #ifdef WIND
-    vec4 position = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
-    if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 23) {
-        position.xz += (sin(frameTimeCounter*cellular(position.xyz + cameraPosition)*4)/16)*WIND_STRENGTH;
-    }
-    gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
-    #else
+    glcolor = gl_Color;
+
     gl_Position = ftransform();
+    worldSpace = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
+
+    #ifdef WIND
+    if ((mc_Entity.x == 20.0 && gl_MultiTexCoord0.t < mc_midTexCoord.t) || mc_Entity.x == 21.0) {
+        vec4 position = worldSpace;
+        position.x += (sin((frameTimeCounter*2.0*WIND_STRENGTH)+cellular(position.xyz+cameraPosition+(frameTimeCounter/8.0))*4.0)/12.0);
+        position.z += (sin((frameTimeCounter/2.0*WIND_STRENGTH)+cellular(position.xyz+cameraPosition+(frameTimeCounter/8.0))*4.0)/12.0);
+        gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
+    }
     #endif
 
-    viewPos = (gl_ModelViewMatrix * gl_Vertex).xyz;
-
-    normal   = normalize(gl_NormalMatrix * gl_Normal);
-    vec3 tangent  = normalize(gl_NormalMatrix * (at_tangent.xyz));
-    tbn = transpose(mat3(tangent, normalize(cross(tangent, normal)), normal));
-
-    vec2 textureSize = abs(texcoord - mc_midTexCoord.xy);
-
-    mintex = mc_midTexCoord.xy - textureSize;
-	maxtex = mc_midTexCoord.xy + textureSize;
+    #ifdef TAA
+    gl_Position.xy += jitter(1.5+gl_Position.z);
+    #endif
 }
 
 #endif

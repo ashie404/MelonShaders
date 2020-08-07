@@ -1,6 +1,6 @@
 option.MELONINFO=§aMelon Shaders
 value.MELONINFO.0=§bBy June
-value.MELONINFO.1=§dV1.5
+value.MELONINFO.1=§dV2.0
 
 screen.POST=Post Processing
 screen.SKY=Sky
@@ -10,7 +10,11 @@ screen.TWEAKS=Tweaks
 option.BLOOM=Bloom
 option.BLOOM_STRENGTH=Bloom Strength
 
+screen.TAA=TAA Settings
 option.TAA=Temporal Anti-Aliasing
+option.TAA_NCLAMP=Neighborhood Clamping
+option.TAA_BLEND=TAA Blending
+
 option.LUT=Color LUT
 option.LUTV=LUT
 value.LUTV.0=Kingdom Come
@@ -18,51 +22,56 @@ value.LUTV.1=Kodak DSCS 3151
 value.LUTV.2=Agfachrome RSX2 050
 value.LUTV.3=Fujifilm F400
 value.LUTV.4=Night City Punk
+value.LUTV.5=Tropical
 
 screen.CAMERA=Camera Settings
+option.APERTURE=Aperture
 option.DOF=Depth of Field
 option.DOF_QUALITY=DOF Quality
-value.DOF_QUALITY.1=§aLow
-value.DOF_QUALITY.2=§eMedium
-value.DOF_QUALITY.3=§cHigh
-value.DOF_QUALITY.4=§4Ultra
-option.APERTURE=Aperture
+value.DOF_QUALITY.1=§bLow
+value.DOF_QUALITY.2=§aMedium
+value.DOF_QUALITY.4=§eHigh
+value.DOF_QUALITY.8=§cUltra
 option.CHROM_ABB=Chromatic Aberration
-option.CHROM_ABB_S=Chromatic Aberration Strength
 
 screen.ACES_SETTINGS=ACES Settings
 
 option.sunPathRotation=Sun Path Rotation
-option.CELESTIAL_RADIUS=Celestial Body Radius
 option.STARS=Stars
 
 option.FOG=Fog
 option.FOG_DENSITY=Fog Density
 
-screen.VOLUMETRICS=Volumetrics
-
-option.VL=Volumetric Lighting
-option.VL_STEPS=VL Steps
-option.VL_DENSITY=VL Fog Density
-option.VARYING_VL_DENSITY=Varying Fog Density
-
-screen.CLOUD_SETTINGS=Cloud Settings
-
+screen.CLOUDS=Clouds
 option.CUMULUS=Cumulus Clouds
-option.CIRRUS=Cirrus Clouds
 option.CLOUD_SPEED=Cloud Speed
-option.CLOUD_COVERAGE=Cloud Coverage
+option.CLOUD_DENSITY=Cloud Density
 option.CLOUD_LIGHTING=Cloud Lighting
 
-option.SPECULAR=Specular
-option.SSR=Reflections
-option.HQ_REFLECTIONS=HQ Reflections
-option.SPECULAR_REFLECTION_STRENGTH=Specular Reflection Strength
+screen.VOLUMETRICS=Volumetrics
+option.VL=Volumetric Lighting
+option.VL_DENSITY=VL Density
+
+screen.REFLECTIONS=Reflection Settings
+
+option.REFLECTIONS=Reflections
+option.SSR=Screen Space Reflections
+option.MICROFACET_REFL=Microfacet Reflections
+option.SPEC_REFLECTIONS=Specular Reflections
+
+option.HEAT_DISTORT=Heat Distortion
+
+screen.RAIN=Rain Effects
+option.RAIN_PUDDLES=Rain Puddles
+option.PUDDLE_MULT=Puddles Multiplier
+option.STRETCH_PUDDLES_Y=Stretch Y Puddles
+option.POROSITY=LabPBR Porosity
+
+option.NIGHT_DESAT=Night Desaturation
 
 option.SSS=Subsurface Scattering
-option.SSS_STRENGTH=SSS Strength
-option.DIRECTIONAL_LIGHTMAP=Directional Lightmap
-option.DIRECTIONAL_LIGHTMAP_STRENGTH=Directional Lightmap Strength
+option.SSS_SCATTER=SSS Scatter Size
+option.SPECULAR=Specular
 
 screen.SHADOWS=Shadows
 option.shadowMapResolution=Shadow Resolution
@@ -75,44 +84,39 @@ option.BLOCKLIGHT_G=§2Green
 option.BLOCKLIGHT_B=§1Blue
 option.BLOCKLIGHT_I=Intensity
 
+screen.EMISSIVES=Emissives
+
 option.EMISSIVE_MAP=Emissive Maps
 value.EMISSIVE_MAP.0=Off
-value.EMISSIVE_MAP.1=Blue Channel
-value.EMISSIVE_MAP.2=LabPBR (alpha channel)
-option.EMISSIVE_MAP_STRENGTH=Emissive Map Strength
+value.EMISSIVE_MAP.1=OldPBR/Blue Channel
+value.EMISSIVE_MAP.2=LabPBR/Alpha Channel
+
+option.EMISSIVE_STRENGTH=Emissive Strength
+
+option.EMISSIVE_FALLBACK=Emissive Fallback
 
 option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
-option.NIGHT_DESAT=Night Desaturation
+
+option.REBUILD_Z=Rebuild Normal Z
+
 option.WHITEWORLD=Whiteworld
+
+option.TRANS_COMPAT=Translucents Compatibility
 
 screen.WATER=Water
 
 option.WAVE_FOAM=Water Foam
-option.WAVE_LINES=Water Lines
-option.WAVE_CAUSTICS=Water Caustics
-option.WAVE_PIXEL=Pixelate Water Patterns
+option.WAVE_CAUSTICS=Wave Foam Patterns
+option.WAVE_CAUSTICS_D=Wave Foam Density
+option.WAVE_PIXEL=Pixelate Wave Foam
 option.WAVE_PIXEL_R=Pixelation Resolution
-option.WAVE_SPEED=Water Pattern Speed
-option.WAVE_BRIGHTNESS=Water Foam/Pattern Brightness
+option.WAVE_SPEED=Wave Foam Speed
+option.WAVE_BRIGHTNESS=Wave Foam Brightness
+option.WAVE_NORMALS=Water Normals
+option.WAVE_SCALE=Water Normals Scale
 
 screen.VISUAL=Visual
-
-screen.TRANSLUCENTS=Translucents
-option.TRANS_REFRACTION=Translucent Refractions
-option.REFRACTION_STRENGTH=Refraction Strength
-option.BLUR_TRANSLUCENT=Blur Translucents
-option.TRANS_COMPAT=Translucents Compat Mode
-
-option.XBRZ_UPSCALE=xBRZ Upscaling
-
-#debug
-option.DEBUG_MODE=Debug Mode
-value.DEBUG_MODE.0=Off
-value.DEBUG_MODE.1=Lightmap
-value.DEBUG_MODE.2=Normals
-value.DEBUG_MODE.3=Specular
-value.DEBUG_MODE.4=Bloom Tiles
 
 #ACES
 option.SAT_MOD=Saturation

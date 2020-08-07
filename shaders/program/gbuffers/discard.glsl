@@ -1,5 +1,6 @@
-/* 
-    Melon Shaders by June
+/*
+    Melon Shaders
+    By June (juniebyte)
     https://juniebyte.cf
 */
 
@@ -8,7 +9,7 @@
 
 // FRAGMENT SHADER //
 
-#ifdef FRAG
+#ifdef FSH
 
 void main() {
     discard;
@@ -18,7 +19,7 @@ void main() {
 
 // VERTEX SHADER //
 
-#ifdef VERT
+#ifdef VSH
 
 void main() {
     return;

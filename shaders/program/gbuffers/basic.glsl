@@ -1,5 +1,6 @@
-/* 
-    Melon Shaders by June
+/*
+    Melon Shaders
+    By June (juniebyte)
     https://juniebyte.cf
 */
 
@@ -8,15 +9,22 @@
 
 // FRAGMENT SHADER //
 
-#ifdef FRAG
+#ifdef FSH
 
-/* DRAWBUFFERS:01 */
-layout (location = 0) out vec4 albedoOut; // albedo output
-layout (location = 1) out vec4 lmNormalMatOut; // lightmap, normal map, and material mask output
+/* DRAWBUFFERS:014 */
+layout (location = 0) out vec4 albedoOut;
+layout (location = 1) out vec4 dataOut;
+layout (location = 2) out vec4 normalOut;
 
-in vec4 glcolor;
+// Inputs from vertex shader
+in vec2 texcoord;
 in vec3 normal;
+in vec4 glcolor;
 
+// Uniforms
+uniform mat4 gbufferModelViewInverse;
+
+// other stuff
 vec3 toLinear(vec3 srgb) {
     return mix(
         srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
@@ -26,29 +34,54 @@ vec3 toLinear(vec3 srgb) {
 }
 
 void main() {
-    albedoOut = vec4(toLinear(glcolor.rgb), glcolor.a);
-    lmNormalMatOut = vec4(
-        encodeLightmaps(vec2(0.0, 1.0)), 
-        encodeNormals(clamp(normal, -1.0, 1.0)), 
-        0.0, 
-        encodeVec3(vec3(0.0))
+    // get albedo
+    vec4 albedo = glcolor;
+
+    albedo.rgb = toLinear(albedo.rgb);
+
+    // output everything
+	albedoOut = albedo;
+    dataOut = vec4(
+        encodeLightmaps(vec2(0.0, 1.0)), // lightmap
+        encodeLightmaps(vec2(0.0, albedo.a)), // material mask and albedo alpha
+        encodeLightmaps(vec2(0.0)), // specular green and blue channel
+        0.0 // specular red channel
     );
+    normalOut = vec4((mat3(gbufferModelViewInverse) * normal) * 0.5 + 0.5, encodeColor(albedo.rgb));
 }
 
 #endif
 
 // VERTEX SHADER //
 
-#ifdef VERT
+#ifdef VSH
 
-// outputs to fragment
-out vec4 glcolor;
+// Outputs to fragment shader
+out vec2 texcoord;
 out vec3 normal;
+out vec4 glcolor;
+
+// Uniforms
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
+
+// Includes
+#include "/lib/util/taaJitter.glsl"
 
 void main() {
-	gl_Position = ftransform();
-	glcolor = gl_Color;
+    texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+
     normal = normalize(gl_NormalMatrix * gl_Normal);
+
+    glcolor = gl_Color;
+
+    gl_Position = ftransform();
+
+    #ifdef TAA
+    gl_Position.xy += jitter(1.5+gl_Position.z);
+    #endif
 }
 
 #endif

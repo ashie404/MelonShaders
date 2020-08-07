@@ -1,5 +1,6 @@
-/* 
-    Melon Shaders by June
+/*
+    Melon Shaders
+    By June (juniebyte)
     https://juniebyte.cf
 */
 
@@ -8,35 +9,43 @@
 
 // FRAGMENT SHADER //
 
-#ifdef FRAG
+#ifdef FSH
 
 /* DRAWBUFFERS:06 */
-layout (location = 0) out vec4 colorOut;
-layout (location = 1) out vec4 taaOut;
+layout (location = 0) out vec3 colorOut;
+layout (location = 1) out vec3 taaOut;
 
+// Inputs from vertex shader
 in vec2 texcoord;
 
+// Uniforms
 uniform sampler2D colortex0;
 uniform sampler2D colortex6;
 
 uniform sampler2D depthtex0;
 
-uniform float viewWidth;
-uniform float viewHeight;
-uniform int frameCounter;
-
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferModelViewInverse;
-uniform vec3 cameraPosition;
-uniform vec3 previousCameraPosition;
 uniform mat4 gbufferPreviousModelView;
 uniform mat4 gbufferPreviousProjection;
 
-#include "/lib/temporalUtil.glsl"
+uniform vec3 cameraPosition;
+uniform vec3 previousCameraPosition;
+
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
+
+// Includes
+#include "/lib/post/taaUtil.glsl"
 
 void main() {
     #ifdef TAA
     vec2 reprojectedCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
+
+    #ifdef TAA_NCLAMP
+
     vec3 current = RGBToYCoCg(texture2D(colortex0, texcoord).rgb);
     vec3 history = RGBToYCoCg(texture2D(colortex6, reprojectedCoord).rgb);
 
@@ -61,11 +70,24 @@ void main() {
 
     history = YCoCgToRGB(history);
 
-    colorOut = vec4(mix(texture2D(colortex0, texcoord).rgb, history, 0.85), 1.0);
-    
-    taaOut = vec4(mix(texture2D(colortex0, texcoord+jitter()).rgb, history, 0.95), 1.0);
+    current = YCoCgToRGB(current);
+
     #else
-    colorOut = texture2D(colortex0, texcoord);
+
+    vec3 current = texture2D(colortex0, texcoord).rgb;
+    vec3 history = texture2D(colortex6, reprojectedCoord).rgb;
+
+    #endif
+
+    vec3 outColor = mix(current, history, TAA_BLEND);
+
+    colorOut = outColor;
+    taaOut = outColor;
+
+    #else
+
+    colorOut = texture2D(colortex0, texcoord).rgb;
+    
     #endif
 }
 
@@ -73,11 +95,18 @@ void main() {
 
 // VERTEX SHADER //
 
-#ifdef VERT
+#ifdef VSH
 
 out vec2 texcoord;
 
 uniform float sunAngle;
+
+uniform float viewWidth;
+uniform float viewHeight;
+
+uniform int frameCounter;
+
+#include "/lib/util/taaJitter.glsl"
 
 void main() {
 	gl_Position = ftransform();

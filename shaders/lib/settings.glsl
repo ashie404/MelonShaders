@@ -1,5 +1,6 @@
 /*
-    Melon Shaders by June
+    Melon Shaders
+    By June (juniebyte)
     https://juniebyte.cf
 */
 
@@ -25,99 +26,93 @@
 
 #define COLOR_AP1 // Whether to use the AP1 color space or not. Makes colors look more natural.
 
-// shadow settings
-#define SHADOW_SOFTNESS 1.0 // How soft the shadows should be. Has no effect if PCSS is enabled. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0 2.25 2.5 2.75 3.0 3.5 4.0 4.5 5.0 6.0 7.0 8.0 9.0 10.0]
-#define PCSS // Percentage-closer soft shadowing. Makes shadows hard at contact point, and softer further away.
-#define SHADOW_BIAS 0.0005
-
-// sky settings
-#define CELESTIAL_RADIUS 0.25 // Radius of celestial bodies (the sun and moon). [ 0.1 0.25 0.3 0.4 0.5 0.6 0.7 ]
-#define STARS // Whether to have stars at night or not.
-#define FOG // Whether to have fog or not.
-#define FOG_DENSITY 1.0 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0 3.25 3.5]
-
-// volumetrics
-#define VL // Whether to have volumetric lighting or not. Does not work if fog is turned off.
-#define VL_STEPS 8 // Volumetric lighting steps. Higher is much laggier. [4 8 16 24 32 48 64]
-#define VL_DENSITY 1.0 // Density of VL fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
-#define VARYING_VL_DENSITY
-
-// cloud settings
-#define CUMULUS // Whether to have cumulus clouds or not.
-#define CIRRUS // Whether to have cirrus clouds or not.
-#define CLOUD_SPEED 0.3 // How fast clouds move. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
-#define CLOUD_LIGHTING // Turns on and off cloud lighting. Can be very intensive. If your game lags badly when looking at the sky or a reflective surface like water, turn off.
-#define CLOUD_COVERAGE 1.0 // Coverage of clouds in sky. [0.5 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2]
+const int noiseTextureResolution = 512;
+const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]
 
 // lighting settings
-#define SPECULAR // Specular highlights & reflections. Not recommended to have enabled unless your resourcepack is LabPBR compliant.
-#define SSR // Screenspace reflections.
-//#define HQ_REFLECTIONS // Makes screenspace reflections higher quality at the cost of performance.
-#define SPECULAR_REFLECTION_STRENGTH 1.0 // Strength of specular reflections. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
-#define SSS // Subsurface scattering. Improves lighting vastly on leaves, grass, and flowers.
-#define SSS_STRENGTH 1.0 // Strength of subsurface scattering. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.7 1.75 1.8 1.9 2]
-#define DIRECTIONAL_LIGHTMAP // Whether to have blocklights and skylight affected by normal maps or not.
-#define DIRECTIONAL_LIGHTMAP_STRENGTH 1.0 // Strength of directional lightmaps. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define SSS // Subsurface scattering.
+#define SSS_SCATTER 1.0 // Subsurface scattering scatter size. [0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define SPECULAR // Specular highlights.
+#define SPEC_REFLECTIONS // Specular reflections. Has no effect if reflections are disabled.
+
+// shadow settings
+#define PCSS // Percentage-closer soft shadowing. Makes shadows hard at the contact point, and softer farther away.
+#define SHADOW_SOFTNESS 1.0 // Shadow softness. If PCSS is on, affects how quickly the shadows get soft. [0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0]
+const int shadowMapResolution = 2048; // [1024 2048 4096 8192]
+const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
+
+// sky settings
+#define STARS
+#define FOG
+#define FOG_DENSITY 1.0 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+
+#define CUMULUS // Whether to have 2D cumulus clouds or not.
+#define CLOUD_SPEED 1.0 // Speed of clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define CLOUD_DENSITY 1.0 // Density of clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define CLOUD_LIGHTING
+
+#define VL // Volumetric lighting.
+#define VL_DENSITY 1.0 // Density of volumetric lighting. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2.0]
+
+// visual settings
+#define REFLECTIONS // Enables sky reflections. 
+#define SSR // Screenspace reflections. Has no effect if reflections are disabled.
+#define MICROFACET_REFL // Whether to use microfacet distribution on rough reflections or not. When off, uses LODs for rough reflections (will perform slightly better, but won't look as good)
+//#define WHITEWORLD
+#define NIGHT_DESAT // Whether to desaturate colors at night or not.
+//#define TRANS_COMPAT // Translucents compatibility mode. Changes the blending mode of translucents from multiply to mix (more like vanilla). Can fix certain mods that use translucents, or resource packs.
+#define HEAT_DISTORT // Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.
+
+// rain effects
+//#define RAIN_PUDDLES // When rainy, objects will appear more wet. Requires specular and reflections to be enabled to work. Can cause storms to be much laggier.
+#define STRETCH_PUDDLES_Y // Whether to stretch puddles on the Y axis or not. Prevents circular puddle patterns from appearing on sides of blocks.
+#define PUDDLE_MULT 1.0 // How much the puddles should cover terrain. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0 3.25 3.5 3.75 4.0]
+//#define POROSITY // Enables LabPBR porosity for resource packs that support it. Blue channel emissives have to be disabled for this to work. Rain puddles have to be enabled for this to work.
+
+// water settings
+#define WAVE_FOAM
+#define WAVE_CAUSTICS // Renders a caustics-like pattern on the surface of the water.
+#define WAVE_CAUSTICS_D 1.0 // Density of water patterns. [0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define WAVE_PIXEL
+#define WAVE_PIXEL_R 16.0 // Resolution of water pattern pixelization. [4.0 8.0 16.0 32.0 64.0 128.0]
+#define WAVE_SPEED 0.5 // Speed of water patterns. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
+#define WAVE_BRIGHTNESS 1.0 // Brightness of wave foam and patterns. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define WAVE_NORMALS // Whether to have water normals or not.
+#define WAVE_SCALE 0.1 // Scale of water normals. [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
 
 // post processing settings
 #define BLOOM
-#define BLOOM_STRENGTH 0.1 // Strength of bloom. [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
+#define BLOOM_STRENGTH 0.1 // Strength of bloom [0.025 0.05 0.075 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+
 #define LUT // Color lookup table. Adjusts the overall look of colors.
-#define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4]
-#define TAA
+#define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4 5]
+
+// TAA settings
+
+#define TAA // Temporal anti-aliasing. Helps smooth out jagged edges and reduce noise in noisy effects. Not recommended to turn off.
+#define TAA_NCLAMP // TAA neighborhood clamping. Prevents ghosting. Not recommended to turn off.
+#define TAA_BLEND 0.9 // How much to blend between current frame info and TAA history. Higher numbers will make the image smoother, but blurrier in motion. [0.0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
 
 // camera settings
-#define DOF // Depth of field.
-#define DOF_QUALITY 2 // Quality of the depth of field. Higher is laggier, but will look better. [1 2 3 4]
-#define APERTURE 1.0 // The aperture of the camera. Determines how big the depth of field is. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+//#define DOF
+#define DOF_QUALITY 2 // Quality of depth of field. Higher quality is laggier. [1 2 4 8]  
+#define APERTURE 1.0 // How blurry the DOF is. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
-#define CHROM_ABB // Whether to have chromatic aberration in out-of-focus areas or not. Has no effect if DOF is off.
-#define CHROM_ABB_S 1.0 // Strength of chromatic aberration. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.7 1.75 1.8 1.9 2.0]
+#define CHROM_ABB // Chromatic aberration.
 
 // tweaks
+#define EMISSIVE_MAP 0 // Emissive map setting. [0 1 2]
+#define EMISSIVE_STRENGTH 1.0 // Strength of emissives. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.25 1.5 1.75 2.0 2.5 3.0 3.5 4.0 4.5 5.0 6.0 7.0 8.0 9.0 10.0]
+#define EMISSIVE_FALLBACK // When emissive maps are on, and this setting is enabled, hardcoded emissives will also be calculated, and blended with emissive maps. Can fix missing emissives in certain resource packs.
 
-// blocklight color
-#define BLOCKLIGHT_R 1.0 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
-#define BLOCKLIGHT_G 0.4 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define WIND // Whether to have waving plants and leaves or not.
+#define WIND_STRENGTH 1.0 // Strength of wind. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0]
+
+#define REBUILD_Z // Whether to rebuild normal Z or not. Used for LabPBR 1.2+ resource packs. Disable if normal maps look wrong.
+
+#define BLOCKLIGHT_R 0.9 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define BLOCKLIGHT_G 0.3 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_B 0.1 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_I 1.0 // Intensity of blocklight. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
-#define EMISSIVE_MAP 0 // Emissive map setting. [0 1 2]
-#define EMISSIVE_MAP_STRENGTH 1.0 // Strength of emissive maps. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0 2.5 3.0 3.5 4.0 4.5 5.0 6.0 7.0 8.0 9.0 10.0]
-
-#define WIND // Whether to have waving terrain (leaves, plants) or not.
-#define WIND_STRENGTH 1.0 // Strength of wind. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0]
-#define NIGHT_DESAT // Whether to desaturate dark colors at night.
-
-//#define WHITEWORLD
-
-//#define XBRZ_UPSCALE // Upscale textures using the 4xBRZ pixel art upscaling algorithm.
-
-// water visual settings
-
-#define WAVE_FOAM // Whether to have water foam or not.
-//#define WAVE_LINES // Whether to have water lines pattern (similar to Minecraft Dungeons) on the water or not.
-#define WAVE_CAUSTICS // Whether to have a water caustics pattern on the water or not.
-#define WAVE_PIXEL // Whether to snap the water caustics patterns to a pixel grid or not.
-#define WAVE_PIXEL_R 16.0 // Resolution of the pixel grid that water caustics patterns are snapped to. [4.0 8.0 16.0 32.0 64.0 128.0]
-#define WAVE_SPEED 0.5 // Speed of water patterns. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
-#define WAVE_BRIGHTNESS 1.0 // Brightness of water foam & patterns. [0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5]
-
-// translucents
-
-//#define TRANS_REFRACTION // Whether to have (fake) translucent refraction or not.
-#define REFRACTION_STRENGTH 1.0 // Strength of translucent refraction. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2.0]
-//#define BLUR_TRANSLUCENT // Whether to blur translucents or not. Has no effect if translucent refraction is off.
-//#define TRANS_COMPAT // Translucents compatibility mode. Changes the blending method of translucents from multiplication to mix. Fixes some mods/resource packs that use translucents.
-
-// debug
-
-#define DEBUG_MODE 0 // [0 1 2 3 4]
-
-const int noiseTextureResolution = 512;
-const int shadowMapResolution = 2048; //[1024 2048 4096 8192]
-const int shadowDistance = 128; //[128 256 512 1024]
-const float shadowIntervalSize = 0.1;
-const float sunPathRotation = -30.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0]
-
-const vec3 nightSkyColor = vec3(0.14, 0.2, 0.24)*0.0005;
+const vec3 waterCoeff = vec3(0.8, 0.2, 0.1);
