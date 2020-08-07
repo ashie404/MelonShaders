@@ -23,13 +23,21 @@ in vec3 normal;
 in mat3 tbn;
 in float id;
 in vec4 glcolor;
+in vec4 worldSpace;
 
 // Uniforms
 uniform sampler2D texture;
 uniform sampler2D specular;
 uniform sampler2D normals;
 
+uniform vec3 cameraPosition;
+
+uniform float frameTimeCounter;
+
 uniform mat4 gbufferModelViewInverse;
+
+// Includes
+#include "/lib/util/noise.glsl"
 
 // other stuff
 vec3 toLinear(vec3 srgb) {
@@ -38,6 +46,18 @@ vec3 toLinear(vec3 srgb) {
         pow(0.947867 * srgb + 0.0521327, vec3(2.4)),
         step(0.04045, srgb)
     );
+}
+
+vec3 waterNormals(vec3 pos, float scale) {
+    
+  float height = cellular(pos);
+    
+  vec2 dxy = height - vec2(
+      cellular(pos + vec3(1.0, 0.0, 0.0)), 
+      cellular(pos + vec3(0.0, 0.0, 1.0))
+  );
+    
+  return normalize(vec3(dxy * scale, 1.0));
 }
 
 void main() {
@@ -70,9 +90,19 @@ void main() {
 
     if (idCorrected == 8) {
         matMask = 3;
-        // discard normal map if there was any
+        #ifdef WAVE_NORMALS
+        // custom water normals
+        vec3 worldPosCamera = worldSpace.xyz + cameraPosition;
+        #ifdef WAVE_PIXEL
+        worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
+        #endif
+        worldPosCamera.y += frameTimeCounter*WAVE_SPEED;
+
+        normalData = normalize(waterNormals(worldPosCamera, WAVE_SCALE) * tbn);
+        #else
         normalData = normal;
-    } 
+        #endif
+    }
 
     // output everything
 	albedoOut = albedo;
@@ -98,6 +128,7 @@ out vec3 normal;
 out mat3 tbn;
 out float id;
 out vec4 glcolor;
+out vec4 worldSpace;
 
 // Uniforms
 attribute vec3 mc_Entity;
@@ -105,6 +136,8 @@ attribute vec4 at_tangent;
 
 uniform float viewWidth;
 uniform float viewHeight;
+
+uniform mat4 gbufferModelViewInverse;
 
 uniform int frameCounter;
 
@@ -124,6 +157,7 @@ void main() {
     glcolor = gl_Color;
 
     gl_Position = ftransform();
+    worldSpace = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
 
     #ifdef TAA
     gl_Position.xy += jitter(1.5+gl_Position.z);

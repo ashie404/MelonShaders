@@ -77,6 +77,8 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define WAVE_PIXEL_R 16.0 // Resolution of water pattern pixelization. [4.0 8.0 16.0 32.0 64.0 128.0]
 #define WAVE_SPEED 0.5 // Speed of water patterns. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
 #define WAVE_BRIGHTNESS 1.0 // Brightness of wave foam and patterns. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define WAVE_NORMALS // Whether to have water normals or not.
+#define WAVE_SCALE 0.1 // Scale of water normals. [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
 
 // post processing settings
 #define BLOOM
