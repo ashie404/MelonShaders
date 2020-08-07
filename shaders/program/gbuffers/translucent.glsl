@@ -98,7 +98,7 @@ void main() {
         #endif
         worldPosCamera.y += frameTimeCounter*WAVE_SPEED;
 
-        normalData = normalize(waterNormals(worldPosCamera, WAVE_SCALE) * tbn);
+        normalData = normalize(clamp(waterNormals(worldPosCamera, WAVE_SCALE), -1.0, 1.0) * tbn);
         #else
         normalData = normal;
         #endif

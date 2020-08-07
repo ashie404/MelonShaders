@@ -86,7 +86,7 @@ void main() {
             for (int i = 0; i <= dofQuality; i++) {
                 vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
                 #ifdef CHROM_ABB
-                float g = texture2D(colortex0, texcoord + (offset*0.5)).g;
+                float g = texture2D(colortex0, texcoord + vec2(offset.x+(oneTexel.x*clamp(blurSize, 0.0, 4.0)), offset.y)).g;
                 vec2 rb = texture2D(colortex0, texcoord + offset).rb;
                 blurred += vec3(rb.x, g, rb.y);
                 #else
@@ -101,7 +101,7 @@ void main() {
             for (int i = 0; i <= dofQuality; i++) {
                 vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
                 #ifdef CHROM_ABB
-                float b = texture2D(colortex0, texcoord + (offset*0.5)).b;
+                float b = texture2D(colortex0, texcoord + vec2(offset.x+(oneTexel.x*clamp(blurSize, 0.0, 4.0)), offset.y)).b;
                 vec2 rg = texture2D(colortex0, texcoord + offset).rg;
                 blurred += vec3(rg, b);
                 #else
