@@ -64,7 +64,8 @@ void main() {
     vec4 worldPos = gbufferModelViewInverse * viewPos;
     
     #if WORLD == 0
-    atmosphereOut = getSkyColor(viewPos.xyz, 15);
+    vec3 color = getSkyColor(viewPos.xyz, 15);
+    atmosphereOut = color;
     #elif WORLD == -1
     atmosphereOut = fogColor;
     #elif WORLD == 1

@@ -46,6 +46,11 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define FOG
 #define FOG_DENSITY 1.0 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
+#define CUMULUS // Whether to have 2D cumulus clouds or not.
+#define CLOUD_SPEED 1.0 // Speed of clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define CLOUD_DENSITY 1.0 // Density of clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define CLOUD_LIGHTING
+
 #define VL // Volumetric lighting.
 #define VL_DENSITY 1.0 // Density of volumetric lighting. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2.0]
 

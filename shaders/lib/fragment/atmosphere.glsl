@@ -207,3 +207,64 @@ void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 colo
 	
 	#endif
 }
+
+float cloudNoise(in vec2 coord, in float time) {
+	float cloud = clamp01(pow(texture2D(noisetex, coord+time).g, 2.0));
+	cloud = remap(cloud, 0.0, 1.0, 0.0, clamp01(pow(texture2D(noisetex, (coord/2.0)+time).g, mix(0.25, 2.0, clamp01(times.y)))));
+	return clamp01(cloud*CLOUD_DENSITY);
+}
+
+void calculateClouds(in vec3 worldPos, inout vec3 color) {
+	#ifdef CUMULUS
+	if (clamp01(worldPos.y/256.0) > 0.0) {
+		float time = frameTimeCounter/256.0*CLOUD_SPEED;
+    	vec2 uv = (worldPos.xz / (worldPos.y))/3.0;
+		vec3 slPos = mat3(gbufferModelViewInverse) * normalize(shadowLightPosition);
+    	vec2 sunUv = (slPos.xz / slPos.y);
+
+    	// set up 2D ray march variables
+    	vec2 marchDist = vec2(0.25 * max(viewWidth, viewHeight)) / vec2(viewWidth, viewHeight);
+    	float stepsInv = 1.0 / 4.0;
+    	vec2 sunDir = normalize(sunUv - uv) * marchDist * stepsInv;
+    	vec2 marchUv = uv;
+    	float cloudColor = 1.0;
+    	float cloudShape = cloudNoise(uv, time);
+
+    	#ifdef CLOUD_LIGHTING
+    	// 2D ray march lighting loop based on uncharted 4
+    	if (cloudShape >= 0.10) {
+    		for (float i = 0.0; i < marchDist.x; i += marchDist.x * stepsInv)
+    		{
+    	        marchUv += sunDir * i;
+   		        float c = cloudNoise(marchUv, time);
+    	        cloudColor *= clamp(1.0 - c, 0.0, 1.0);
+    		}
+    	}
+    	#endif
+
+    	cloudColor += mix(0.015, 0.0015, clamp01(times.w)); // cloud ambient brightness
+
+    	// beer's law + powder sugar
+    	cloudColor = mix(
+			exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0, // day
+			exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 1.5, // night
+			clamp01(times.w)
+		);
+
+    	cloudColor *= cloudShape;
+		color = mix(
+			color, 
+			mix(
+        		color, 
+                vec3(cloudColor)*max(lightColor, 0.1)*mix(
+                    mix(color, vec3(1.0), clamp01(cloudColor)), 
+                    vec3(1.0), 
+                    clamp01(times.w)
+                ), 
+                clamp01(cloudShape)
+            ), 
+            clamp01(worldPos.y/256.0)
+		);
+	}
+	#endif
+}

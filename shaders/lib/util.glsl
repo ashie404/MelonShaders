@@ -61,6 +61,10 @@ float luma(vec4 color) {
   return dot(color.rgb, vec3(0.299, 0.587, 0.114));
 }
 
+float remap(float val, float min1, float max1, float min2, float max2) {
+  return min2 + (val - min1) * (max2 - min2) / (max1 - min1);
+}
+
 // light color
 void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpos, out vec3 ambient, out vec3 light, out vec4 times) {
 
@@ -76,9 +80,9 @@ void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpo
     vec3 sunsetAmbColor  = vec3(0.33, 0.28, 0.23)*0.5;
     vec3 nightAmbColor   = vec3(0.19, 0.21, 0.29)*0.1;
 
-    vec3 sunriseLightColor = vec3(1.5, 0.3, 0.15)*2.5;
+    vec3 sunriseLightColor = vec3(1.5, 0.5, 0.15)*2.5;
     vec3 noonLightColor    = vec3(1.0, 0.99, 0.96)*4.0;
-    vec3 sunsetLightColor  = vec3(1.5, 0.3, 0.15)*2.5;
+    vec3 sunsetLightColor  = vec3(1.5, 0.5, 0.15)*2.5;
     vec3 nightLightColor   = vec3(0.6, 0.6, 0.6)*0.1;
 
     ambient = ((sunrise * sunriseAmbColor) + (noon * noonAmbColor) + (sunset * sunsetAmbColor)) + (night * nightAmbColor);
