@@ -106,8 +106,7 @@ void main() {
                 #if WORLD == 0
 
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
-                vec3 worldPosRefl = normalize(reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal));
-                calculateCelestialBodies(reflect(viewPos.xyz, info.normal), worldPosRefl, skyReflectionColor);
+                calculateCelestialBodies(reflect(viewPos.xyz, info.normal),reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
                 skyReflectionColor *= info.lightmap.y;
 
                 #else
