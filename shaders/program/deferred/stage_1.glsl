@@ -93,7 +93,7 @@ void main() {
 
     vec3 color = info.albedo.rgb;
 
-    rtaoOut = ambientColor;
+    rtaoOut = vec3(1.0);
 
     if (depth0 != 1.0) {
         #ifdef RTAO
