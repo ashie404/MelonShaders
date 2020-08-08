@@ -101,7 +101,7 @@ void main() {
         vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal)));
         vec3 history = texture2D(colortex5, reprojectCoords(screenPos.xyz * 0.5 + 0.5)).rgb;
 
-        rtaoOut = mix(current, history, 0.6);
+        rtaoOut = mix(current, history, 0.85);
         #else
         rtaoOut = texture2D(colortex5, texcoord).rgb;
         #endif
