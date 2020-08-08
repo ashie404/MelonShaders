@@ -10,8 +10,10 @@ const int colortex1Format = RGBA16; // Lightmaps, material mask, albedo alpha, s
 const int colortex2Format = R11F_G11F_B10F; // Atmosphere (deferred->composite1), bloom (composite2->final)
 const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1->final)
 const int colortex4Format = RGBA16; // Normals (gbuffers->final)
+const int colortex5Format = RGBA16F; // RTAO Buffer
 const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
 const bool colortex6Clear = false;
+const bool colortex5Clear = false;
 const float eyeBrightnessSmoothHalflife = 4.0;
 */
 
@@ -146,6 +148,14 @@ vec2 vogelDiskSample(int sampleIndex, int samplesCount, float phi)
   float cosTheta = cos(theta);
   
   return vec2(r * cosTheta, r * sinTheta);
+}
+
+vec3 sphereMap(vec2 a) {
+  float phi = a.y * 2.0 * PI;
+  float cosTheta = 1.0 - a.x;
+  float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+
+  return vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
 }
 
 float getShadowBias(vec3 viewPos, float angle) {

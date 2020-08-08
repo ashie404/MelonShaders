@@ -21,6 +21,7 @@ in vec2 texcoord;
 
 // Uniforms
 uniform sampler2D colortex0;
+uniform sampler2D colortex5;
 uniform sampler2D colortex7;
 
 uniform float sunAngle;
@@ -111,7 +112,11 @@ void main() {
     color = lookup(color);
     #endif
 
+    #ifdef RTAO_DEBUG
+    screenOut = vec4(texture2D(colortex5, texcoord).rgb, 1.0);
+    #else
     screenOut = vec4(color, 1.0);
+    #endif
 }
 
 #endif

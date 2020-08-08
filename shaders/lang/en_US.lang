@@ -60,6 +60,12 @@ option.MICROFACET_REFL=Microfacet Reflections
 option.SPEC_REFLECTIONS=Specular Reflections
 option.ROUGH_REFL_SAMPLES=Rough Reflection Samples
 
+screen.AO=Ambient Occlusion
+
+option.RTAO_DEBUG=RTAO Debug
+option.RTAO_RAYS=RTAO Rays
+option.RTAO_STEPS=RTAO Steps
+
 option.HEAT_DISTORT=Heat Distortion
 
 screen.RAIN=Rain Effects

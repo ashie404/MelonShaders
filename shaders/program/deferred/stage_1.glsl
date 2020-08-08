@@ -11,9 +11,10 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:03 */
+/* DRAWBUFFERS:035 */
 layout (location = 0) out vec3 colorOut;
 layout (location = 1) out vec3 noTranslucentsOut;
+layout (location = 2) out vec3 rtaoOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -27,8 +28,10 @@ uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 uniform sampler2D colortex4;
+uniform sampler2D colortex5;
 
 uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 
 uniform sampler2D noisetex;
 
@@ -41,6 +44,9 @@ uniform mat4 gbufferProjection;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
 
+uniform mat4 gbufferPreviousModelView;
+uniform mat4 gbufferPreviousProjection;
+
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 
@@ -48,12 +54,16 @@ uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 uniform vec3 upPosition;
+uniform vec3 cameraPosition;
+uniform vec3 previousCameraPosition;
 
 uniform vec3 fogColor;
 
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float frameTimeCounter;
+uniform float far;
+uniform float near;
 
 uniform float eyeAltitude;
 uniform float sunAngle;
@@ -66,6 +76,8 @@ uniform int isEyeInWater;
 #include "/lib/fragment/shading.glsl"
 #include "/lib/util/noise.glsl"
 #include "/lib/fragment/atmosphere.glsl"
+#include "/lib/fragment/ambientOcclusion.glsl"
+#include "/lib/post/taaUtil.glsl"
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
@@ -82,8 +94,18 @@ void main() {
 
     vec3 color = info.albedo.rgb;
 
+    rtaoOut = vec3(1.0);
+
     if (depth0 != 1.0) {
         color = calculateShading(info, viewPos.xyz, shadowPos.xyz);
+
+        #ifdef RTAO
+        // RTAO accumulation stuff
+        vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal))+0.1);
+        vec3 history = texture2D(colortex5, reprojectCoords(screenPos.xyz * 0.5 + 0.5)).rgb;
+
+        rtaoOut = mix(history, current, 0.1);
+        #endif
     } else {
         color = texture2D(colortex2, texcoord*0.1).rgb;
         calculateCelestialBodies(viewPos.xyz, worldPos.xyz, color);

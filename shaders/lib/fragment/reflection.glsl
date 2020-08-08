@@ -78,7 +78,7 @@ vec4 roughReflection(vec3 viewPos, vec3 normal, float dither, float roughness, s
 	#ifdef MICROFACET_REFL
 
 	for (int i = 1; i <= ROUGH_REFL_SAMPLES; i++) {
-		normal = microfacetDistribution(normal, fract(frameTimeCounter * 4.0 + hash32(uvec2(gl_FragCoord.xy*i))), roughness*roughness);
+		normal = microfacetDistribution(normal, fract((frameTimeCounter+(i*8)) * 4.0 + hash32(uvec2(gl_FragCoord.xy*i+(i*4.25)))), roughness*roughness);
 
 		vec4 rtPos = raytrace(depthtex0, viewPos, reflect(normalize(viewPos), normalize(normal)), dither, 4.0, 1.0, 0.1, 1.5);
 

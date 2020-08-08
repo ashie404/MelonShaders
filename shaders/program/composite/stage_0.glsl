@@ -30,6 +30,7 @@ uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 uniform sampler2D colortex4;
+uniform sampler2D colortex5;
 
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
@@ -68,7 +69,7 @@ uniform float near;
 uniform int isEyeInWater;
 
 // Defines
-#define linear(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
+#define linearDepth(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))
 
 // Includes
 #include "/lib/fragment/fraginfo.glsl"
@@ -99,8 +100,8 @@ void main() {
             color = calculateTranslucentShading(info, viewPos.xyz, shadowPos.xyz);
         } else if (info.matMask == 3.0) { // if water, calculate water stuff
             // render water fog
-            float ldepth0 = linear(depth0);
-            float ldepth1 = linear(texture2D(depthtex1, texcoord).r);
+            float ldepth0 = linearDepth(depth0);
+            float ldepth1 = linearDepth(texture2D(depthtex1, texcoord).r);
 
             float depthcomp = (ldepth1-ldepth0);
 
@@ -137,6 +138,10 @@ void main() {
             }
         }
     }
+
+    #ifdef RTAO
+    color *= clamp01(pow(texture2D(colortex5, texcoord).rgb, vec3(2.0)));
+    #endif
 
     calculateFog(color, viewPos.xyz, depth0);
     

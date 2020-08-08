@@ -35,6 +35,13 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 #define SPECULAR // Specular highlights.
 #define SPEC_REFLECTIONS // Specular reflections. Has no effect if reflections are disabled.
 
+// AO settings
+#define RTAO // Ray-traced ambient occlusion.
+//#define RTAO_DEBUG // Outputs the RTAO buffer directly to the screen.
+
+#define RTAO_RAYS 2 // How many rays to shoot out per frame for RTAO. Higher will be less noisy, but laggier. [1 2 3 4 5 6 7 8]
+#define RTAO_STEPS 16 // How many steps per RTAO ray. [4 5 6 7 8 9 10 11 12 13 14 15 16 24 32 48 64]
+
 // shadow settings
 #define PCSS // Percentage-closer soft shadowing. Makes shadows hard at the contact point, and softer farther away.
 #define SHADOW_SOFTNESS 1.0 // Shadow softness. If PCSS is on, affects how quickly the shadows get soft. [0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0]
