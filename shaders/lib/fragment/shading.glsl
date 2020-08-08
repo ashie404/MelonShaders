@@ -137,15 +137,15 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     #if WORLD == -1
 
-    vec3 color = (fogColor*0.25*pow(texture2D(colortex5, info.coord).rgb, vec3(2.0)))+blockLight;
+    vec3 color = (fogColor*0.25*texture2D(colortex5, info.coord).rgb)+blockLight;
 
     #elif WORLD == 1
 
-    vec3 color = (fogColor*0.25*pow(texture2D(colortex5, info.coord).rgb, vec3(2.0)))+blockLight;
+    vec3 color = (fogColor*0.25*texture2D(colortex5, info.coord).rgb)+blockLight;
 
     #elif WORLD == 0
 
-    vec3 skyLight = ambientColor * (pow(texture2D(colortex5, info.coord).rgb, vec3(2.0)) * info.lightmap.y);
+    vec3 skyLight = ambientColor * (texture2D(colortex5, info.coord).rgb * info.lightmap.y);
 
     vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos, undistortedShadowPos);
 
