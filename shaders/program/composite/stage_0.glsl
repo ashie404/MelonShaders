@@ -139,8 +139,6 @@ void main() {
         }
     }
 
-    color *= clamp01(pow(texture2D(colortex5, texcoord).rgb, vec3(2.0)));
-
     calculateFog(color, viewPos.xyz, depth0);
     
     colorOut = color;

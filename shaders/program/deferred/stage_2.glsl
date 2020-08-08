@@ -11,9 +11,9 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:05 */
+/* DRAWBUFFERS:03 */
 layout (location = 0) out vec3 colorOut;
-layout (location = 1) out vec3 rtaoOut;
+layout (location = 1) out vec3 noTranslucentsOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -93,25 +93,12 @@ void main() {
 
     vec3 color = info.albedo.rgb;
 
-    rtaoOut = ambientColor;
-
     if (depth0 != 1.0) {
-        #ifdef RTAO
-        // RTAO accumulation stuff
-        vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal)));
-        vec3 history = texture2D(colortex5, reprojectCoords(screenPos.xyz * 0.5 + 0.5)).rgb;
-
-        rtaoOut = mix(current, history, 0.6);
-        #else
-        rtaoOut = texture2D(colortex5, texcoord).rgb;
-        #endif
-    } else {
-        color = texture2D(colortex2, texcoord*0.1).rgb;
-        calculateCelestialBodies(viewPos.xyz, worldPos.xyz, color);
-        calculateClouds(worldPos.xyz, color);
+        color = calculateShading(info, viewPos.xyz, shadowPos.xyz);
     }
     
     colorOut = color;
+    noTranslucentsOut = color;
 }
 
 #endif

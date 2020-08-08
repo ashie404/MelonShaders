@@ -215,6 +215,8 @@ float cloudNoise(in vec2 coord, in float time) {
 }
 
 void calculateClouds(in vec3 worldPos, inout vec3 color) {
+	#if WORLD == 0
+
 	#ifdef CUMULUS
 	if (clamp01(worldPos.y/256.0) > 0.0) {
 		float time = frameTimeCounter/256.0*CLOUD_SPEED;
@@ -266,5 +268,7 @@ void calculateClouds(in vec3 worldPos, inout vec3 color) {
             clamp01(worldPos.y/256.0)
 		);
 	}
+	#endif
+
 	#endif
 }
