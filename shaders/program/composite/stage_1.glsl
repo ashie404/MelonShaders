@@ -125,7 +125,7 @@ void main() {
             // SPECULAR HIGHLIGHTS //
             vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
             #if WORLD == 0
-            vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz);
+            vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz)*texture2D(colortex5, texcoord).rgb;
             float specularStrength = ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), clamp(info.specular.g, 0.0, 0.898039), info.specular.r);
             vec3 specularColor = vec3(0.0);
             if (info.specular.g <= 0.898039) {
