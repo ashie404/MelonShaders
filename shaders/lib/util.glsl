@@ -13,7 +13,9 @@ const int colortex4Format = RGBA16; // Normals (gbuffers->final)
 const int colortex5Format = RGBA16F; // RTAO Buffer
 const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
 const bool colortex6Clear = false;
+#ifdef RTAO
 const bool colortex5Clear = false;
+#endif
 const float eyeBrightnessSmoothHalflife = 4.0;
 */
 

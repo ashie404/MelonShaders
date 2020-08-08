@@ -11,10 +11,11 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:014 */
+/* DRAWBUFFERS:0145 */
 layout (location = 0) out vec4 albedoOut;
 layout (location = 1) out vec4 dataOut;
 layout (location = 2) out vec4 normalOut;
+layout (location = 3) out vec4 aoOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -65,7 +66,8 @@ void main() {
     int idCorrected = int(id + 0.5);
 
     // get albedo
-    vec4 albedo = texture2D(texture, texcoord) * glcolor;
+    vec4 albedo = texture2D(texture, texcoord);
+    albedo.rgb *= glcolor.rgb;
 
     float luminance = luma(albedo.rgb);
 
@@ -160,6 +162,9 @@ void main() {
         specularData.r // specular red channel
     );
     normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(albedo.rgb));
+    #ifndef RTAO
+    aoOut = vec4(vec3(glcolor.a), 1.0);
+    #endif
 }
 
 #endif

@@ -11,7 +11,7 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:014 */
+/* DRAWBUFFERS:0145 */
 layout (location = 0) out vec4 albedoOut;
 layout (location = 1) out vec4 dataOut;
 layout (location = 2) out vec4 normalOut;
@@ -65,7 +65,8 @@ void main() {
     int idCorrected = int(id + 0.5);
 
     // get albedo
-    vec4 albedo = texture2D(texture, texcoord) * glcolor;
+    vec4 albedo = texture2D(texture, texcoord);
+    albedo.rgb *= glcolor.rgb;
 
     albedo.rgb = toLinear(albedo.rgb);
 

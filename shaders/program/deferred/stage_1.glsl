@@ -105,11 +105,14 @@ void main() {
         vec3 history = texture2D(colortex5, reprojectCoords(screenPos.xyz * 0.5 + 0.5)).rgb;
 
         rtaoOut = mix(history, current, 0.1);
+        #else
+        rtaoOut = texture2D(colortex5, texcoord).rgb;
         #endif
     } else {
         color = texture2D(colortex2, texcoord*0.1).rgb;
         calculateCelestialBodies(viewPos.xyz, worldPos.xyz, color);
         calculateClouds(worldPos.xyz, color);
+
     }
     
     colorOut = color;

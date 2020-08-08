@@ -139,9 +139,7 @@ void main() {
         }
     }
 
-    #ifdef RTAO
     color *= clamp01(pow(texture2D(colortex5, texcoord).rgb, vec3(2.0)));
-    #endif
 
     calculateFog(color, viewPos.xyz, depth0);
     

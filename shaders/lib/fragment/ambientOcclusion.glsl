@@ -21,8 +21,7 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
 
         vec3 currentRayPos = viewPos + rayInc * fract(frameTimeCounter * 4.0 + noisePattern);
 
-        vec4 rayPosScreen = vec4(currentRayPos, 1.0);
-        rayPosScreen = gbufferProjection * rayPosScreen;
+        vec4 rayPosScreen = gbufferProjection * vec4(currentRayPos, 1.0);
         rayPosScreen /= rayPosScreen.w;
         rayPosScreen = rayPosScreen * 0.5 + 0.5;
 
@@ -38,16 +37,13 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
             }
 
             currentRayPos += rayInc;
-            rayPosScreen = vec4(currentRayPos, 1.0);
-            rayPosScreen = gbufferProjection * rayPosScreen;
+            rayPosScreen = gbufferProjection * vec4(currentRayPos, 1.0);
             rayPosScreen /= rayPosScreen.w;
             rayPosScreen = rayPosScreen * 0.5 + 0.5;
             depth = linearizeDepth(texture2D(depthtex1, rayPosScreen.xy).r);
         }
 
-        if (intersected) continue;
-
-        rtaoCol += dot(normalize(rayDir), normal)*2.0;
+        if (!intersected) rtaoCol += dot(normalize(rayDir), normal)*2.0;
     }
     rtaoCol /= RTAO_RAYS;
     return rtaoCol;
