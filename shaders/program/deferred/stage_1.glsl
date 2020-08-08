@@ -101,7 +101,7 @@ void main() {
 
         #ifdef RTAO
         // RTAO accumulation stuff
-        vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal))+0.1);
+        vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal)));
         vec3 history = texture2D(colortex5, reprojectCoords(screenPos.xyz * 0.5 + 0.5)).rgb;
 
         rtaoOut = mix(history, current, 0.1);

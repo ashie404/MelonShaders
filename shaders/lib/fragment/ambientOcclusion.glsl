@@ -13,7 +13,7 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
     float noisePattern = bayer64(gl_FragCoord.xy);
 
     for (int r = 1; r <= RTAO_RAYS; r++) {
-        vec3 rayDir = sphereMap(fract(frameTimeCounter * 4.0 + hash32(uvec2(gl_FragCoord.xy*r)).xy));
+        vec3 rayDir = sphereMap(hash32(uvec2(gl_FragCoord.xy*r*frameTimeCounter)).xy);
         rayDir = mix(rayDir, normalize(upPosition), 0.3) * 5.0;
         if (dot(rayDir, normal) < 0.0) rayDir = -rayDir;
 
@@ -31,7 +31,7 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
 
         for (int i = 0; i < RTAO_STEPS; i++) {
             float diff = depth - currentRayPos.z;
-            if (diff > 0.0 && diff < 4.5) {
+            if (diff > 0.0 && diff < 4.0) {
                 intersected = true; 
                 break;
             }
