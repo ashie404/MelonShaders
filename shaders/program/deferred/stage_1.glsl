@@ -101,7 +101,17 @@ void main() {
         vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal)));
         vec3 history = texture2D(colortex5, reprojectCoords(screenPos.xyz * 0.5 + 0.5)).rgb;
 
-        rtaoOut = mix(current, history, 0.85);
+        vec4 previousPosition = vec4(worldPos.xyz + cameraPosition, worldPos.w);
+        previousPosition.xyz -= previousCameraPosition;
+        previousPosition = gbufferPreviousModelView * previousPosition;
+        previousPosition = gbufferPreviousProjection * previousPosition;
+        previousPosition /= previousPosition.w;
+
+        vec2 velocity = (screenPos - previousPosition).xy * 0.02;
+        velocity = clamp01(normalize(velocity)*length(velocity)*128.0);
+
+        rtaoOut = mix(current, history, clamp01(0.85-clamp01(velocity.x+velocity.y)));
+        
         #else
         rtaoOut = texture2D(colortex5, texcoord).rgb;
         #endif
