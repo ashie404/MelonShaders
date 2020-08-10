@@ -133,6 +133,8 @@ void main() {
             } else {
                 specularColor = (lightColor * specularStrength * albedo * (isEyeInWater == 1 ? exp(-waterCoeff * length(viewPos.xyz)) : vec3(1.0))) * shadowsDiffuse;
             }
+
+            color += specularColor;
             #endif
 
             // SPECULAR REFLECTIONS //
@@ -170,11 +172,11 @@ void main() {
 
                 if (info.specular.g <= 0.898039) {
                     // dielectric
+                    #if WORLD == 0
+                    reflection += specularColor;
+                    #endif
                     calculateFog(reflection, viewPos.xyz, depth0);
                     color = mix(color, reflection, clamp01(fresnel+0.1-clamp(roughness*8.0, 0.0, 0.1)));
-                    #if WORLD == 0
-                    color += specularColor;
-                    #endif
                 } else {
                     // metal
                     #if WORLD == 0
