@@ -171,7 +171,9 @@ void main() {
                 if (info.specular.g <= 0.898039) {
                     // dielectric
                     color = mix(color, reflection, clamp01(fresnel+0.3-clamp(roughness*8.0, 0.0, 0.3)));
+                    #if WORLD == 0
                     color += specularColor;
+                    #endif
                 } else {
                     // metal
                     #if WORLD == 0
