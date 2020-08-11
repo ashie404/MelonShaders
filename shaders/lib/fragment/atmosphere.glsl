@@ -210,7 +210,7 @@ void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 colo
 
 float cloudNoise(in vec2 coord, in float time) {
 	float cloud = clamp01(pow(texture2D(noisetex, coord+time).g, 2.0));
-	cloud = remap(cloud, 0.0, 1.0, 0.0, clamp01(pow(texture2D(noisetex, (coord/2.0)+time).g, mix(0.25, 2.0, clamp01(times.y)))));
+	cloud = remap(cloud, 0.0, 1.0, 0.0, clamp01(pow(texture2D(noisetex, (coord/2.0)+time).g, mix(0.25, 1.0, clamp01(pow(times.y, 4.0))))));
 	return clamp01(cloud*CLOUD_DENSITY);
 }
 
