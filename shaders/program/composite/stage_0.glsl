@@ -96,9 +96,9 @@ void main() {
     // if not sky, check for translucents
     if (depth0 != 1.0) {
         // if just translucent, calculate shading
-        if (info.matMask == 2.0) {
+        if (info.matMask == 2) {
             color = calculateTranslucentShading(info, viewPos.xyz, shadowPos.xyz);
-        } else if (info.matMask == 3.0) { // if water, calculate water stuff
+        } else if (info.matMask == 3) { // if water, calculate water stuff
             // render water fog
             float ldepth0 = linearDepth(depth0);
             float ldepth1 = linearDepth(texture2D(depthtex1, texcoord).r);
@@ -113,6 +113,9 @@ void main() {
                 // calculate transmittance
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
                 color = color * transmittance;
+
+                //float specularStrength = ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), 0.02, 0.99);
+                //color += lightColor*4.0*specularStrength;
 
                 // calculate water foam/lines color
                 vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;

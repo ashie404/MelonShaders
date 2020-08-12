@@ -22,10 +22,12 @@ in float water;
 
 // Uniforms
 
+uniform int entityId;
+
 uniform sampler2D texture;
 
 void main() {
-	if (water > 0.5) {
+	if (water > 0.5 || entityId == 7) {
 		discard;
 	} else {
 		vec4 color = texture2D(texture, texcoord) * glcolor;

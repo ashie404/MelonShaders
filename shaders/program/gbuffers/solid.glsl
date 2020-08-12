@@ -32,6 +32,8 @@ uniform sampler2D specular;
 uniform sampler2D normals;
 uniform float sunAngle;
 
+uniform int entityId;
+
 uniform float rainStrength;
 
 uniform vec3 cameraPosition;
@@ -151,6 +153,9 @@ void main() {
 
     if (idCorrected == 20 || idCorrected == 21 || idCorrected == 23) {
         matMask = 1;
+    } else if (entityId == 7) {
+        albedo.rgb = vec3(15.0*emissionMult);
+        matMask = 4;
     }
 
     // output everything
