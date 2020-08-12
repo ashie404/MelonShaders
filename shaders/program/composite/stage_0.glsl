@@ -114,9 +114,6 @@ void main() {
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
                 color = color * transmittance;
 
-                //float specularStrength = ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), 0.02, 0.99);
-                //color += lightColor*4.0*specularStrength;
-
                 // calculate water foam/lines color
                 vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;
                 foamColor = mix(vec3(0.025), foamColor, info.lightmap.y);
