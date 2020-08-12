@@ -7,17 +7,26 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color) {
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
+    vec3 vlColor = vec3(0.0);
     for (int i = 0; i < 8; i++) {
         currentPos += increment;
 
         vec3 currentPosShadow = distortShadow(currentPos.xyz) * 0.5 + 0.5;
 
-        visibility += texture2D(shadowtex1, currentPosShadow.xy).r < currentPosShadow.z ? 0.0 : 1.0;
+        float shadow0 = texture2D(shadowtex0, currentPosShadow.xy).r;
+        float shadow1 = texture2D(shadowtex1, currentPosShadow.xy).r;
+
+        if (!(shadow1 < currentPosShadow.z)) {
+            visibility += 1.0;
+            if (shadow0 < currentPosShadow.z) vlColor += texture2D(shadowcolor0, currentPosShadow.xy).rgb*2.0;
+            else vlColor += vec3(1.0);
+        }
     }
 
     visibility /= 8.0;
+    vlColor /= 8.0;
 
-    return visibility * color;
+    return visibility * (color*vlColor);
 }
 
 void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
@@ -36,7 +45,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
             color = mix(color, fogCol2, clamp01(length(viewPos)/196.0*FOG_DENSITY));
         }
         #ifdef VL
-        color += calculateVL(viewPos, lightColor*fogCol/12.0*mix(1.0, 0.05, clamp01(times.y))*VL_DENSITY);
+        color += calculateVL(viewPos, lightColor*fogCol/12.0*mix(1.0, 0.15, clamp01(times.y))*VL_DENSITY);
         #endif
     }
     #elif WORLD == -1
