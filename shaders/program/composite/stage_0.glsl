@@ -67,6 +67,7 @@ uniform float far;
 uniform float near;
 
 uniform int isEyeInWater;
+uniform int frameCounter;
 
 // Defines
 #define linearDepth(x) (2.0 * near * far / (far + near - (2.0 * x - 1.0) * (far - near)))

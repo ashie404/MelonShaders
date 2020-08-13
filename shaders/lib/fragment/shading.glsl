@@ -163,7 +163,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
         float shadowBias = getShadowBias(viewPos, sunAngle);
 
         for (int i = 0; i <= 8; i++) {
-            vec2 offset = (vogelDiskSample(i, 8, 0.5)*(12.0*SSS_SCATTER)*(shadowMapResolution/2048.0)) / shadowMapResolution;
+            vec2 offset = (vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy*frameCounter))*(8.0*SSS_SCATTER)*(shadowMapResolution/2048.0)) / shadowMapResolution;
             offset = rotationMatrix * offset;
 
             // sample shadow map
