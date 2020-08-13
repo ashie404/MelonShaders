@@ -81,6 +81,7 @@ uniform int frameCounter;
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
+    float depth1 = texture2D(depthtex1, texcoord).r;
 
     FragInfo info = getFragInfo(texcoord);
 
@@ -88,6 +89,11 @@ void main() {
     vec4 viewPos = gbufferProjectionInverse * screenPos;
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
+
+    // no-translucents positions
+    vec4 screenPosNT = vec4(texcoord, depth1, 1.0) * 2.0 - 1.0;
+    vec4 viewPosNT = gbufferProjectionInverse * screenPosNT;
+    viewPosNT /= viewPosNT.w;
 
     vec4 shadowPos = shadowProjection * shadowModelView * worldPos;
     shadowPos /= shadowPos.w;
@@ -102,7 +108,7 @@ void main() {
         } else if (info.matMask == 3) { // if water, calculate water stuff
             // render water fog
             float ldepth0 = linearDepth(depth0);
-            float ldepth1 = linearDepth(texture2D(depthtex1, texcoord).r);
+            float ldepth1 = linearDepth(depth1);
 
             float depthcomp = (ldepth1-ldepth0);
 
@@ -113,7 +119,13 @@ void main() {
             if (isEyeInWater == 0) {
                 // calculate transmittance
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
-                color = color * transmittance;
+                color *= transmittance;
+                #ifdef VL
+                vec3 scattering = calculateVL(viewPosNT.xyz, lightColor*VL_DENSITY);
+                scattering *= waterScatterCoeff; // scattering coefficent
+                scattering *= (vec3(1.0) - transmittance) / waterCoeff;
+                color += scattering;
+                #endif
 
                 // calculate water foam/lines color
                 vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;

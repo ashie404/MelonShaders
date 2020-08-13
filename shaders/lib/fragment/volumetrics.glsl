@@ -65,7 +65,10 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
         vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL
-        color += calculateVL(viewPos.xyz, vec3(0.1, 0.5, 0.9)/12.0*mix(1.0, 0.15, clamp01(times.w))*VL_DENSITY);
+        vec3 scattering = calculateVL(viewPos.xyz, lightColor*VL_DENSITY);
+        scattering *= waterScatterCoeff; // scattering coefficent
+        scattering *= (vec3(1.0) - transmittance) / waterCoeff;
+        color += scattering;
         #endif
     }
 }
