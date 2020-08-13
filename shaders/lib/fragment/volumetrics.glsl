@@ -8,7 +8,7 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color) {
 
     float visibility = 0.0;
     vec3 vlColor = vec3(0.0);
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < VL_STEPS; i++) {
         currentPos += increment;
 
         vec3 currentPosShadow = distortShadow(currentPos.xyz) * 0.5 + 0.5;
@@ -23,8 +23,8 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color) {
         }
     }
 
-    visibility /= 8.0;
-    vlColor /= 8.0;
+    visibility /= VL_STEPS;
+    vlColor /= VL_STEPS;
 
     return visibility * (color*vlColor);
 }
