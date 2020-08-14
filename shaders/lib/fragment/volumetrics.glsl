@@ -1,10 +1,3 @@
-//Mie phase function
-float miePhase(float x, float d) {
-    float g = exp2(d*-0.025);
-    float g2 = g*g;
-    return (1.0/4.0*PI)*((1.0-g2)/pow(1.0+g2-2.0*g*x,1.5));
-}
-
 vec3 calculateColoredVL(in vec3 viewPos, in vec3 color) {
 
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
@@ -76,7 +69,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
             color = mix(color, fogCol2, clamp01(length(viewPos)/196.0*FOG_DENSITY));
         }
         #ifdef VL
-        float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0), 0.5));
+        float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
         color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/8.0*mix(1.0, 0.25, clamp01(times.y)));
         #endif
     }
@@ -101,7 +94,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
         vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL
-        float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0), 0.5));
+        float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
         vec3 scattering = calculateVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie));
         scattering *= waterScatterCoeff; // scattering coefficent
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;

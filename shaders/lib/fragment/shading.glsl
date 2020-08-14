@@ -172,7 +172,8 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
             visibility += step(shadowPos.z - shadowMapSample, shadowBias);
         }
-        color += lightColor*clamp01((visibility/4.0)-depth)/2.0;
+        float mie = miePhase(dot(normalize(viewPos), normalize(shadowLightPosition)), depth, 0.05);
+        color += lightColor*clamp01(clamp01((visibility/4.0)-depth)*clamp(mie, 0.75, 2.0)/2.0);
     }
     #endif
 

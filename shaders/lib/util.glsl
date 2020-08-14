@@ -104,6 +104,15 @@ float fresnel_schlick(in vec3 viewPos, in vec3 normal, in float F0)
     return F0 + (1.0 - F0) * pow(1.0 - clamp01(dot(normal, reflect(normalize(viewPos), normal))), 5.0);
 }
 
+// phase functions
+
+// Mie phase function
+float miePhase(float x, float d, float scatter) {
+    float g = exp2(d*-scatter);
+    float g2 = g*g;
+    return (1.0/4.0*PI)*((1.0-g2)/pow(1.0+g2-2.0*g*x,1.5));
+}
+
 // Encoding & Decoding functions
 
 #ifdef FSH
