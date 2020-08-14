@@ -162,8 +162,8 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
         float shadowBias = getShadowBias(viewPos, sunAngle);
 
-        for (int i = 0; i <= 8; i++) {
-            vec2 offset = (vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy*frameCounter))*(8.0*SSS_SCATTER)*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        for (int i = 0; i <= 12; i++) {
+            vec2 offset = (vogelDiskSample(i, 12, interleavedGradientNoise(gl_FragCoord.xy*frameCounter))*(12.0*SSS_SCATTER)*(shadowMapResolution/2048.0)) / shadowMapResolution;
             offset = rotationMatrix * offset;
 
             // sample shadow map
@@ -172,7 +172,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
             visibility += step(shadowPos.z - shadowMapSample, shadowBias);
         }
-        color += lightColor*clamp01((visibility/2.0)-depth)/2.0;
+        color += lightColor*clamp01((visibility/4.0)-depth)/2.0;
     }
     #endif
 

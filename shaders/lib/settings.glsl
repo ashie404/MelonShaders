@@ -33,7 +33,7 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 
 // lighting settings
 #define SSS // Subsurface scattering.
-#define SSS_SCATTER 1.0 // Subsurface scattering scatter size. [0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define SSS_SCATTER 1.0 // Light scattering radius on subsurface scattering. [0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 #define SPECULAR // Specular highlights.
 #define SPEC_REFLECTIONS // Specular reflections. Has no effect if reflections are disabled.
 
@@ -62,7 +62,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 
 #define VL // Volumetric lighting.
 #define VL_DENSITY 1.0 // Density of volumetric lighting. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.2 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2.0]
-#define VL_STEPS 8 // How many raymarching steps to take when calculating volumetric lighting. Higher is laggier, but will most likely look better. [4 6 8 12 16 24 32]
+#define VL_STEPS 4 // How many raymarching steps to take when calculating volumetric lighting. Higher is laggier, but will most likely look better. [4 6 8 12 16 24 32]
 
 // visual settings
 #define REFLECTIONS // Enables sky reflections. 
