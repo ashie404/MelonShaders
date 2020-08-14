@@ -1,9 +1,9 @@
-vec3 calculateVL(in vec3 viewPos, in vec3 color) {
+vec3 calculateColoredVL(in vec3 viewPos, in vec3 color) {
 
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / 8.0 * fract(frameTimeCounter * 4.0 + texture2D(noisetex, gl_FragCoord.xy * (1.0 / vec2(noiseTextureResolution))).r);
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS * fract(frameTimeCounter * 4.0 + texture2D(noisetex, gl_FragCoord.xy * (1.0 / vec2(noiseTextureResolution))).r);
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
@@ -26,8 +26,32 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color) {
     visibility /= VL_STEPS;
     vlColor /= VL_STEPS;
 
-    return visibility * (color*vlColor);
+    return (visibility*VL_DENSITY) * (color*vlColor);
 }
+
+vec3 calculateVL(in vec3 viewPos, in vec3 color) {
+
+    vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
+
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS * fract(frameTimeCounter * 4.0 + texture2D(noisetex, gl_FragCoord.xy * (1.0 / vec2(noiseTextureResolution))).r);
+    vec4 currentPos = startPos;
+
+    float visibility = 0.0;
+
+    for (int i = 0; i < VL_STEPS; i++) {
+        currentPos += increment;
+
+        vec3 currentPosShadow = distortShadow(currentPos.xyz) * 0.5 + 0.5;
+
+        visibility += texture2D(shadowtex1, currentPosShadow.xy).r < currentPosShadow.z ? 0.0 : 1.0;
+    }
+
+    visibility /= VL_STEPS;
+
+    return (visibility*VL_DENSITY) * color;
+}
+
 
 void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
     #ifdef FOG 
@@ -45,7 +69,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
             color = mix(color, fogCol2, clamp01(length(viewPos)/196.0*FOG_DENSITY));
         }
         #ifdef VL
-        color += calculateVL(viewPos, lightColor*fogCol/12.0*mix(1.0, 0.15, clamp01(times.y))*VL_DENSITY);
+        color += calculateColoredVL(viewPos, lightColor*fogCol/12.0*mix(1.0, 0.15, clamp01(times.y)));
         #endif
     }
     #elif WORLD == -1
@@ -65,7 +89,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
         vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL
-        vec3 scattering = calculateVL(viewPos.xyz, lightColor*VL_DENSITY);
+        vec3 scattering = calculateVL(viewPos.xyz, lightColor);
         scattering *= waterScatterCoeff; // scattering coefficent
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;
         color += scattering;

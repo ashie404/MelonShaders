@@ -121,7 +121,7 @@ void main() {
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
                 color *= transmittance;
                 #ifdef VL
-                vec3 scattering = calculateVL(viewPosNT.xyz, lightColor*VL_DENSITY);
+                vec3 scattering = calculateVL(viewPosNT.xyz, lightColor);
                 scattering *= waterScatterCoeff; // scattering coefficent
                 scattering *= (vec3(1.0) - transmittance) / waterCoeff;
                 color += scattering;
