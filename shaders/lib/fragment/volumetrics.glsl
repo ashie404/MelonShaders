@@ -3,12 +3,13 @@ vec3 calculateColoredVL(in vec3 viewPos, in vec3 color) {
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS;
-    vec4 currentPos = startPos + increment*fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 currentPos = startPos;
 
     float visibility = 0.0;
     vec3 vlColor = vec3(0.0);
     for (int i = 0; i < VL_STEPS; i++) {
+        currentPos += increment;
         vec3 currentPosShadow = distortShadow(currentPos.xyz) * 0.5 + 0.5;
 
         float shadow0 = texture2D(shadowtex0, currentPosShadow.xy).r;
@@ -19,7 +20,6 @@ vec3 calculateColoredVL(in vec3 viewPos, in vec3 color) {
             if (shadow0 < currentPosShadow.z) vlColor += texture2D(shadowcolor0, currentPosShadow.xy).rgb*2.0;
             else vlColor += vec3(1.0);
         }
-        currentPos += increment;
     }
 
     visibility /= VL_STEPS;
@@ -33,17 +33,16 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color) {
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS;
-    vec4 currentPos = startPos + increment*fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 currentPos = startPos;
 
     float visibility = 0.0;
 
     for (int i = 0; i < VL_STEPS; i++) {
+        currentPos += increment;
         vec3 currentPosShadow = distortShadow(currentPos.xyz) * 0.5 + 0.5;
 
         visibility += texture2D(shadowtex1, currentPosShadow.xy).r < currentPosShadow.z ? 0.0 : 1.0;
-
-        currentPos += increment;
     }
 
     visibility /= VL_STEPS;
