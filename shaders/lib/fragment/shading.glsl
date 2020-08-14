@@ -5,12 +5,10 @@
 */
 
 mat2 getRotationMatrix(in vec2 coord) {
-    float rotationAmount = texture2D(
+    float rotationAmount = texelFetch(
         noisetex,
-        coord * vec2(
-            viewWidth / noiseTextureResolution,
-            viewHeight / noiseTextureResolution
-        )
+        ivec2(coord * ivec2(viewWidth, viewHeight)) & noiseTextureResolution-1,
+        0
     ).r;
     rotationAmount = fract(frameTimeCounter * 4.0 + rotationAmount);
     return mat2(
@@ -183,7 +181,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
     #ifndef WHITEWORLD
     color *= info.albedo.rgb;
     #endif
-
+    
     return color;
 }
 
