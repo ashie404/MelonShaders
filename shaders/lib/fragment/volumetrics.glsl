@@ -77,7 +77,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
         }
         #ifdef VL
         float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0), 0.5));
-        color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/4.0*mix(1.0, 0.25, clamp01(times.y)));
+        color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/8.0*mix(1.0, 0.25, clamp01(times.y)));
         #endif
     }
     #elif WORLD == -1
