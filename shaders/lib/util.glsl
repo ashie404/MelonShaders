@@ -26,6 +26,8 @@ const float PI = 3.1415926535897;
 const float rPI = 1.0 / PI;
 const float rLOG2 = 1.0 / log(2.0);
 
+const float PHI = (1.0 + sqrt(5.0)) / 2.0;
+
 // Dithering functions
 float bayer2(vec2 a){
     a = floor(a);
@@ -54,6 +56,11 @@ vec3 hash32(uvec2 x)
     uint n = baseHash(x);
     uvec3 rz = uvec3(n, n*16807U, n*48271U);
     return vec3((rz >> 1) & uvec3(0x7fffffffU))/float(0x7fffffff);
+}
+
+float gold_noise(in vec2 xy, in float seed)
+{
+    return fract(tan(distance(xy*PHI, xy)*seed)*xy.x);
 }
 
 // luma functions

@@ -13,7 +13,7 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
     float noisePattern = bayer64(gl_FragCoord.xy);
 
     for (int r = 1; r <= RTAO_RAYS; r++) {
-        vec3 rayDir = sphereMap(hash32(uvec2(gl_FragCoord.xy*r*frameTimeCounter)).xy);
+        vec3 rayDir = sphereMap(fract(frameTimeCounter * 4.0 + texelFetch(noisetex, ivec2(gl_FragCoord.xy*r) & noiseTextureResolution - 1, 0).rg));
         rayDir = mix(rayDir, normalize(upPosition), 0.3) * 5.0;
         if (dot(rayDir, normal) < 0.0) rayDir = -rayDir;
 

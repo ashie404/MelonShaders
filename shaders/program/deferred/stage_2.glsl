@@ -76,7 +76,6 @@ uniform int frameCounter;
 #include "/lib/fragment/shading.glsl"
 #include "/lib/util/noise.glsl"
 #include "/lib/fragment/atmosphere.glsl"
-#include "/lib/fragment/ambientOcclusion.glsl"
 #include "/lib/post/taaUtil.glsl"
 
 void main() {
