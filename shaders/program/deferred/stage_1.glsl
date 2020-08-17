@@ -108,9 +108,9 @@ void main() {
         previousPosition /= previousPosition.w;
 
         vec2 velocity = (screenPos - previousPosition).xy * 0.02;
-        velocity = clamp01(normalize(velocity)*length(velocity)*128.0);
+        velocity = clamp01(normalize(velocity)*length(velocity)*1024.0);
 
-        rtaoOut = mix(current, history, clamp01(0.75-clamp01(velocity.x+velocity.y)));
+        rtaoOut = mix(current, history, clamp01(0.85-clamp(velocity.x+velocity.y, 0.0, 0.45)));
         
         #else
         rtaoOut = texture2D(colortex5, texcoord).rgb;
