@@ -152,7 +152,7 @@ void main() {
 
             // SPECULAR REFLECTIONS //
             #ifdef SPEC_REFLECTIONS
-            if (roughness <= 0.4) {
+            if (roughness <= 0.325) {
                 // screenspace reflection calculation
                 #ifdef SSR
                 vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0);
