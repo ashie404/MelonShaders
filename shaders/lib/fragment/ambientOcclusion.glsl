@@ -15,7 +15,7 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
     for (int r = 1; r <= RTAO_RAYS; r++) {
         vec2 noise = texelFetch(noisetex, ivec2(gl_FragCoord.xy*r) & noiseTextureResolution - 1, 0).rg;
         noise = noise * (255.0/256.0);
-        float t = float(frameCounter & 255);
+        float t = float(frameCounter & 255)*12.0;
         noise = fract(noise + (t * PHI));
         noise.x = (noise.x > 0.5 ? 1.0 - noise.x : noise.x) * 2.0;
         noise.y = (noise.y > 0.5 ? 1.0 - noise.y : noise.y) * 2.0;

@@ -1,14 +1,16 @@
-vec3 calculateColoredVL(in vec3 viewPos, in vec3 color) {
+vec3 calculateColoredVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
+
+    int steps = lowQ ? 2 : VL_STEPS;
 
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
     vec3 vlColor = vec3(0.0);
-    for (int i = 0; i < VL_STEPS; i++) {
+    for (int i = 0; i < steps; i++) {
         currentPos += increment;
         vec3 currentPosShadow = distortShadow(currentPos.xyz) * 0.5 + 0.5;
 
@@ -22,36 +24,38 @@ vec3 calculateColoredVL(in vec3 viewPos, in vec3 color) {
         }
     }
 
-    visibility /= VL_STEPS;
-    vlColor /= VL_STEPS;
+    visibility /= steps;
+    vlColor /= steps;
 
     return (visibility*VL_DENSITY) * (color*vlColor);
 }
 
-vec3 calculateVL(in vec3 viewPos, in vec3 color) {
+vec3 calculateVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
+
+    int steps = lowQ ? 2 : VL_STEPS;
 
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / VL_STEPS * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
 
-    for (int i = 0; i < VL_STEPS; i++) {
+    for (int i = 0; i < steps; i++) {
         currentPos += increment;
         vec3 currentPosShadow = distortShadow(currentPos.xyz) * 0.5 + 0.5;
 
         visibility += texture2D(shadowtex1, currentPosShadow.xy).r < currentPosShadow.z ? 0.0 : 1.0;
     }
 
-    visibility /= VL_STEPS;
+    visibility /= steps;
 
     return (visibility*VL_DENSITY) * color;
 }
 
 
-void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
+void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lowQVL) {
     #ifdef FOG 
 
     #if WORLD == 0
@@ -64,11 +68,11 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
             } else if (eyeBrightnessSmooth.y <= 8) {
                 fogCol2 = vec3(0.1);
             }
-            color = mix(color, fogCol2, clamp01(length(viewPos)/196.0*FOG_DENSITY));
+            color = mix(color, fogCol2, clamp01(length(viewPos)/256.0*FOG_DENSITY));
         }
         #ifdef VL
         float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
-        color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/8.0*mix(1.0, 0.25, clamp01(times.y)));
+        color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/8.0*mix(1.0, 0.25, clamp01(times.y)), lowQVL);
         #endif
     }
     #elif WORLD == -1
@@ -93,7 +97,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0) {
         color *= transmittance;
         #ifdef VL
         float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
-        vec3 scattering = calculateVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie));
+        vec3 scattering = calculateVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie), lowQVL);
         scattering *= waterScatterCoeff; // scattering coefficent
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;
         color += scattering;

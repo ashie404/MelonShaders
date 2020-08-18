@@ -196,14 +196,14 @@ void main() {
                     #else
                     vec3 metalReflection = reflection*albedo;
                     #endif
-                    calculateFog(metalReflection, viewPos.xyz, depth0);
+                    calculateFog(metalReflection, viewPos.xyz, depth0, true);
                     color = mix(color, metalReflection, clamp01(fresnel+0.3));
                 } else {
                     // dielectric
                     #if WORLD == 0
                     reflection += specularColor;
                     #endif
-                    calculateFog(reflection, viewPos.xyz, depth0);
+                    calculateFog(reflection, viewPos.xyz, depth0, true);
                     color = mix(color, reflection, clamp01(fresnel));
                 }
             }
