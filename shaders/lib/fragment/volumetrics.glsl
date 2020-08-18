@@ -68,7 +68,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lo
             } else if (eyeBrightnessSmooth.y <= 8) {
                 fogCol2 = vec3(0.1);
             }
-            color = mix(color, fogCol2, clamp01(length(viewPos)/256.0*FOG_DENSITY));
+            color = mix(color, fogCol2, clamp01(length(viewPos)/196.0*FOG_DENSITY));
         }
         #ifdef VL
         float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
