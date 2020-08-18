@@ -161,7 +161,7 @@ void main() {
     worldSpace = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
 
     #ifdef TAA
-    gl_Position.xy += jitter(1.5+gl_Position.z);
+    gl_Position.xy += jitter(2.0);
     #endif
 }
 
