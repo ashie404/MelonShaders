@@ -137,7 +137,7 @@ void main() {
 
                 #else
                 
-                skyReflectionColor = fogColor*0.5;
+                skyReflectionColor = vec3(0.01);
 
                 #endif
             }
@@ -201,7 +201,7 @@ void main() {
 
                     #else
 
-                    skyReflectionColor = fogColor*0.5;
+                    skyReflectionColor = vec3(0.01);
 
                     #endif
                 }
