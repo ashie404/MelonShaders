@@ -85,15 +85,17 @@ void main() {
         #ifdef STRETCH_PUDDLES_Y
         worldPos.y = 0.0;
         #endif
+        float puddles = clamp01(cellular(worldPos)*PUDDLE_MULT);
+
         #ifdef POROSITY
         if (specularData.b <= 0.251 && EMISSIVE_MAP != 1) {
-            albedo.rgb = mix(albedo.rgb, mix(albedo.rgb, mix(vec3(luma(albedo.rgb*0.75)), albedo.rgb*0.75, 1.0+(1.0-clamp01(cellular(worldPos)*PUDDLE_MULT))), specularData.b/0.251), rainStrength);
-            specularData.r = mix(specularData.r, mix(clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), specularData.r, specularData.b/0.251), rainStrength);
+            albedo.rgb = mix(albedo.rgb, pow(albedo.rgb, mix(vec3(1.0), vec3(2.25), clamp01((specularData.b/0.251)*puddles))), rainStrength);
+            specularData.r = mix(specularData.r, mix(clamp01(specularData.r+puddles), specularData.r, specularData.b/0.251), rainStrength);
         } else {
-            specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), rainStrength);
+            specularData.r = mix(specularData.r, clamp01(specularData.r+puddles), rainStrength);
         }
         #else
-        specularData.r = mix(specularData.r, clamp01(specularData.r+clamp01(cellular(worldPos)*PUDDLE_MULT)), rainStrength);
+        specularData.r = mix(specularData.r, clamp01(specularData.r+puddles), rainStrength);
         #endif
 
         specularData.r = clamp01(specularData.r);
