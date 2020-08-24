@@ -107,6 +107,7 @@ option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
 
 option.REBUILD_Z=Rebuild Normal Z
+option.HARDCODED_METALS=Hardcoded Metals
 
 option.WHITEWORLD=Whiteworld
 

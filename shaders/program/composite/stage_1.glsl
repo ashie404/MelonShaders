@@ -155,10 +155,12 @@ void main() {
             vec3 albedo = decodeColor(texture2D(colortex4, texcoord).w);
             mat2x3 hardcodedData = mat2x3(0.0);
 
+            #ifdef HARDCODED_METALS
             if (isHardcoded) {
                 hardcodedData = getHardcodedMetal(info.specular.g);
                 albedo = pow(fresnel_metal(hardcodedData[0], hardcodedData[1], clamp01(dot(info.normal, -normalize(viewPos.xyz)))), vec3(2.0));
             }
+            #endif
 
             // SPECULAR HIGHLIGHTS //
 
