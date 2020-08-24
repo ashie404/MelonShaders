@@ -85,7 +85,7 @@ void main() {
         #ifdef STRETCH_PUDDLES_Y
         worldPos.y = 0.0;
         #endif
-        float puddles = clamp01(cellular(worldPos)*PUDDLE_MULT);
+        float puddles = clamp01(cellular(worldPos/16.0)*PUDDLE_MULT);
 
         #ifdef POROSITY
         if (specularData.b <= 0.251 && EMISSIVE_MAP != 1) {
