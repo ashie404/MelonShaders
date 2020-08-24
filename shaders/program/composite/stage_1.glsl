@@ -79,6 +79,27 @@ uniform int frameCounter;
 #include "/lib/fragment/volumetrics.glsl"
 #include "/lib/fragment/shading.glsl"
 
+// other things
+mat2x3 getHardcodedMetal(float specG) {
+    if      (specG == 230.0/255.0) return mat2x3(vec3(2.9114, 2.9497, 2.5845), vec3(3.0893, 2.9318, 2.7670));    // iron
+    else if (specG == 231.0/255.0) return mat2x3(vec3(0.18299, 0.42108, 1.3734), vec3(3.4242, 2.3459, 1.7704));  // gold
+    else if (specG == 232.0/255.0) return mat2x3(vec3(1.3456, 0.96521, 0.61722), vec3(7.4746, 6.3995, 5.3031));  // aluminum
+    else if (specG == 233.0/255.0) return mat2x3(vec3(3.1071, 3.1812, 2.3230), vec3(3.3314, 3.3291, 3.1350));    // chrome
+    else if (specG == 234.0/255.0) return mat2x3(vec3(0.27105, 0.67693, 1.3164), vec3(3.6092, 2.6248, 2.2921));  // copper
+    else if (specG == 235.0/255.0) return mat2x3(vec3(1.9100, 1.8300, 1.4400), vec3(3.5100, 3.4000, 3.1800));    // lead
+    else if (specG == 236.0/255.0) return mat2x3(vec3(2.3757, 2.0847, 1.8453), vec3(4.2655, 3.7153, 3.1365));    // platinum
+    else if (specG == 237.0/255.0) return mat2x3(vec3(0.15943, 0.14512, 0.13547), vec3(3.9291, 3.1900, 2.3808)); // silver
+    else return mat2x3(0.0);
+}
+
+// from http://wscg.zcu.cz/WSCG2005/Papers_2005/Short/H29-full.pdf
+vec3 fresnel_metal(vec3 N, vec3 K, float cosTheta) {
+    vec3 a = pow(N-1.0, vec3(2.0))+(4.0*N)*pow(1.0-cosTheta, 5.0)+pow(K, vec3(2.0));
+    vec3 b = pow(N+1.0, vec3(2.0))+pow(K, vec3(2.0));
+
+    return clamp01(a/b);
+}
+
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
 
@@ -129,8 +150,15 @@ void main() {
         #ifdef SPECULAR
         else {
             bool isMetal = (info.specular.g >= 230.0 / 255.0);
+            bool isHardcoded = (isMetal && (info.specular.g < 238.0/255.0));
 
-            vec3 albedo = pow(decodeColor(texture2D(colortex4, texcoord).w), vec3(2.0));
+            vec3 albedo = decodeColor(texture2D(colortex4, texcoord).w);
+            mat2x3 hardcodedData = mat2x3(0.0);
+
+            if (isHardcoded) {
+                hardcodedData = getHardcodedMetal(info.specular.g);
+                albedo = pow(fresnel_metal(hardcodedData[0], hardcodedData[1], clamp01(dot(info.normal, -normalize(viewPos.xyz)))), vec3(2.0));
+            }
 
             // SPECULAR HIGHLIGHTS //
 
@@ -152,12 +180,12 @@ void main() {
 
             // SPECULAR REFLECTIONS //
             #ifdef SPEC_REFLECTIONS
-            if (roughness <= 0.285) {
+            if (roughness <= 0.5) {
                 // screenspace reflection calculation
-                #ifdef SSR
-                vec4 reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0);
-                #else
                 vec4 reflectionColor = vec4(0.0);
+                #ifdef SSR
+                if (roughness <= 0.25) reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 1.5);
+                else reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 2.0, 2.0);
                 #endif
 
                 vec3 skyReflectionColor = vec3(0.0);
@@ -191,13 +219,14 @@ void main() {
 
                 if (isMetal) {
                     // metal
-                    #if WORLD == 0
-                    vec3 metalReflection = reflection*albedo+specularColor;
-                    #else
                     vec3 metalReflection = reflection*albedo;
+                    
+                    #if WORLD == 0
+                    metalReflection += specularColor;
                     #endif
+
                     calculateFog(metalReflection, viewPos.xyz, depth0, true);
-                    color = mix(color, metalReflection, clamp01(fresnel+0.3));
+                    color = metalReflection;
                 } else {
                     // dielectric
                     #if WORLD == 0
