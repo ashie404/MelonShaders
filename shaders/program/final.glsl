@@ -4,6 +4,7 @@
     https://juniebyte.cf
 */
 
+#define ACES
 #include "/lib/settings.glsl"
 #include "/lib/util.glsl"
 
@@ -21,6 +22,7 @@ in vec2 texcoord;
 
 // Uniforms
 uniform sampler2D colortex0;
+uniform sampler2D colortex4;
 uniform sampler2D colortex5;
 uniform sampler2D colortex7;
 

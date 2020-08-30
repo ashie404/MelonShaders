@@ -43,15 +43,6 @@ uniform mat4 gbufferModelViewInverse;
 // Includes
 #include "/lib/util/noise.glsl"
 
-// other stuff
-vec3 toLinear(vec3 srgb) {
-    return mix(
-        srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
-        pow(0.947867 * srgb + 0.0521327, vec3(2.4)),
-        step(0.04045, srgb)
-    );
-}
-
 void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
     if      (id == 50 ) albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0);
     else if (id == 51 ) albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0);
@@ -168,7 +159,7 @@ void main() {
         specularData.g, // specular green channel
         specularData.r // specular red channel
     );
-    normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(albedo.rgb));
+    normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(toSrgb(albedo.rgb)));
     #ifndef RTAO
     aoOut = vec4(vec3(glcolor.a), 1.0);
     #endif
@@ -234,7 +225,7 @@ void main() {
     #endif
 
     #ifdef TAA
-    gl_Position.xy += jitter(2.0);
+    gl_Position.xy += jitter(2.0*gl_Position.w);
     #endif
 }
 

@@ -152,12 +152,11 @@ void main() {
             bool isMetal = (info.specular.g >= 230.0 / 255.0);
             bool isHardcoded = (isMetal && (info.specular.g < 238.0/255.0));
 
-            vec3 albedo = decodeColor(texture2D(colortex4, texcoord).w);
-            mat2x3 hardcodedData = mat2x3(0.0);
+            vec3 albedo = toLinear(decodeColor(texture2D(colortex4, texcoord).w));
 
             #ifdef HARDCODED_METALS
             if (isHardcoded) {
-                hardcodedData = getHardcodedMetal(info.specular.g);
+                mat2x3 hardcodedData = getHardcodedMetal(info.specular.g);
                 albedo = pow(fresnel_metal(hardcodedData[0], hardcodedData[1], clamp01(dot(info.normal, -normalize(viewPos.xyz)))), vec3(2.0));
             }
             #endif
@@ -182,12 +181,15 @@ void main() {
 
             // SPECULAR REFLECTIONS //
             #ifdef SPEC_REFLECTIONS
-            if (roughness <= 0.5) {
+            if (roughness <= 0.35) {
                 // screenspace reflection calculation
                 vec4 reflectionColor = vec4(0.0);
                 #ifdef SSR
-                if (roughness <= 0.25) reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 1.5);
-                else reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 2.0, 2.0);
+                if (roughness <= 0.225) {
+                    reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 1.5);
+                } else { 
+                    reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 2.0);
+                }
                 #endif
 
                 vec3 skyReflectionColor = vec3(0.0);

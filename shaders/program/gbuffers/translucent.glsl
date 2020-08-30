@@ -39,15 +39,6 @@ uniform mat4 gbufferModelViewInverse;
 // Includes
 #include "/lib/util/noise.glsl"
 
-// other stuff
-vec3 toLinear(vec3 srgb) {
-    return mix(
-        srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
-        pow(0.947867 * srgb + 0.0521327, vec3(2.4)),
-        step(0.04045, srgb)
-    );
-}
-
 vec3 waterNormals(vec3 pos, float scale) {
     
   float height = cellular(pos);
@@ -66,6 +57,7 @@ void main() {
 
     // get albedo
     vec4 albedo = texture2D(texture, texcoord);
+
     albedo.rgb *= glcolor.rgb;
 
     albedo.rgb = toLinear(albedo.rgb);
@@ -113,7 +105,7 @@ void main() {
         specularData.g, // specular green channel
         specularData.r // specular red channel
     );
-    normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(albedo.rgb));
+    normalOut = vec4((mat3(gbufferModelViewInverse) * normalData) * 0.5 + 0.5, encodeColor(toSrgb(albedo.rgb)));
 }
 
 #endif
@@ -161,7 +153,7 @@ void main() {
     worldSpace = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
 
     #ifdef TAA
-    gl_Position.xy += jitter(2.0);
+    gl_Position.xy += jitter(2.0*gl_Position.w);
     #endif
 }
 

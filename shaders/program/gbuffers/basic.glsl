@@ -24,15 +24,6 @@ in vec4 glcolor;
 // Uniforms
 uniform mat4 gbufferModelViewInverse;
 
-// other stuff
-vec3 toLinear(vec3 srgb) {
-    return mix(
-        srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
-        pow(0.947867 * srgb + 0.0521327, vec3(2.4)),
-        step(0.04045, srgb)
-    );
-}
-
 void main() {
     // get albedo
     vec4 albedo = glcolor;
@@ -80,7 +71,7 @@ void main() {
     gl_Position = ftransform();
 
     #ifdef TAA
-    gl_Position.xy += jitter(2.0);
+    gl_Position.xy += jitter(2.0*gl_Position.w);
     #endif
 }
 

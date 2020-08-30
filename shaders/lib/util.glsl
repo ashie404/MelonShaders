@@ -76,6 +76,26 @@ float remap(float val, float min1, float max1, float min2, float max2) {
   return min2 + (val - min1) * (max2 - min2) / (max1 - min1);
 }
 
+#ifndef ACES
+
+vec3 toLinear(vec3 srgb) {
+    return mix(
+        srgb * 0.07739938080495356, // 1.0 / 12.92 = ~0.07739938080495356
+        pow(0.947867 * srgb + 0.0521327, vec3(2.4)),
+        step(0.04045, srgb)
+    );
+}
+
+vec3 toSrgb(vec3 linear) {
+    return mix(
+        linear * 12.92,
+        pow(linear, vec3(0.416666666667)) * 1.055 - 0.055, // 1.0 / 2.4 = ~0.416666666667
+        step(0.0031308, linear)
+    );
+}
+
+#endif
+
 // light color
 void calcLightingColor(in float angle, in float rain, in vec3 spos, in vec3 slpos, out vec3 ambient, out vec3 light, out vec4 times) {
 
