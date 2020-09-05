@@ -71,7 +71,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lo
             color = mix(color, fogCol2, clamp01(length(viewPos)/196.0*FOG_DENSITY));
         }
         #ifdef VL
-        float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
+        float mie = clamp01(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025));
         color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/8.0*mix(1.0, 0.25, clamp01(times.y)), lowQVL);
         #endif
     }

@@ -42,6 +42,7 @@ uniform sampler2D shadowtex1;
 uniform sampler2D shadowcolor0;
 
 uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferProjection;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
 
@@ -106,13 +107,13 @@ void main() {
         if (info.matMask == 2) {
             color = calculateTranslucentShading(info, viewPos.xyz, shadowPos.xyz);
         } else if (info.matMask == 3) { // if water, calculate water stuff
-            // render water fog
+
+            // water fog vars
             float ldepth0 = linearDepth(depth0);
             float ldepth1 = linearDepth(depth1);
 
             float depthcomp = (ldepth1-ldepth0);
 
-            // set color to no-translucents color
             color = texture2D(colortex3, texcoord).rgb;
 
             // if eye is not in water, render above-water fog and wave foam
