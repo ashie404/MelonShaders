@@ -145,6 +145,7 @@ void main() {
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, 0.02);
 
             color += mix(vec3(0.0), mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a), fresnel);
+            color += ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), 0.02, 0.97)*lightColor*getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz);
 
         } 
         #ifdef SPECULAR
