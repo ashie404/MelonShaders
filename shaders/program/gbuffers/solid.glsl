@@ -225,7 +225,7 @@ void main() {
     #endif
 
     #ifdef TAA
-    gl_Position.xy += jitter(2.0*gl_Position.w);
+    gl_Position.xy += jitter(2.0)*gl_Position.w;
     #endif
 }
 
