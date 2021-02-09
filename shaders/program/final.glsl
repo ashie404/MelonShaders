@@ -12,7 +12,7 @@
 
 #ifdef FSH
 
-#define MELONINFO 0 // Melon Shaders by June. V2.1. [0 1]
+#define MELONINFO 0 // Melon Shaders by June. V2.2. [0 1]
 
 /* DRAWBUFFERS:0 */
 layout (location = 0) out vec4 screenOut;
