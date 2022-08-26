@@ -1,7 +1,7 @@
 /*
     Melon Shaders
-    By June (juniebyte)
-    https://juniebyte.cf
+    By Ash (ashie404)
+    https://ashiecorner.xyz
 */
 
 #include "/lib/settings.glsl"
@@ -11,10 +11,10 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:014 */
-layout (location = 0) out vec4 albedoOut;
-layout (location = 1) out vec4 dataOut;
-layout (location = 2) out vec4 normalOut;
+/* RENDERTARGETS: 0,1,4 */
+out vec4 albedoOut;
+out vec4 dataOut;
+out vec4 normalOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;

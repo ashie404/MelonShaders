@@ -1,7 +1,7 @@
 /*
     Melon Shaders
-    By June (juniebyte)
-    https://juniebyte.cf
+    By Ash (ashie404)
+    https://ashiecorner.xyz
 */
 
 #include "/lib/settings.glsl"
@@ -11,13 +11,11 @@
 
 #ifdef FSH
 
-/*
 const bool colortex2MipmapEnabled = true;
-*/
 
-/* DRAWBUFFERS:02 */
-layout (location = 0) out vec3 colorOut;
-layout (location = 1) out vec3 bloomTileOut;
+/* RENDERTARGETS: 0,2 */
+out vec3 colorOut;
+out vec3 bloomTileOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;

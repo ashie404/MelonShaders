@@ -1,7 +1,7 @@
 /*
     Melon Shaders
-    By June (juniebyte)
-    https://juniebyte.cf
+    By Ash (ashie404)
+    https://ashiecorner.xyz
 */
 
 #define ACES
@@ -12,10 +12,10 @@
 
 #ifdef FSH
 
-#define MELONINFO 0 // Melon Shaders by June. V2.2. [0 1]
+#define MELONINFO 0 // Melon Shaders by Ashie. V2.3. [0 1]
 
-/* DRAWBUFFERS:0 */
-layout (location = 0) out vec4 screenOut;
+/* RENDERTARGETS: 0 */
+out vec4 screenOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;

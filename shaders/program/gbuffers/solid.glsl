@@ -1,7 +1,7 @@
 /*
     Melon Shaders
-    By June (juniebyte)
-    https://juniebyte.cf
+    By Ash (ashie404)
+    https://ashiecorner.xyz
 */
 
 #include "/lib/settings.glsl"
@@ -11,11 +11,11 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:0145 */
-layout (location = 0) out vec4 albedoOut;
-layout (location = 1) out vec4 dataOut;
-layout (location = 2) out vec4 normalOut;
-layout (location = 3) out vec4 aoOut;
+/* RENDERTARGETS: 0,1,4,5 */
+out vec4 albedoOut;
+out vec4 dataOut;
+out vec4 normalOut;
+out vec4 aoOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -61,6 +61,10 @@ void main() {
     // get albedo
     vec4 albedo = texture2D(texture, texcoord);
     albedo.rgb *= glcolor.rgb;
+
+    if (albedo.a < 0.1) {
+        discard;
+    }
 
     float luminance = luma(albedo.rgb);
 

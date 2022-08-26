@@ -1,7 +1,7 @@
 /*
     Melon Shaders
-    By June (juniebyte)
-    https://juniebyte.cf
+    By Ash (ashie404)
+    https://ashiecorner.xyz
 */
 
 #include "/lib/settings.glsl"
@@ -11,9 +11,9 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:03 */
-layout (location = 0) out vec3 colorOut;
-layout (location = 1) out vec3 noTranslucentsOut;
+/* RENDERTARGETS: 0,3 */
+out vec3 colorOut;
+out vec3 noTranslucentsOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;

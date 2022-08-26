@@ -1,9 +1,10 @@
 /*
     Melon Shaders
-    By June (juniebyte)
-    https://juniebyte.cf
+    By Ash (ashie404)
+    https://ashiecorner.xyz
 */
 
+// these are commented purely to prevent compile errors, however they do still set buffer formats
 /*
 const int colortex0Format = R11F_G11F_B10F; // Color buffer
 const int colortex1Format = RGBA16; // Lightmaps, material mask, albedo alpha, specular map (gbuffers->final)
@@ -12,12 +13,12 @@ const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1
 const int colortex4Format = RGBA16; // Normals (gbuffers->final)
 const int colortex5Format = RGBA16F; // RTAO Buffer
 const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
+*/
 const bool colortex6Clear = false;
 #ifdef RTAO
 const bool colortex5Clear = false;
 #endif
 const float eyeBrightnessSmoothHalflife = 4.0;
-*/
 
 #define clamp01(p) (clamp(p, 0.0, 1.0))
 #define log10(x) log(x) / log(10.0)

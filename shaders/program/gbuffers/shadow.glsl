@@ -1,7 +1,7 @@
 /*
     Melon Shaders
-    By June (juniebyte)
-    https://juniebyte.cf
+    By Ash (ashie404)
+    https://ashiecorner.xyz
 */
 
 #include "/lib/settings.glsl"
@@ -11,8 +11,8 @@
 
 #ifdef FSH
 
-/* DRAWBUFFERS:0 */
-layout (location = 0) out vec4 shadowcolorOut;
+/* RENDERTARGETS: 0 */
+out vec4 shadowcolorOut;
 
 // Inputs from vertex shader
 
@@ -27,10 +27,10 @@ uniform int entityId;
 uniform sampler2D texture;
 
 void main() {
-	if (water > 0.5 || entityId == 7) {
+	vec4 color = texture2D(texture, texcoord) * glcolor;
+	if (water > 0.5 || entityId == 7 || color.a < 0.1) {
 		discard;
 	} else {
-		vec4 color = texture2D(texture, texcoord) * glcolor;
 		shadowcolorOut = color;
 	}
 }
