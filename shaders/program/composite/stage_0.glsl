@@ -64,6 +64,7 @@ uniform float eyeAltitude;
 uniform float sunAngle;
 uniform float far;
 uniform float near;
+uniform float wetness;
 
 uniform int isEyeInWater;
 uniform int frameCounter;
@@ -144,7 +145,7 @@ void main() {
                 worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
                 #endif
 
-                worldPosCamera.y += frameTimeCounter*WAVE_SPEED;
+                worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(wetness*1.5));
                 color += vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75 * foamColor;
                 #endif
             }
