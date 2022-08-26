@@ -44,14 +44,17 @@ uniform mat4 gbufferModelViewInverse;
 #include "/lib/util/noise.glsl"
 
 void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
-    if      (id == 50 ) albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0);
-    else if (id == 51 ) albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0);
-    else if (id == 83 ) albedo *= max(clamp01(pow(luminance, 8))* 62.5*emissionMult, 1.0);
-    else if (id == 100) albedo *= max(clamp01(pow(luminance, 8))*100.0*emissionMult, 1.0);
-    else if (id == 105) albedo *= max(clamp01(pow(luminance, 4))*100.0*emissionMult, 1.0);
-    else if (id == 110) albedo *= max(clamp01(pow(luminance, 8))* 50.0*emissionMult, 1.0);
-    else if (id == 120) albedo *= max(25.0*emissionMult, 1.0);
-    else if (id == 122) albedo *= max(12.5*emissionMult, 1.0);
+    switch (id) {
+    case 50 : albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0); break;
+    case 51 : albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0); break;
+    case 83 : albedo *= max(clamp01(pow(luminance, 8))* 62.5*emissionMult, 1.0); break;
+    case 100: albedo *= max(clamp01(pow(luminance, 8))*100.0*emissionMult, 1.0); break;
+    case 105: albedo *= max(clamp01(pow(luminance, 4))*100.0*emissionMult, 1.0); break;
+    case 110: albedo *= max(clamp01(pow(luminance, 8))* 50.0*emissionMult, 1.0); break;
+    case 120: albedo *= max(25.0*emissionMult, 1.0); break;
+    case 122: albedo *= max(12.5*emissionMult, 1.0); break;
+    case 132: albedo *= max(luminance*75.0*emissionMult, 1.0); break;
+    }
 }
 
 void main() {
