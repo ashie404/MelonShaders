@@ -130,7 +130,7 @@ void main() {
                 #if WORLD == 0
 
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
-                calculateCelestialBodies(reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                calculateCelestialBodies(false, reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
                 skyReflectionColor *= info.lightmap.y;
 
                 #else
@@ -143,7 +143,7 @@ void main() {
             float fresnel = fresnel_schlick(viewPos.xyz, info.normal, 0.02);
 
             color += mix(vec3(0.0), mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a), fresnel);
-            color += ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), 0.02, 0.97)*lightColor*getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz);
+            color += ggx(info.normal, normalize(viewPos.xyz), normalize(shadowLightPosition), 0.02, 0.99)*(lightColor*0.4)*getShadowsDiffuse(info, viewPos.xyz, shadowPos.xyz);
 
         } 
         #ifdef SPECULAR

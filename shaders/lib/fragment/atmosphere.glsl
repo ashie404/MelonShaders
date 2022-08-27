@@ -188,7 +188,7 @@ vec3 getSkyColor(vec3 viewPos, int atmosSteps) {
     return skyColor;
 }
 
-void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 color) {
+void calculateCelestialBodies(in bool sunMoon, in vec3 viewPos, in vec3 worldPos, inout vec3 color) {
 	#if WORLD == 0
 
     #ifdef STARS
@@ -198,12 +198,14 @@ void calculateCelestialBodies(in vec3 viewPos, in vec3 worldPos, inout vec3 colo
     }
     #endif
 
-    vec4 sunSpot = calculateSunSpot(normalize(viewPos.xyz), normalize(sunPosition), 0.35);
-    vec4 moonSpot = calculateMoonSpot(normalize(viewPos.xyz), normalize(moonPosition), 0.5);
+	if (sunMoon) {
+   		vec4 sunSpot = calculateSunSpot(normalize(viewPos.xyz), normalize(sunPosition), 0.35);
+    	vec4 moonSpot = calculateMoonSpot(normalize(viewPos.xyz), normalize(moonPosition), 0.5);
 
-    // add sun and moon spots
-    color += sunSpot.rgb*color;
-    color += moonSpot.rgb;
+    	// add sun and moon spots
+    	color += sunSpot.rgb*color;
+    	color += moonSpot.rgb;
+	}
 	
 	#endif
 }
