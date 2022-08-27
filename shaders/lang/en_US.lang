@@ -1,6 +1,6 @@
-option.MELONINFO=§aMelon Shaders
-value.MELONINFO.0=§bBy Ashie!
-value.MELONINFO.1=§dV2.3
+option.MELONINFO=§6Melon Shaders
+value.MELONINFO.0=§dby Ashie404!
+value.MELONINFO.1=§bV2.3
 
 screen.POST=Post Processing
 screen.SKY=Sky
@@ -110,6 +110,8 @@ option.REBUILD_Z=Rebuild Normal Z
 option.HARDCODED_METALS=Hardcoded Metals
 
 option.WHITEWORLD=Whiteworld
+
+option.TRANS_MULT=Translucent Multiply Blending
 
 screen.WATER=Water
 
