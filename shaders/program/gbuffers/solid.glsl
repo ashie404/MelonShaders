@@ -45,6 +45,7 @@ uniform mat4 gbufferModelViewInverse;
 
 void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
     switch (id) {
+    case 42 : albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0); break;
     case 50 : albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0); break;
     case 51 : albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0); break;
     case 83 : albedo *= max(clamp01(pow(luminance, 8))* 62.5*emissionMult, 1.0); break;
@@ -151,7 +152,7 @@ void main() {
 
     int matMask = 0;
 
-    if (idCorrected == 20 || idCorrected == 21 || idCorrected == 23) {
+    if (idCorrected == 20 || idCorrected == 21 || idCorrected == 23 || idCorrected == 42) {
         matMask = 1;
     } else if (entityId == 7) {
         albedo.rgb = vec3(15.0*emissionMult);
