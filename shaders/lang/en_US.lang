@@ -111,7 +111,12 @@ option.HARDCODED_METALS=Hardcoded Metals
 
 option.WHITEWORLD=Whiteworld
 
+screen.TRANS=Translucents
+
 option.TRANS_MULT=Translucent Multiply Blending
+option.FAKE_REFRACT=Fake Refractions
+option.REFRACT_STRENGTH=Refraction Strength
+option.BLUR_REFRACT=Blur Refractions
 
 screen.WATER=Water
 

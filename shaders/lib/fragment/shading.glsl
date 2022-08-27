@@ -192,10 +192,41 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 }
 
 vec3 calculateTranslucentShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
-    vec3 behind = texture2D(colortex3, info.coord).rgb;
 
     #ifdef TRANS_MULT
+
+    #ifdef FAKE_REFRACT
+    vec3 behind = vec3(0.0);
+    vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
+
+    #ifdef BLUR_REFRACT
+
+        for (int i = 0; i < 4; i++) {
+            vec2 poffset = vec2(7.0*REFRACT_STRENGTH) * (1.0-info.albedo.a);
+            vec2 gboffset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)) + poffset) * oneTexel * (4.0*REFRACT_STRENGTH);
+            vec2 roffset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)) + poffset) * oneTexel * (5.0*REFRACT_STRENGTH);
+            vec3 temp = vec3(0.0, texture2D(colortex3, info.coord + gboffset).gb);
+            temp.r = texture2D(colortex3, info.coord + roffset).r;
+            behind += temp;
+        }
+        behind /= 4.0;
+
+    #else
+
+        vec2 poffset = vec2(7.0*REFRACT_STRENGTH) * (1.0-info.albedo.a);
+        vec2 gboffset = poffset * oneTexel * (4.0*REFRACT_STRENGTH);
+        vec2 roffset = poffset * oneTexel * (5.0*REFRACT_STRENGTH);
+        behind = vec3(0.0, texture2D(colortex3, info.coord + gboffset).gb);
+        behind.r = texture2D(colortex3, info.coord + roffset).r;
+
+    #endif
+
+    #else
+        vec3 behind = texture2D(colortex3, info.coord).rgb;
+    #endif
+
     vec3 color = mix(behind, behind*info.albedo.rgb, clamp01(pow(info.albedo.a, 0.2)));
+
     #else
     vec3 color = calculateShading(info, viewPos, undistortedShadowPos);
     color = mix(behind, color, info.albedo.a);

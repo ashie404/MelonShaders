@@ -72,7 +72,12 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 //#define WHITEWORLD
 #define NIGHT_DESAT // Whether to desaturate colors at night or not.
 #define HEAT_DISTORT // Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.
+
+// translucent rendering settings
 #define TRANS_MULT // Uses multiply blending for translucents instead of regular alpha blending. Could make certain mods/blocks behave weirdly.
+#define FAKE_REFRACT // Whether to have (fake) translucent refraction or not.
+#define REFRACT_STRENGTH 1.0 // Strength of translucent refraction. [0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0 1.1 1.25 1.3 1.4 1.5]
+#define BLUR_REFRACT // Whether to blur translucents or not. Has no effect if translucent refraction is off.
 
 // rain effects
 //#define RAIN_PUDDLES // When rainy, objects will appear more wet. Requires specular and reflections to be enabled to work. Can cause storms to be much laggier.
