@@ -39,9 +39,11 @@ uniform float rainStrength;
 uniform vec3 cameraPosition;
 
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
 
 // Includes
 #include "/lib/util/noise.glsl"
+#include "/lib/fragment/dirLightmap.glsl"
 
 void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
     switch (id) {
@@ -146,6 +148,17 @@ void main() {
         #endif
         normalData = normalize(normalData * tbn);
     }
+
+    #ifdef DIRECTIONAL_LIGHTMAP
+    vec2 lm = lmcoord.xy;
+
+    mat3 lmtbn = getLightmapTBN((gbufferModelView * worldSpace).xyz);
+
+    lm.x = directionalLightmap(clamp01(lm.x), lm.x, normalData, lmtbn);
+    lm.y = directionalLightmap(clamp01(lm.y), lm.y, normalData, lmtbn);
+    #else
+    vec2 lm = lmcoord.xy;
+    #endif
     
 
     // get material mask
@@ -162,7 +175,7 @@ void main() {
     // output everything
 	albedoOut = albedo;
     dataOut = vec4(
-        encodeLightmaps(clamp01(lmcoord-0.03125)), // lightmap
+        encodeLightmaps(clamp01(lm-0.03125)), // lightmap
         encodeLightmaps(vec2(matMask/10.0, albedo.a)), // material mask and albedo alpha
         specularData.g, // specular green channel
         specularData.r // specular red channel
