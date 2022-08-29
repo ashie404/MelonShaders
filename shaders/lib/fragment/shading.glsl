@@ -4,9 +4,7 @@
     https://ashiecorner.xyz
 */
 
-const bool shadowtex0Nearest = true;
-const bool shadowtex1Nearest = true;
-const bool shadowcolor0Nearest = true;
+
 
 mat2 getRotationMatrix(in vec2 coord) {
     float rotationAmount = texelFetch(

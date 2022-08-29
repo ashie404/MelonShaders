@@ -106,6 +106,10 @@ option.EMISSIVE_STRENGTH=Emissive Strength
 
 option.EMISSIVE_FALLBACK=Emissive Fallback
 
+option.AMETHYST_BLOCK_GLOW=Glowing Amethyst Blocks
+value.AMETHYST_BLOCK_GLOW.0=Off
+value.AMETHYST_BLOCK_GLOW.1=On
+
 option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
 

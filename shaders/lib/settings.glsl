@@ -129,6 +129,8 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define REBUILD_Z // Whether to rebuild normal Z or not. Used for LabPBR 1.2+ resource packs. Disable if normal maps look wrong.
 #define HARDCODED_METALS // Whether to have labPBR hardcoded metals enabled or not.
 
+#define AMETHYST_BLOCK_GLOW 0 // Whether to have glowing amethyst blocks or not. [0 1]
+
 #define BLOCKLIGHT_R 0.9 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_G 0.3 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_B 0.1 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
