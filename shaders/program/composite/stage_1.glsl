@@ -219,7 +219,7 @@ void main() {
                 }
 
                 // prevent sky reflection from being literally black
-                skyReflectionColor = max(skyReflectionColor, vec3(0.01));
+                skyReflectionColor = max(skyReflectionColor, vec3(0.002));
                 
                 float fresnel = fresnel_schlick(viewPos.xyz, info.normal, info.specular.g);
 
