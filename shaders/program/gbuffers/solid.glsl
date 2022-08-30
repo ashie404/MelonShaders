@@ -30,11 +30,11 @@ in vec4 worldSpace;
 uniform sampler2D texture;
 uniform sampler2D specular;
 uniform sampler2D normals;
-uniform float sunAngle;
 
 uniform int entityId;
 
 uniform float rainStrength;
+uniform float sunAngle;
 
 uniform vec3 cameraPosition;
 
@@ -138,7 +138,7 @@ void main() {
     #endif
 
     // get normal map
-    vec3 normalData = texture2D(normals, texcoord).xyz * 2.0 - 1.0;
+    vec3 normalData = vec3(texture2D(normals, texcoord).xy, 0.0) * 2.0 - 1.0;
     if (all(equal(normalData, vec3(0.0)))) {
         // invalid normal, reset to default normal
         normalData = normal;
@@ -148,6 +148,8 @@ void main() {
         #endif
         normalData = normalize(normalData * tbn);
     }
+
+    
 
     #ifdef DIRECTIONAL_LIGHTMAP
     vec2 lm = lmcoord.xy;

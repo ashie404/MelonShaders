@@ -121,7 +121,7 @@ float ggx(vec3 normal, vec3 svec, vec3 lvec, float f0, float smoothness) {
 }
 
 vec3 getShadowsDiffuse(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
-    float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), info.normal, 1.0);
+    float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), normalize(info.normal), 0.0);
     vec3 diffuseLight = vec3(diffuseStrength);
 
     vec4 shadowLight = vec4(0.0);
