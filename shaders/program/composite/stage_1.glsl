@@ -16,8 +16,9 @@ const bool colortex2MipmapEnabled = true;
 const bool colortex0MipmapEnabled = true;
 #endif
 
-/* RENDERTARGETS: 0 */
+/* RENDERTARGETS: 0,2 */
 out vec3 colorOut;
+out vec3 bloomOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -253,6 +254,18 @@ void main() {
     #endif
 
     colorOut = color;
+
+    #if DOF == 0
+    #ifdef BLOOM
+    vec3 bloomSample = color.rgb * clamp01(pow(luma(color.rgb), 4.0));
+    bloomOut = bloomSample;
+    #endif
+    #elif HEAT_DISTORT && WORLD == -1
+    #ifdef BLOOM
+    vec3 bloomSample = color.rgb * clamp01(pow(luma(color.rgb), 4.0));
+    bloomOut = bloomSample;
+    #endif
+    #endif
 }
 
 #endif
