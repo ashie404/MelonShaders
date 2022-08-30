@@ -267,7 +267,7 @@ void calculateClouds(in vec3 worldPos, inout vec3 color) {
                 ), 
                 clamp01(cloudShape)
             ), 
-            clamp01(worldPos.y/256.0)
+            clamp01(worldPos.y/640.0)
 		);
 	}
 	#endif
