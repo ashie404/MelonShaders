@@ -116,7 +116,7 @@ void main() {
             color = texture2D(colortex3, texcoord).rgb;
 
             // if eye is not in water, render above-water fog and wave foam
-            if (isEyeInWater == 0) {
+            if (isEyeInWater < 0.5) {
                 // calculate transmittance
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
                 color *= transmittance;
@@ -148,6 +148,12 @@ void main() {
                 worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(wetness*1.5));
                 color += vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75 * foamColor;
                 #endif
+            } else {
+                vec3 rayDir = refract(normalize(viewPos.xyz), info.normal, 1.33261354207);
+                if (rayDir == vec3(0.0)) {
+                    vec3 transmittance = exp(-waterCoeff * depthcomp);
+                    color *= clamp01(pow(transmittance, vec3(4.0)));
+                }
             }
         }
     }

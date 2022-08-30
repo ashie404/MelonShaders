@@ -59,7 +59,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lo
     #ifdef FOG 
 
     #if WORLD == 0
-    if (isEyeInWater == 0) {
+    if (isEyeInWater < 0.5) {
         vec3 fogCol = texture2DLod(colortex2, texcoord*0.1, 6.0).rgb*2.0;
         if (depth0 != 1.0) {
             vec3 fogCol2 = fogCol;
@@ -76,11 +76,11 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lo
         #endif
     }
     #elif WORLD == -1
-    if (isEyeInWater == 0 && depth0 != 1.0) {
+    if (isEyeInWater < 0.5 && depth0 != 1.0) {
         color = mix(color, fogColor, clamp01(length(viewPos)/84.0*FOG_DENSITY));
     }
     #elif WORLD == 1
-    if (isEyeInWater == 0 && depth0 != 1.0) {
+    if (isEyeInWater < 0.5 && depth0 != 1.0) {
         color = mix(color, fogColor, clamp01(length(viewPos)/84.0*FOG_DENSITY));
     }
     #endif
@@ -89,9 +89,9 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lo
 
     // draw water fog
     #ifdef FOG
-    else if (isEyeInWater == 1) {
+    else if (isEyeInWater > 0.5) {
     #else
-    if (isEyeInWater == 1) {
+    if (isEyeInWater > 0.5) {
     #endif
         vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
         color *= transmittance;
