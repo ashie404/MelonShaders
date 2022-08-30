@@ -82,11 +82,11 @@ vec4 roughReflection(vec3 viewPos, vec3 normal, float dither, float roughness, s
 	#if ROUGH_REFL_SAMPLES > 1
 	for (int r = 1; r <= ROUGH_REFL_SAMPLES; r++) {
 		normal = microfacetDistribution(normal, 
-			fract(frameTimeCounter * 4.0 + texelFetch(noisetex, ivec2(gl_FragCoord.xy*r) & noiseTextureResolution - 1, 0).rgb), 
+			fract(frameTimeCounter * 4.0 + texelFetch(noisetex, (ivec2(gl_FragCoord.xy*r)+ivec2(frameTimeCounter*64, frameTimeCounter*128)) & noiseTextureResolution - 1, 0).rgb), 
 		roughness);
 	#else
 		normal = microfacetDistribution(normal, 
-			fract(frameTimeCounter * 4.0 + texelFetch(noisetex, ivec2(gl_FragCoord.xy) & noiseTextureResolution - 1, 0).rgb), 
+			fract(frameTimeCounter * 4.0 + texelFetch(noisetex, (ivec2(gl_FragCoord.xy)+ivec2(frameTimeCounter*64, frameTimeCounter*128)) & noiseTextureResolution - 1, 0).rgb), 
 		roughness);
 	#endif
 

@@ -10,10 +10,10 @@ float linearizeDepth(float depth) {
 
 vec3 calcRTAO(vec3 viewPos, vec3 normal) {
     vec3 rtaoCol = vec3(0.0);
-    float noisePattern = bayer64(gl_FragCoord.xy);
+    float noisePattern = bayer64(gl_FragCoord.xy+frameTimeCounter);
 
     for (int r = 1; r <= RTAO_RAYS; r++) {
-        vec2 noise = texelFetch(noisetex, ivec2(gl_FragCoord.xy*r) & noiseTextureResolution - 1, 0).rg;
+        vec2 noise = texelFetch(noisetex, (ivec2(gl_FragCoord.xy*r)+ivec2(frameTimeCounter*64, frameTimeCounter*128)) & noiseTextureResolution - 1, 0).rg;
         noise = noise * (255.0/256.0);
         float t = float(frameCounter & 255);
         noise = fract(noise + (t * PHI));

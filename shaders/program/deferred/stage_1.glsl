@@ -118,7 +118,7 @@ void main() {
     } else {
         color = texture2D(colortex2, texcoord*0.1).rgb;
         calculateCelestialBodies(true, viewPos.xyz, worldPos.xyz, color);
-        calculateClouds(worldPos.xyz, color);
+        calculateClouds(false, worldPos.xyz, color);
     }
     
     colorOut = color;

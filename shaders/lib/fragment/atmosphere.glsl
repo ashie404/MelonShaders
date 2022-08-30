@@ -216,7 +216,7 @@ float cloudNoise(in vec2 coord, in float time) {
 	return clamp01(cloud*CLOUD_DENSITY);
 }
 
-void calculateClouds(in vec3 worldPos, inout vec3 color) {
+void calculateClouds(in bool refl, in vec3 worldPos, inout vec3 color) {
 	#if WORLD == 0
 
 	#ifdef CUMULUS
@@ -267,7 +267,7 @@ void calculateClouds(in vec3 worldPos, inout vec3 color) {
                 ), 
                 clamp01(cloudShape)
             ), 
-            clamp01(worldPos.y/640.0)
+            refl ? clamp01(worldPos.y*3.0) : clamp01(worldPos.y/640.0)
 		);
 	}
 	#endif

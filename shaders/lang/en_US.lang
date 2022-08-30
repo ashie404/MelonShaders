@@ -10,7 +10,6 @@ screen.TWEAKS=Tweaks
 option.BLOOM=Bloom
 option.BLOOM_STRENGTH=Bloom Strength
 
-screen.TAA=TAA Settings
 option.TAA=Temporal Anti-Aliasing
 option.TAA_NCLAMP=Neighborhood Clamping
 option.TAA_BLEND=TAA Blending
@@ -56,6 +55,7 @@ option.VL_STEPS=VL Steps
 screen.REFLECTIONS=Specular Settings
 
 option.REFLECTIONS=Reflections
+option.CLOUD_REFLECTIONS=Cloud Reflections
 option.SSR=Screen Space Reflections
 option.MICROFACET_REFL=Microfacet Reflections
 option.SPEC_REFLECTIONS=Specular Reflections

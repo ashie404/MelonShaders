@@ -131,6 +131,9 @@ void main() {
 
                 skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
                 calculateCelestialBodies(false, reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                #ifdef CLOUD_REFLECTIONS
+                calculateClouds(true, reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                #endif
                 skyReflectionColor *= info.lightmap.y;
 
                 #else
@@ -198,6 +201,9 @@ void main() {
                     #if WORLD == 0
 
                     skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
+                    #ifdef CLOUD_REFLECTIONS
+                    calculateClouds(true, reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                    #endif
                     skyReflectionColor *= info.lightmap.y;
 
                     #else
