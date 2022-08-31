@@ -136,6 +136,7 @@ option.WAVE_SPEED=Wave Foam Speed
 option.WAVE_BRIGHTNESS=Wave Foam Brightness
 option.WAVE_NORMALS=Water Normals
 option.WAVE_SCALE=Water Normals Scale
+option.SNELLS_WINDOW=Snell's Window
 
 screen.VISUAL=Visual
 

@@ -148,13 +148,23 @@ void main() {
                 worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(wetness*1.5));
                 color += vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75 * foamColor;
                 #endif
-            } else {
+            } 
+            #ifdef SNELLS_WINDOW
+            else {
                 vec3 rayDir = refract(normalize(viewPos.xyz), info.normal, 1.33261354207);
                 if (rayDir == vec3(0.0)) {
-                    vec3 transmittance = exp(-waterCoeff * depthcomp);
-                    color *= clamp01(pow(transmittance, vec3(4.0)));
+                    // none of this is actually realistic i just
+                    // like how it looks
+
+                    vec3 transmittance = exp(-waterCoeff * ldepth0);
+                    color *= transmittance;
+                    vec3 scattering = vec3(viewPos.w);
+                    scattering *= waterScatterCoeff; // scattering coefficent
+                    scattering *= (vec3(1.0) - transmittance) / waterCoeff;
+                    color = pow(scattering, vec3(1.4));
                 }
             }
+            #endif
         }
     }
 
