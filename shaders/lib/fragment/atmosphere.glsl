@@ -209,6 +209,18 @@ void calculateCelestialBodies(in bool sunMoon, in vec3 viewPos, in vec3 worldPos
 	
 	#endif
 }
+void calculateCelestialBodiesNoStars(in vec3 viewPos, in vec3 worldPos, inout vec3 color) {
+	#if WORLD == 0
+
+   		vec4 sunSpot = calculateSunSpot(normalize(viewPos.xyz), normalize(sunPosition), 0.35);
+    	vec4 moonSpot = calculateMoonSpot(normalize(viewPos.xyz), normalize(moonPosition), 0.5);
+
+    	// add sun and moon spots
+    	color += sunSpot.rgb*color;
+    	color += moonSpot.rgb;
+	
+	#endif
+}
 
 float cloudNoise(in vec2 coord, in float time) {
 	float cloud = clamp01(pow(texture2D(noisetex, coord+time).a, 2.0));

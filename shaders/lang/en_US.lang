@@ -41,6 +41,10 @@ option.STARS=Stars
 option.FOG=Fog
 option.FOG_DENSITY=Fog Density
 
+option.SKYTEX=Textured Skybox
+option.SKYBOX_BRIGHT=Skybox Brightness
+option.SKYCLR_BRIGHT=Sky Color Brightness
+
 screen.CLOUDS=Clouds
 option.CUMULUS=Cumulus Clouds
 option.CLOUD_SPEED=Cloud Speed

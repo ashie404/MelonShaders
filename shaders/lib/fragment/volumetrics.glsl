@@ -60,7 +60,11 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lo
 
     #if WORLD == 0
     if (isEyeInWater < 0.5) {
+        #ifndef SKYTEX
         vec3 fogCol = texture2DLod(colortex2, texcoord*0.1, 6.0).rgb*2.0;
+        #else
+        vec3 fogCol = texture2DLod(colortex2, texcoord, 7.0).rgb*2.0;
+        #endif
         if (depth0 != 1.0) {
             vec3 fogCol2 = fogCol;
             if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {

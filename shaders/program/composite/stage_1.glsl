@@ -130,11 +130,20 @@ void main() {
             if (reflectionColor.a < 0.5 && isEyeInWater == 0) {
                 #if WORLD == 0
 
-                skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
-                calculateCelestialBodies(false, reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
-                #ifdef CLOUD_REFLECTIONS
-                calculateClouds(true, reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                #ifndef SKYTEX
+
+                    skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
+                    calculateCelestialBodies(false, reflect(viewPos.xyz, info.normal), reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                    #ifdef CLOUD_REFLECTIONS
+                    calculateClouds(true, reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                    #endif
+                
+                #else
+
+                    skyReflectionColor = texture2DLod(colortex2, vec2(texcoord.x, 1.0 - texcoord.y), 6.0).rgb;
+
                 #endif
+                
                 skyReflectionColor *= info.lightmap.y;
 
                 #else
@@ -201,10 +210,19 @@ void main() {
                 if (reflectionColor.a < 0.5) {
                     #if WORLD == 0
 
-                    skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
-                    #ifdef CLOUD_REFLECTIONS
-                    calculateClouds(true, reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                    #ifndef SKYTEX
+
+                        skyReflectionColor = getSkyColor(reflect(viewPos.xyz, info.normal), 6);
+                        #ifdef CLOUD_REFLECTIONS
+                        calculateClouds(true, reflect(worldPos.xyz, mat3(gbufferModelViewInverse)*info.normal), skyReflectionColor);
+                        #endif
+
+                    #else
+
+                        skyReflectionColor = texture2DLod(colortex2, vec2(texcoord.x, 1.0 - texcoord.y), 6.0).rgb;
+
                     #endif
+
                     skyReflectionColor *= info.lightmap.y;
 
                     #else

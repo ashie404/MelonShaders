@@ -11,8 +11,14 @@
 
 #ifdef FSH
 
+#ifndef SKYTEX
 /* RENDERTARGETS: 2 */
 out vec3 atmosphereOut;
+#else
+// idk why the fuck but i have to draw to a buffer, so if skytex
+// enabled just draw to buffer 8 we dont use that lol
+/* RENDERTARGETS: 8 */
+#endif
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -23,6 +29,7 @@ in vec3 ambientColor;
 // Uniforms
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
+uniform sampler2D colortex2;
 
 uniform sampler2D depthtex0;
 
@@ -64,8 +71,12 @@ void main() {
     vec4 worldPos = gbufferModelViewInverse * viewPos;
     
     #if WORLD == 0
+    
+    #ifndef SKYTEX
     vec3 color = getSkyColor(viewPos.xyz, 15);
     atmosphereOut = color;
+    #endif
+
     #elif WORLD == -1
     atmosphereOut = fogColor;
     #elif WORLD == 1

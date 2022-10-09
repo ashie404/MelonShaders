@@ -2,4 +2,5 @@
 
 #define VSH
 #define WORLD 0
-#include "/program/gbuffers/discard.glsl"
+#define BASIC
+#include "/program/gbuffers/skytex.glsl"
