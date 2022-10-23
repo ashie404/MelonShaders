@@ -2,4 +2,4 @@
 
 #define VSH
 #define WORLD 0
-#include "/program/gbuffers/solid.glsl"
+#include "/program/gbuffers/particles.glsl"
