@@ -121,23 +121,7 @@ void main() {
     vec3 color = info.albedo.rgb;
 
     vec4 reflectionColor = vec4(0.0);
-
-    #ifdef REFL_FILTER
-        vec2 reprojCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
-        vec4 previousReflection = texture2D(colortex8, reprojCoord);
-        vec3 currentNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord).xyz * 2.0 - 1.0);
-        vec4 filtered = vec4(0.0);
-        vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
-        for (int i = 0; i < 4; i++) {
-            vec2 offset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 0.5;
-            vec3 filterNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord + offset).xyz * 2.0 - 1.0);
-            if (all(equal(currentNormal, filterNormal)))
-                filtered += texture2D(colortex8, reprojCoord + offset);
-            else
-                filtered += previousReflection;
-        }
-        filtered /= 4.0;
-    #endif
+    vec4 filtered = vec4(0.0);
 
     #ifdef REFLECTIONS
     if (depth0 != 1.0) {
@@ -186,6 +170,24 @@ void main() {
         } 
         #ifdef SPECULAR
         else {
+            
+            #ifdef REFL_FILTER
+                vec2 reprojCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
+                vec4 previousReflection = texture2D(colortex8, reprojCoord);
+                vec3 currentNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord).xyz * 2.0 - 1.0);
+                vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
+
+                for (int i = 0; i < 4; i++) {
+                    vec2 offset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 0.5;
+                    vec3 filterNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord + offset).xyz * 2.0 - 1.0);
+                    if (all(equal(currentNormal, filterNormal)))
+                        filtered += texture2D(colortex8, reprojCoord + offset);
+                    else
+                        filtered += previousReflection;
+                }
+                filtered /= 4.0;
+            #endif
+
             bool isMetal = (info.specular.g >= 230.0 / 255.0);
             bool isHardcoded = (isMetal && (info.specular.g < 238.0/255.0));
 
@@ -298,7 +300,7 @@ void main() {
 
     colorOut = color;
     #ifdef REFL_FILTER
-    reflecOut = mix(filtered, reflectionColor, 0.1);
+        reflecOut = mix(filtered, reflectionColor, 0.25);
     #endif
 
     #if DOF == 0
