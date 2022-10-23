@@ -130,12 +130,13 @@ void main() {
         vec2 velocity = (screenPos - previousPosition).xy * 0.02;
         velocity = clamp01(normalize(velocity)*length(velocity)*1024.0);
 
+
         #ifdef RTAO_FILTER
-        current = mix(current, history, 0.8-clamp(velocity.x+velocity.y, 0.0, 0.45));
+        rtaoOut = mix(current, history, clamp01(0.95-clamp(velocity.x+velocity.y, 0.0, 0.45)));
+        #else
+        rtaoOut = mix(current, history, clamp01(0.85-clamp(velocity.x+velocity.y, 0.0, 0.45)));
         #endif
 
-        rtaoOut = mix(current, history, clamp01(0.85-clamp(velocity.x+velocity.y, 0.0, 0.45)));
-        
         #else
         rtaoOut = texture2D(colortex5, texcoord).rgb;
         #endif
