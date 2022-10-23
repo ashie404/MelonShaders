@@ -120,7 +120,7 @@ void main() {
 
     vec3 color = info.albedo.rgb;
 
-    vec4 reflectionColor = vec4(vec3(1.0), 0.0);
+    vec4 reflectionColor = vec4(0.0);
 
     #ifdef REFL_FILTER
         vec2 reprojCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
@@ -298,7 +298,7 @@ void main() {
 
     colorOut = color;
     #ifdef REFL_FILTER
-    reflecOut = mix(filtered, reflectionColor.a < 0.1 ? vec4(vec3(1.0),0.0) : reflectionColor, 0.1);
+    reflecOut = mix(filtered, reflectionColor, 0.1);
     #endif
 
     #if DOF == 0
