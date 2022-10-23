@@ -77,7 +77,19 @@ void main() {
     // ACES color grading (from Raspberry Shaders https://rutherin.netlify.app)
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
-    m.saturation = 0.95 + SAT_MOD;
+    #if WORLD == 0
+    #ifdef NIGHT_DESAT
+        // apply night desaturation
+        float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
+        m.saturation = 0.95 + SAT_MOD - mix(0.0, 0.3, clamp01(night));
+    #else
+        // dont
+        m.saturation = 0.95 + SAT_MOD;
+    #endif
+    #else
+        // dont
+        m.saturation = 0.95 + SAT_MOD;
+    #endif
 	m.vibrance = VIB_MOD;
 	m.contrast = 1.0 - CONT_MOD;
 	m.contrastMidpoint = CONT_MIDPOINT;
@@ -89,22 +101,12 @@ void main() {
     color = FilmToneMap(color);
     color = WhiteBalance(color);
 	color = Vibrance(color, m);
-	color = Saturation(color, m);
+    color = Saturation(color, m);
     color = Contrast(color, m);
     color = LiftGammaGain(color, m);
 
     // convert back to srgb space
     color = linearToSrgb(color);
-
-    #ifdef NIGHT_DESAT
-
-    #if WORLD == 0
-    float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
-
-    color = mix(color, vec3(luma(color)), mix(0.0, 0.5, clamp01(night-pow(luma(color), 3.0)*8.0)));
-    #endif
-
-    #endif
 
     #ifdef COLOR_AP1
     color = color * sRGB_2_AP1;
