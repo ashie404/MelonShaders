@@ -148,7 +148,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     #elif WORLD == 0
 
-    skyLight = ambientColor * max(ao * info.lightmap.y, 0.1);
+    skyLight = ambientColor * ao * max(info.lightmap.y, 0.1);
 
     vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos, undistortedShadowPos);
 
