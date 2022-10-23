@@ -69,8 +69,9 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in float depth0, in bool lo
             vec3 fogCol2 = fogCol;
             float nightMix = (times.w*0.6);
             if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                fogCol2 = mix(vec3(0.05), fogCol2, clamp01((eyeBrightnessSmooth.y-9)/55.0));
-                nightMix = 0.0;
+                float mixVal = clamp01((eyeBrightnessSmooth.y-9)/55.0);
+                fogCol2 = mix(vec3(0.05), fogCol2, mixVal);
+                nightMix = mix(0.0, nightMix, mixVal);
             } else if (eyeBrightnessSmooth.y <= 8) {
                 fogCol2 = vec3(0.05);
                 nightMix = 0.0;
