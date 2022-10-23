@@ -96,6 +96,8 @@ void main() {
         #else
         normalData = normal;
         #endif
+    } else if (idCorrected == 130) {
+        matMask = 5;
     }
 
     // output everything

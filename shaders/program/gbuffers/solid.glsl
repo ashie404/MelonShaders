@@ -47,7 +47,7 @@ uniform mat4 gbufferModelView;
 
 void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
     switch (id) {
-    case 11 : albedo *= max(25.0*emissionMult, 1.0); break;
+    case 11 : albedo *= max(7.5*emissionMult, 1.0); break;
     case 42 : albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0); break;
     case 50 : albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0); break;
     case 51 : albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0); break;

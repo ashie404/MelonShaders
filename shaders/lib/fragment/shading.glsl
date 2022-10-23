@@ -221,7 +221,9 @@ vec3 calculateTranslucentShading(in FragInfo info, in vec3 viewPos, in vec3 undi
         vec3 behind = texture2D(colortex3, info.coord).rgb;
     #endif
 
-    vec3 color = mix(behind, behind*info.albedo.rgb, clamp01(pow(info.albedo.a, 0.2)));
+    vec3 color = info.matMask != 5 ? 
+        mix(behind, behind*info.albedo.rgb, clamp01(pow(info.albedo.a, 0.2))) 
+        : mix(behind, behind+(info.albedo.rgb*2), clamp01(pow(info.albedo.a, 0.2))) ;
 
     #else
     vec3 behind = texture2D(colortex3, info.coord).rgb;

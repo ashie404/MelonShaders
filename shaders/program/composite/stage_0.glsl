@@ -103,7 +103,7 @@ void main() {
     // if not sky, check for translucents
     if (depth0 != 1.0) {
         // if just translucent, calculate shading
-        if (info.matMask == 2) {
+        if (info.matMask == 2 || info.matMask == 5) {
             color = calculateTranslucentShading(info, viewPos.xyz, shadowPos.xyz);
         } else if (info.matMask == 3) { // if water, calculate water stuff
 
