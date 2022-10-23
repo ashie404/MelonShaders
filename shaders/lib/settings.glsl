@@ -136,6 +136,8 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define WIND // Whether to have waving plants and leaves or not.
 #define WIND_STRENGTH 1.0 // Strength of wind. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0]
 
+#define WAVY_LAVA // Makes lava wavy.
+
 #define REBUILD_Z // Whether to rebuild normal Z or not. Used for LabPBR 1.2+ resource packs. Disable if normal maps look wrong.
 #define HARDCODED_METALS // Whether to have labPBR hardcoded metals enabled or not.
 

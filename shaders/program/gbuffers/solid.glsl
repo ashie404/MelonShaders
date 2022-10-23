@@ -47,6 +47,7 @@ uniform mat4 gbufferModelView;
 
 void calculateHardcodedEmissives(in int id, in float luminance, in float emissionMult, inout vec3 albedo) {
     switch (id) {
+    case 11 : albedo *= max(25.0*emissionMult, 1.0); break;
     case 42 : albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0); break;
     case 50 : albedo *= max(clamp01(pow(luminance, 6))* 60.0*emissionMult, 1.0); break;
     case 51 : albedo *= max(clamp01(pow(luminance, 6))* 75.0*emissionMult, 1.0); break;
@@ -245,6 +246,13 @@ void main() {
         position.z += (sin((frameTimeCounter/2.0*WIND_STRENGTH)+cellular(position.xyz+cameraPosition+(frameTimeCounter/8.0))*4.0)/12.0);
         gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
     }
+    #endif
+    #ifdef WAVY_LAVA
+    if (mc_Entity.x == 11.0) {
+        vec4 position = worldSpace;
+        position.y += (sin(frameTimeCounter+cellular(position.xyz+cameraPosition+(frameTimeCounter/16.0))*4.0)/24.0);
+        gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
+    }   
     #endif
 
     #ifdef TAA

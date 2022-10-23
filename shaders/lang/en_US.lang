@@ -120,6 +120,8 @@ value.AMETHYST_BLOCK_GLOW.1=On
 option.WIND=Wind
 option.WIND_STRENGTH=Wind Strength
 
+option.WAVY_LAVA=Wavy Lava
+
 option.REBUILD_Z=Rebuild Normal Z
 option.HARDCODED_METALS=Hardcoded Metals
 
