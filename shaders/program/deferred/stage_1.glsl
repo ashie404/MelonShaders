@@ -98,8 +98,28 @@ void main() {
     if (depth0 != 1.0) {
         #ifdef RTAO
         // RTAO accumulation stuff
+        vec2 reprojCoord = reprojectCoords(screenPos.xyz * 0.5 + 0.5);
+
         vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal)));
-        vec3 history = texture2D(colortex5, reprojectCoords(screenPos.xyz * 0.5 + 0.5)).rgb;
+        vec3 history = texture2D(colortex5, reprojCoord).rgb;
+
+        #ifdef RTAO_FILTER 
+            vec3 currentNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord).xyz * 2.0 - 1.0);
+
+            vec3 filtered = vec3(0.0);
+            vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
+            for (int i = 0; i < 4; i++) {
+                vec2 offset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 2.0;
+                vec3 filterNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord + offset).xyz * 2.0 - 1.0);
+                if (all(greaterThanEqual(currentNormal+vec3(0.05), filterNormal)) && all(lessThanEqual(currentNormal-vec3(0.05), filterNormal)))
+                    filtered += texture2D(colortex5, reprojCoord + offset).rgb;
+                else
+                    filtered += history;
+            }
+            filtered /= 4.0;
+
+            history = filtered;
+        #endif
 
         vec4 previousPosition = vec4(worldPos.xyz + cameraPosition, worldPos.w);
         previousPosition.xyz -= previousCameraPosition;
@@ -109,6 +129,10 @@ void main() {
 
         vec2 velocity = (screenPos - previousPosition).xy * 0.02;
         velocity = clamp01(normalize(velocity)*length(velocity)*1024.0);
+
+        #ifdef RTAO_FILTER
+        current = mix(current, history, 0.8-clamp(velocity.x+velocity.y, 0.0, 0.45));
+        #endif
 
         rtaoOut = mix(current, history, clamp01(0.85-clamp(velocity.x+velocity.y, 0.0, 0.45)));
         

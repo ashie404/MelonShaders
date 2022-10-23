@@ -75,6 +75,7 @@ screen.AO=Ambient Occlusion
 option.RTAO_DEBUG=RTAO Debug
 option.RTAO_RAYS=RTAO Rays
 option.RTAO_STEPS=RTAO Steps
+option.RTAO_FILTER=RTAO Filtering
 
 option.HEAT_DISTORT=Heat Distortion
 
