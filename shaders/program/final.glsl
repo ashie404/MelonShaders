@@ -22,6 +22,7 @@ in vec2 texcoord;
 
 // Uniforms
 uniform sampler2D colortex0;
+uniform sampler2D colortex1;
 uniform sampler2D colortex4;
 uniform sampler2D colortex5;
 uniform sampler2D colortex7;
@@ -80,8 +81,9 @@ void main() {
     #if WORLD == 0
     #ifdef NIGHT_DESAT
         // apply night desaturation
+        vec2 lightmap = clamp01(decodeLightmaps(texture2D(colortex1, texcoord).x));
         float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
-        m.saturation = 0.95 + SAT_MOD - mix(0.0, 0.3, clamp01(night));
+        m.saturation = 0.95 + SAT_MOD - mix(0.0, 0.6, clamp01(night-lightmap.x));
     #else
         // dont
         m.saturation = 0.95 + SAT_MOD;
