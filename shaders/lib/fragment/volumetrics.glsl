@@ -65,29 +65,19 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float 
         #else
         vec3 fogCol = texture2DLod(colortex2, texcoord, 7.0).rgb*2.0;
         #endif
-        if (depth0 != 1.0) {
-            vec3 fogCol2 = fogCol;
-            float nightMix = (times.w*0.6);
-            if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                fogCol2 = mix(vec3(0.05), fogCol2, clamp01((eyeBrightnessSmooth.y-9)/55.0));
-                nightMix = 0.0;
-            } else if (eyeBrightnessSmooth.y <= 8) {
-                fogCol2 = vec3(0.05);
-                nightMix = 0.0;
-            }
-            color = mix(color, fogCol2, clamp01(length(viewPos)/128.0*FOG_DENSITY+nightMix));
-        } else {
-            vec3 fogCol2 = fogCol;
-            float nightMix = (times.w*0.6);
-            if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
-                fogCol2 = mix(vec3(0.05), fogCol2, clamp01((eyeBrightnessSmooth.y-9)/55.0));
-                nightMix = 0.0;
-            } else if (eyeBrightnessSmooth.y <= 8) {
-                fogCol2 = vec3(0.05);
-                nightMix = 0.0;
-            }
-            color = mix(color, fogCol2, 1.0 - clamp01(worldPos.y/640.0));
+        
+        vec3 fogCol2 = fogCol;
+        float nightMix = (times.w*0.6);
+        if (eyeBrightnessSmooth.y <= 64 && eyeBrightnessSmooth.y > 8) {
+            fogCol2 = mix(vec3(0.05), fogCol2, clamp01((eyeBrightnessSmooth.y-9)/55.0));
+            nightMix = 0.0;
+        } else if (eyeBrightnessSmooth.y <= 8) {
+            fogCol2 = vec3(0.05);
+            nightMix = 0.0;
         }
+        color = depth0 != 1.0 ? mix(color, fogCol2, clamp01(length(viewPos)/128.0*FOG_DENSITY+nightMix)) 
+            : mix(color, fogCol2, 1.0 - clamp01(worldPos.y/640.0));
+
         #ifdef VL
         float mie = clamp01(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025));
         color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/8.0*mix(1.0, 0.25, clamp01(times.y)), lowQVL);
