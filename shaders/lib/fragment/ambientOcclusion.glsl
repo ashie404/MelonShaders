@@ -23,7 +23,7 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
         vec3 rayDir = sphereMap(noise);
         
         rayDir = mix(rayDir, normalize(upPosition), 0.3) * 5.0;
-        if (dot(rayDir, normal) < 0.0) rayDir = -rayDir;
+        rayDir = dot(rayDir, normal) < 0.0 ? -rayDir : rayDir;
 
         vec3 rayInc = rayDir / RTAO_STEPS;
 
@@ -51,7 +51,7 @@ vec3 calcRTAO(vec3 viewPos, vec3 normal) {
             depth = linearizeDepth(texture2D(depthtex1, rayPosScreen.xy).r);
         }
 
-        if (!intersected) rtaoCol += dot(normalize(rayDir), normal)*2.0;
+        rtaoCol += !intersected ? dot(normalize(rayDir), normal)*2.0 : 0.0;
     }
     rtaoCol /= RTAO_RAYS;
     return rtaoCol;

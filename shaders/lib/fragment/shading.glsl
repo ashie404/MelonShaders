@@ -124,9 +124,7 @@ vec3 getShadowsDiffuse(in FragInfo info, in vec3 viewPos, in vec3 undistortedSha
     float diffuseStrength = OrenNayar(normalize(viewPos), normalize(shadowLightPosition), normalize(info.normal), 0.0);
     vec3 diffuseLight = vec3(diffuseStrength);
 
-    vec4 shadowLight = vec4(0.0);
-
-    if (diffuseStrength > 0.0) shadowLight = getShadows(info.coord, viewPos, undistortedShadowPos);
+    vec4 shadowLight = diffuseStrength > 0.0 ? getShadows(info.coord, viewPos, undistortedShadowPos) : vec4(0.0);
 
     return min(diffuseLight, shadowLight.rgb);
 }

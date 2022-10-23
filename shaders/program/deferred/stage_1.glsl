@@ -111,10 +111,10 @@ void main() {
             for (int i = 0; i < 4; i++) {
                 vec2 offset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 2.0;
                 vec3 filterNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord + offset).xyz * 2.0 - 1.0);
-                if (all(greaterThanEqual(currentNormal+vec3(0.05), filterNormal)) && all(lessThanEqual(currentNormal-vec3(0.05), filterNormal)))
-                    filtered += texture2D(colortex5, reprojCoord + offset).rgb;
-                else
-                    filtered += history;
+
+                filtered += all(greaterThanEqual(currentNormal+vec3(0.05), filterNormal)) && all(lessThanEqual(currentNormal-vec3(0.05), filterNormal)) ?
+                    texture2D(colortex5, reprojCoord + offset).rgb
+                    : history;
             }
             filtered /= 4.0;
 
