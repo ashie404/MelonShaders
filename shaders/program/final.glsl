@@ -84,7 +84,7 @@ void main() {
         // apply night desaturation
         vec2 lightmap = clamp01(decodeLightmaps(texture2D(colortex1, texcoord).x));
         float night = ((clamp(sunAngle, 0.50, 0.53)-0.50) / 0.03 - (clamp(sunAngle, 0.96, 1.00)-0.96) / 0.03);
-        m.saturation = 0.95 + SAT_MOD - mix(0.0, 0.6, clamp01(night-lightmap.x));
+        m.saturation = 0.95 + SAT_MOD - mix(0.0, 0.6, clamp01(night-lightmap.x-pow(luma(linearToSrgb(color)), 0.5)));
     #else
         // dont
         m.saturation = 0.95 + SAT_MOD;
