@@ -12,7 +12,7 @@
 
 #ifdef FSH
 
-#define MELONINFO 0 // Melon Shaders by Ashie. V2.3. [0 1]
+#define MELONINFO 0 // Melon Shaders by Ashie. V2.4. [0 1]
 
 /* RENDERTARGETS: 0 */
 out vec4 screenOut;
