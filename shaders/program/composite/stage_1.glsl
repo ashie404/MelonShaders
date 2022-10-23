@@ -253,14 +253,14 @@ void main() {
                     metalReflection += specularColor;
                     #endif
 
-                    calculateFog(metalReflection, viewPos.xyz, depth0, true);
+                    calculateFog(metalReflection, viewPos.xyz, worldPos.xyz, depth0, true);
                     color = metalReflection;
                 } else {
                     // dielectric
                     #if WORLD == 0
                     reflection += specularColor;
                     #endif
-                    calculateFog(reflection, viewPos.xyz, depth0, true);
+                    calculateFog(reflection, viewPos.xyz, worldPos.xyz, depth0, true);
                     color = mix(color, reflection, clamp01(fresnel));
                 }
             }

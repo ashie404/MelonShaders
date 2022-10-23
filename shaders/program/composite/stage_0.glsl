@@ -168,7 +168,7 @@ void main() {
         }
     }
 
-    calculateFog(color, viewPos.xyz, depth0, false);
+    calculateFog(color, viewPos.xyz, worldPos.xyz, depth0, false);
     
     colorOut = color;
 }
