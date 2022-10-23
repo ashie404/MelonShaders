@@ -120,7 +120,7 @@ void main() {
 
     vec3 color = info.albedo.rgb;
 
-    vec4 reflectionColor = vec4(0.0);
+    vec4 reflectionColor = vec4(vec3(1.0), 0.0);
 
     #ifdef REFL_FILTER
         vec2 reprojCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
@@ -221,12 +221,10 @@ void main() {
             if (roughness <= 0.35) {
                 // screenspace reflection calculation
                 #ifdef SSR
-                if (roughness <= 0.225) {
-                    reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 1.5);
-                } else { 
-                    reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 2.0);
-                }
-
+                reflectionColor = roughReflection(viewPos.xyz, 
+                    info.normal, 
+                    fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), 
+                    roughness, colortex0, 1.0, roughness <= 0.225 ? 1.5 : 2.0);
                 #endif
 
                 vec3 skyReflectionColor = vec3(0.0);
@@ -258,9 +256,7 @@ void main() {
                 }
 
                 // apply water fog color to sky reflection color when underwater, so reflections dont look weird underwater
-                if (isEyeInWater == 1) {
-                    skyReflectionColor *= exp(-waterCoeff * length(viewPos.xyz));
-                }
+                skyReflectionColor *= isEyeInWater == 1 ? exp(-waterCoeff * length(viewPos.xyz)) : vec3(1.0);
 
                 // prevent sky reflection from being literally black
                 skyReflectionColor = max(skyReflectionColor, vec3(0.002));
@@ -302,7 +298,7 @@ void main() {
 
     colorOut = color;
     #ifdef REFL_FILTER
-    reflecOut = mix(filtered, reflectionColor, 0.1);
+    reflecOut = mix(filtered, reflectionColor.a < 0.1 ? vec4(vec3(1.0),0.0) : reflectionColor, 0.1);
     #endif
 
     #if DOF == 0

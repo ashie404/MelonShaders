@@ -77,37 +77,19 @@ void main() {
 
         int dofQuality = DOF_QUALITY*4;
 
-        if (currentDepth >= centerDepthSmooth) {
-            // distance blur
-            vec3 blurred = vec3(0.0);
-            float blurSize = clamp((currentDepth-centerDepthSmooth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
-            for (int i = 0; i <= dofQuality; i++) {
-                vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
-                #ifdef CHROM_ABB
-                float g = texture2D(colortex0, texcoord + vec2(offset.x+(oneTexel.x*clamp(blurSize, 0.0, 4.0)), offset.y)).g;
-                vec2 rb = texture2D(colortex0, texcoord + offset).rb;
-                blurred += vec3(rb.x, g, rb.y);
-                #else
-                blurred += texture2D(colortex0, texcoord+offset).rgb;
-                #endif
-            }
-            color = blurred / dofQuality;
-        } else if (currentDepth <= centerDepthSmooth) {
-            // close up blur
-            vec3 blurred = vec3(0.0);
-            float blurSize = clamp((centerDepthSmooth-currentDepth)*(256.0*APERTURE), 0.0, (12.0*APERTURE));
-            for (int i = 0; i <= dofQuality; i++) {
-                vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
-                #ifdef CHROM_ABB
-                float b = texture2D(colortex0, texcoord + vec2(offset.x+(oneTexel.x*clamp(blurSize, 0.0, 4.0)), offset.y)).b;
-                vec2 rg = texture2D(colortex0, texcoord + offset).rg;
-                blurred += vec3(rg, b);
-                #else
-                blurred += texture2D(colortex0, texcoord+offset).rgb;
-                #endif
-            }
-            color = blurred / dofQuality;
+        vec3 blurred = vec3(0.0);
+        float blurSize = clamp((currentDepth >= centerDepthSmooth ? (currentDepth-centerDepthSmooth) : (centerDepthSmooth-currentDepth))*(256.0*APERTURE), 0.0, (12.0*APERTURE));
+        for (int i = 0; i <= dofQuality; i++) {
+            vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
+            #ifdef CHROM_ABB
+            float g = texture2D(colortex0, texcoord + vec2(offset.x+(oneTexel.x*clamp(blurSize, 0.0, 4.0)), offset.y)).g;
+            vec2 rb = texture2D(colortex0, texcoord + offset).rb;
+            blurred += vec3(rb.x, g, rb.y);
+            #else
+            blurred += texture2D(colortex0, texcoord+offset).rgb;
+            #endif
         }
+        color = blurred / dofQuality;
     }
 
     #endif

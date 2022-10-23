@@ -78,12 +78,15 @@ void main() {
 		gl_Position = shadowProjection * shadowModelView * position;
     }
     #endif
+	#ifdef WAVY_LAVA
+    if (mc_Entity.x == 11.0) {
+        vec4 position = shadowModelViewInverse * shadowProjectionInverse * ftransform();
+        position.y += (sin(frameTimeCounter+cellular(position.xyz+cameraPosition+(frameTimeCounter/16.0))*4.0)/24.0);
+        gl_Position = shadowProjection * shadowModelView * position;
+    }   
+    #endif
 
-    if (mc_Entity.x == 8.0) {
-		water = 1.0;
-	} else {
-		water = 0.0;
-	}
+	water = mc_Entity.x == 8.0 ? 1.0 : 0.0;
 
     gl_Position.xyz = distortShadow(gl_Position.xyz);
 }
