@@ -13,11 +13,14 @@ const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1
 const int colortex4Format = RGBA16; // Normals (gbuffers->final)
 const int colortex5Format = RGBA16F; // RTAO Buffer
 const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
+const int colortex8Format = RGBA16F; // Reflection buffer (only used with reflection filter)
 */
 const bool colortex6Clear = false;
+const bool colortex8Clear = false;
 #ifdef RTAO
 const bool colortex5Clear = false;
 #endif
+
 const float eyeBrightnessSmoothHalflife = 4.0;
 
 #define clamp01(p) (clamp(p, 0.0, 1.0))

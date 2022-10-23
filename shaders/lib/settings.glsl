@@ -76,6 +76,8 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define SSR // Screenspace reflections. Has no effect if reflections are disabled.
 #define MICROFACET_REFL // Whether to use microfacet distribution on rough reflections or not. When off, uses LODs for rough reflections. LOD rough reflections will look less noisy, and perform better, but may have more artifacting.
 #define ROUGH_REFL_SAMPLES 2 // When microfacet rough reflections are enabled, this controls how many rays to shoot out per frame. Higher is laggier, but will be less noisy. [1 2 3 4 5 6 7 8]
+#define REFL_FILTER // Whether to use a filter on rough reflections or not. Helps microfacet reflections be more accurate and less noisy, at the cost of some ghosting.
+//#define REFL_DEBUG // Debug view for reflection filtering, outputs the raw filter buffer.
 //#define WHITEWORLD
 #define NIGHT_DESAT // Whether to desaturate colors at night or not.
 #define HEAT_DISTORT // Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.

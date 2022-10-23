@@ -26,6 +26,7 @@ uniform sampler2D colortex1;
 uniform sampler2D colortex4;
 uniform sampler2D colortex5;
 uniform sampler2D colortex7;
+uniform sampler2D colortex8;
 
 uniform float sunAngle;
 
@@ -122,6 +123,9 @@ void main() {
     screenOut = vec4(texture2D(colortex5, texcoord).rgb, 1.0);
     #else
     screenOut = vec4(color, 1.0);
+    #endif
+    #ifdef REFL_DEBUG
+    screenOut = texture2D(colortex8, texcoord);
     #endif
 }
 

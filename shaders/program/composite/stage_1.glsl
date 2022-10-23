@@ -16,9 +16,10 @@ const bool colortex2MipmapEnabled = true;
 const bool colortex0MipmapEnabled = true;
 #endif
 
-/* RENDERTARGETS: 0,2 */
+/* RENDERTARGETS: 0,2,8 */
 out vec3 colorOut;
 out vec3 bloomOut;
+out vec4 reflecOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -33,6 +34,7 @@ uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 uniform sampler2D colortex4;
 uniform sampler2D colortex5;
+uniform sampler2D colortex8;
 
 uniform sampler2D depthtex0;
 
@@ -46,6 +48,8 @@ uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferProjection;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferModelView;
+uniform mat4 gbufferPreviousModelView;
+uniform mat4 gbufferPreviousProjection;
 
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
@@ -55,6 +59,7 @@ uniform vec3 sunPosition;
 uniform vec3 moonPosition;
 uniform vec3 upPosition;
 uniform vec3 cameraPosition;
+uniform vec3 previousCameraPosition;
 
 uniform vec3 fogColor;
 
@@ -77,6 +82,7 @@ uniform int frameCounter;
 #include "/lib/fragment/atmosphere.glsl"
 #include "/lib/fragment/volumetrics.glsl"
 #include "/lib/fragment/shading.glsl"
+#include "/lib/post/taaUtil.glsl"
 
 // other things
 mat2x3 getHardcodedMetal(float specG) {
@@ -114,6 +120,25 @@ void main() {
 
     vec3 color = info.albedo.rgb;
 
+    vec4 reflectionColor = vec4(0.0);
+
+    #ifdef REFL_FILTER
+        vec2 reprojCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
+        vec4 previousReflection = texture2D(colortex8, reprojCoord);
+        vec3 currentNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord).xyz * 2.0 - 1.0);
+        vec4 filtered = vec4(0.0);
+        vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
+        for (int i = 0; i < 4; i++) {
+            vec2 offset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 0.5;
+            vec3 filterNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord + offset).xyz * 2.0 - 1.0);
+            if (all(equal(currentNormal, filterNormal)))
+                filtered += texture2D(colortex8, reprojCoord + offset);
+            else
+                filtered += previousReflection;
+        }
+        filtered /= 4.0;
+    #endif
+
     #ifdef REFLECTIONS
     if (depth0 != 1.0) {
         float roughness = pow(1.0 - info.specular.r, 2.0);
@@ -121,9 +146,9 @@ void main() {
 
             // calculate water reflections
             #ifdef SSR
-            vec4 reflectionColor = reflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), colortex0);
+            reflectionColor = reflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), colortex0);
             #else
-            vec4 reflectionColor = vec4(0.0);
+            reflectionColor = vec4(0.0);
             #endif
             vec3 skyReflectionColor = vec3(0.0);
 
@@ -195,13 +220,13 @@ void main() {
             #ifdef SPEC_REFLECTIONS
             if (roughness <= 0.35) {
                 // screenspace reflection calculation
-                vec4 reflectionColor = vec4(0.0);
                 #ifdef SSR
                 if (roughness <= 0.225) {
                     reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 1.5);
                 } else { 
                     reflectionColor = roughReflection(viewPos.xyz, info.normal, fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), roughness, colortex0, 1.0, 2.0);
                 }
+
                 #endif
 
                 vec3 skyReflectionColor = vec3(0.0);
@@ -243,7 +268,11 @@ void main() {
                 float fresnel = fresnel_schlick(viewPos.xyz, info.normal, info.specular.g);
 
                 // combine reflection
-                vec3 reflection = mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a);
+                #ifdef REFL_FILTER
+                    vec3 reflection = mix(skyReflectionColor, previousReflection.rgb, previousReflection.a);
+                #else
+                    vec3 reflection = mix(skyReflectionColor, reflectionColor.rgb, reflectionColor.a);
+                #endif
 
                 if (isMetal) {
                     // metal
@@ -272,6 +301,9 @@ void main() {
     #endif
 
     colorOut = color;
+    #ifdef REFL_FILTER
+    reflecOut = mix(filtered, reflectionColor, 0.1);
+    #endif
 
     #if DOF == 0
     #ifdef BLOOM

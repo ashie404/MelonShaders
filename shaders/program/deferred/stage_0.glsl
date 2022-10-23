@@ -16,8 +16,8 @@
 out vec3 atmosphereOut;
 #else
 // idk why the fuck but i have to draw to a buffer, so if skytex
-// enabled just draw to buffer 8 we dont use that lol
-/* RENDERTARGETS: 8 */
+// enabled just draw to buffer 9 we dont use that lol
+/* RENDERTARGETS: 9 */
 #endif
 
 // Inputs from vertex shader

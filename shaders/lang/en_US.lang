@@ -64,6 +64,8 @@ option.SSR=Screen Space Reflections
 option.MICROFACET_REFL=Microfacet Reflections
 option.SPEC_REFLECTIONS=Specular Reflections
 option.ROUGH_REFL_SAMPLES=Rough Reflection Rays
+option.REFL_FILTER=Reflection Filtering
+option.REFL_DEBUG=Filter Debug
 
 option.DIRECTIONAL_LIGHTMAP=Directional Lightmaps
 option.DIRECTIONAL_LIGHTMAP_STRENGTH=Dir. Lightmap Strength
