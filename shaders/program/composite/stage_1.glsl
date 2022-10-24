@@ -171,7 +171,7 @@ void main() {
         #ifdef SPECULAR
         else {
             if (info.matMask == 7 && roughness > 0.95) {
-                roughness = 0.002; // fixed roughness value for ice blocks
+                roughness = 0.0; // fixed roughness value for ice blocks
                 info.specular.r = 0.995;
             }
             
@@ -232,7 +232,7 @@ void main() {
                 reflectionColor = roughReflection(viewPos.xyz, 
                     info.normal, 
                     fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy)), 
-                    roughness, colortex0, 1.0, roughness <= 0.225 ? 1.5 : 2.0);
+                    roughness, colortex0, 0.1, roughness <= 0.225 ? 1.5 : 2.0);
                 #endif
 
                 vec3 skyReflectionColor = vec3(0.0);
