@@ -105,15 +105,19 @@ void main() {
 
         #ifdef RTAO_FILTER 
             vec3 currentNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord).xyz * 2.0 - 1.0);
+            float currentDepth = texture2D(depthtex0, reprojCoord).x;
 
             vec3 filtered = vec3(0.0);
             vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
             for (int i = 0; i < 4; i++) {
-                vec2 offset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 2.0;
+                vec2 offset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 2.0;
                 vec3 filterNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord + offset).xyz * 2.0 - 1.0);
+                float filterDepth = texture2D(depthtex0, reprojCoord + offset).x;
 
-                filtered += all(greaterThanEqual(currentNormal+vec3(0.05), filterNormal)) && all(lessThanEqual(currentNormal-vec3(0.05), filterNormal)) ?
-                    texture2D(colortex5, reprojCoord + offset).rgb
+                filtered += all(greaterThanEqual(currentNormal+vec3(0.05), filterNormal))
+                            && all(lessThanEqual(currentNormal-vec3(0.05), filterNormal))
+                            && filterDepth >= currentDepth-0.001 && filterDepth <= currentDepth+0.001
+                    ? texture2D(colortex5, reprojCoord + offset).rgb
                     : history;
             }
             filtered /= 4.0;
