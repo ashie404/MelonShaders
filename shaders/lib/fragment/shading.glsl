@@ -129,7 +129,7 @@ vec3 getShadowsDiffuse(in FragInfo info, in vec3 viewPos, in vec3 undistortedSha
     return min(diffuseLight, shadowLight.rgb);
 }
 
-vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos) {
+vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos, in bool aoMix) {
     // sky light & blocklight
     vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B) * 2.0 * BLOCKLIGHT_I;
     vec3 skyLight = mix(fogColor*0.5, vec3(luma(fogColor*0.5)), 0.5);
@@ -146,7 +146,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     #elif WORLD == 0
 
-    skyLight = ambientColor * ao * max(info.lightmap.y, 0.1);
+    skyLight = aoMix ? ambientColor * ao * max(info.lightmap.y, 0.1) : ambientColor * max(info.lightmap.y, 0.1);
 
     vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos, undistortedShadowPos);
 
@@ -231,7 +231,7 @@ vec3 calculateTranslucentShading(in FragInfo info, in vec3 viewPos, in vec3 undi
 
     #else
     vec3 behind = texture2D(colortex3, info.coord).rgb;
-    vec3 color = calculateShading(info, viewPos, undistortedShadowPos);
+    vec3 color = calculateShading(info, viewPos, undistortedShadowPos, true);
     color = mix(behind, color, info.albedo.a);
     #endif
 

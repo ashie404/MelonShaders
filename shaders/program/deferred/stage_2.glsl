@@ -94,7 +94,7 @@ void main() {
     vec3 color = info.albedo.rgb;
 
     if (depth0 != 1.0 && info.matMask != 4) {
-        color = calculateShading(info, viewPos.xyz, shadowPos.xyz);
+        color = calculateShading(info, viewPos.xyz, shadowPos.xyz, true);
     }
     
     colorOut = color;

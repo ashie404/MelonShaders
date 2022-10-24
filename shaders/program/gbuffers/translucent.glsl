@@ -98,6 +98,8 @@ void main() {
         #endif
     } else if (idCorrected == 130) {
         matMask = 5;
+    } else if (idCorrected == 15) {
+        matMask = 7;
     }
 
     // output everything

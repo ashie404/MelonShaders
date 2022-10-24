@@ -170,6 +170,10 @@ void main() {
         } 
         #ifdef SPECULAR
         else {
+            if (info.matMask == 7 && roughness > 0.95) {
+                roughness = 0.002; // fixed roughness value for ice blocks
+                info.specular.r = 0.995;
+            }
             
             #ifdef REFL_FILTER
                 vec2 reprojCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));

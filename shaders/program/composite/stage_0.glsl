@@ -165,6 +165,27 @@ void main() {
                 }
             }
             #endif
+        } else if (info.matMask == 7) { // ice block handling to make them look less bad
+            // water fog vars
+            float ldepth0 = linearDepth(depth0);
+            float ldepth1 = linearDepth(depth1);
+
+            float depthcomp = (ldepth1-ldepth0);
+
+            color = texture2D(colortex3, texcoord).rgb;
+            if (isEyeInWater < 0.5) {
+                // calculate transmittance
+                vec3 transmittance = exp(-waterCoeff * depthcomp);
+                color *= transmittance;
+                #ifdef VL
+                vec3 scattering = calculateVL(viewPosNT.xyz, lightColor, false);
+                scattering *= waterScatterCoeff; // scattering coefficent
+                scattering *= (vec3(1.0) - transmittance) / waterCoeff;
+                color += scattering;
+                #endif
+
+                color = mix(color, calculateShading(info, viewPos.xyz, shadowPos.xyz, false), clamp01(pow(info.albedo.a, 4.0)));
+            }
         }
     }
 
