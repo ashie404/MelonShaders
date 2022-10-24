@@ -90,7 +90,7 @@ vec4 roughReflection(vec3 viewPos, vec3 normal, float dither, float roughness, s
 		roughness);
 	#endif
 
-		vec4 rtPos = raytrace(depthtex0, viewPos, reflect(normalize(viewPos), normalize(normal)), dither, 2.0, stp, 0.01, inc);
+		vec4 rtPos = raytrace(depthtex0, viewPos, reflect(normalize(viewPos), normalize(normal)), dither, 2.0, stp, 0.1, inc);
 
 		if (rtPos.w <= 100.0 && rtPos.x >= 0.0 && rtPos.x <= 1.0 && rtPos.y >= 0.0 && rtPos.y <= 1.0 && rtPos.z < 1.0 - 1e-5) {
 			outColor += texture2DLod(reflectionTex, rtPos.xy, 0.0); // sample 0.0 lod to prevent weird bright lines on certain GPUs
@@ -103,7 +103,7 @@ vec4 roughReflection(vec3 viewPos, vec3 normal, float dither, float roughness, s
 
 	#else
 
-	vec4 rtPos = raytrace(depthtex0, viewPos, reflect(normalize(viewPos), normalize(normal)), dither, 2.0, stp, 0.01, inc);
+	vec4 rtPos = raytrace(depthtex0, viewPos, reflect(normalize(viewPos), normalize(normal)), dither, 2.0, stp, 0.1, inc);
 	float lod = clamp(roughness*24.0, 0.0, 4.0);
 	if (rtPos.w <= 100.0 && rtPos.x >= 0.0 && rtPos.x <= 1.0 && rtPos.y >= 0.0 && rtPos.y <= 1.0 && rtPos.z < 1.0 - 1e-5) {
 		outColor = texture2DLod(reflectionTex, rtPos.xy, clamp(lod+clamp(rtPos.w*roughness*96.0, 0.0, roughness*96.0), 0.0, 7.0));

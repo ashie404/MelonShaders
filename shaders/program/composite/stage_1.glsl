@@ -177,8 +177,10 @@ void main() {
                 vec3 currentNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord).xyz * 2.0 - 1.0);
                 vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);
 
+                float filterSize = (roughness < 0.1 ? 0.5 : 2.0);
+
                 for (int i = 0; i < 4; i++) {
-                    vec2 offset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * 0.5;
+                    vec2 offset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter))) * oneTexel * filterSize;
                     vec3 filterNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord + offset).xyz * 2.0 - 1.0);
                     if (all(equal(currentNormal, filterNormal)))
                         filtered += texture2D(colortex8, reprojCoord + offset);
@@ -300,7 +302,7 @@ void main() {
 
     colorOut = color;
     #ifdef REFL_FILTER
-        reflecOut = mix(filtered, reflectionColor, 0.25);
+        reflecOut = mix(filtered, reflectionColor, 0.2);
     #endif
 
     #if DOF == 0
