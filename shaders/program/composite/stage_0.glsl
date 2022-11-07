@@ -95,7 +95,11 @@ void main() {
     vec4 viewPosNT = gbufferProjectionInverse * screenPosNT;
     viewPosNT /= viewPosNT.w;
 
+    #ifdef PXL_SHADOWS
+    vec4 shadowPos = shadowProjection * shadowModelView * vec4(ivec3(worldPos.xyz*PXL_SHADOW_RES)/PXL_SHADOW_RES, worldPos.w);
+    #else
     vec4 shadowPos = shadowProjection * shadowModelView * worldPos;
+    #endif
     shadowPos /= shadowPos.w;
 
     vec3 color = info.albedo.rgb;

@@ -54,6 +54,9 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 const int shadowMapResolution = 2048; // [1024 2048 4096 8192]
 const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 
+//#define PXL_SHADOWS // Pixelate shadows to world grid. gives a cool effect.
+#define PXL_SHADOW_RES 16.0 // Resolution of pixelated shadows. [4.0 8.0 16.0 32.0 64.0 128.0]
+
 // sky settings
 #define STARS
 #define FOG

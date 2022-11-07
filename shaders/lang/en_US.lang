@@ -95,6 +95,8 @@ screen.SHADOWS=Shadows
 option.shadowMapResolution=Shadow Resolution
 option.shadowDistance=Shadow Distance
 option.SHADOW_SOFTNESS=Shadow Softness
+option.PXL_SHADOWS=Pixelated Shadows
+option.PXL_SHADOW_RES=Pixelated Shadow Res
 
 screen.BLOCKLIGHT=Blocklight
 option.BLOCKLIGHT_R=§4Red
