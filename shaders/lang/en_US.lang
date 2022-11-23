@@ -1,6 +1,6 @@
-option.MELONINFO=§6Melon Shaders
-value.MELONINFO.0=§aby Ashie404!
-value.MELONINFO.1=§5V2.4
+option.MELONINFO=§aMelon Shaders
+value.MELONINFO.0=§6by Ashie404!
+value.MELONINFO.1=§cV2.5
 
 screen.POST=Post Processing
 screen.SKY=Sky
@@ -17,11 +17,11 @@ option.TAA_BLEND=TAA Blending
 option.LUT=Color LUT
 option.LUTV=LUT
 value.LUTV.0=Kingdom Come
-value.LUTV.1=Kodak DSCS 3151
-value.LUTV.2=Agfachrome RSX2 050
-value.LUTV.3=Fujifilm F400
-value.LUTV.4=Night City Punk
-value.LUTV.5=Tropical
+value.LUTV.1=Fuji Provia 400X
+value.LUTV.2=Kodak Ektachrome 100 VS
+value.LUTV.3=Fuji F400
+value.LUTV.4=Polaroid 669
+value.LUTV.5=Velvia
 
 screen.CAMERA=Camera Settings
 option.APERTURE=Aperture
