@@ -70,6 +70,8 @@ option.REFL_DEBUG=Filter Debug
 option.DIRECTIONAL_LIGHTMAP=Directional Lightmaps
 option.DIRECTIONAL_LIGHTMAP_STRENGTH=Dir. Lightmap Strength
 
+option.LIGHTMAP_STRENGTH=Lightmap Falloff Strength
+
 screen.AO=Ambient Occlusion
 
 option.RTAO_DEBUG=RTAO Debug

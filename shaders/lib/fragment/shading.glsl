@@ -138,11 +138,11 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
     #if WORLD == -1
 
-    vec3 color = mix(skyLight*ao, blockLightColor, clamp01(pow(info.lightmap.x, 6.0)));
+    vec3 color = mix(skyLight*ao, blockLightColor, clamp01(pow(info.lightmap.x, 6.0*LIGHTMAP_STRENGTH)));
 
     #elif WORLD == 1
 
-    vec3 color = mix(skyLight*ao, blockLightColor, clamp01(pow(info.lightmap.x, 6.0)));
+    vec3 color = mix(skyLight*ao, blockLightColor, clamp01(pow(info.lightmap.x, 6.0*LIGHTMAP_STRENGTH)));
 
     #elif WORLD == 0
 
@@ -151,7 +151,7 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
     vec3 shadowsDiffuse = getShadowsDiffuse(info, viewPos, undistortedShadowPos);
 
     // combine lighting
-    vec3 color = (shadowsDiffuse*lightColor)+mix(skyLight, blockLightColor, clamp01(pow(info.lightmap.x, 6.0)));
+    vec3 color = (shadowsDiffuse*lightColor)+mix(skyLight, blockLightColor, clamp01(pow(info.lightmap.x, 6.0*LIGHTMAP_STRENGTH)));
 
     // subsurface scattering
     #ifdef SSS

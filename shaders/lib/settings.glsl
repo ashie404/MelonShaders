@@ -39,6 +39,8 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 #define DIRECTIONAL_LIGHTMAP
 #define DIRECTIONAL_LIGHTMAP_STRENGTH 1.0 // Strength of directional lightmaps. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
+#define LIGHTMAP_STRENGTH 1.0 // Strength of lightmap falloff. Fixes rooms that appear too dark/moody. [0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5]
+
 // AO settings
 #define RTAO // Ray-traced ambient occlusion.
 //#define RTAO_DEBUG // Outputs the RTAO buffer directly to the screen.
