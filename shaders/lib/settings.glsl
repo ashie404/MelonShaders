@@ -85,7 +85,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define ROUGH_REFL_SAMPLES 2 // When microfacet rough reflections are enabled, this controls how many rays to shoot out per frame. Higher is laggier, but will be less noisy. [1 2 3 4 5 6 7 8]
 #define REFL_FILTER // Whether to use a filter on rough reflections or not. Helps microfacet reflections be more accurate and less noisy, at the cost of some ghosting.
 //#define REFL_DEBUG // Debug view for reflection filtering, outputs the raw filter buffer.
-//#define WHITEWORLD
+//#define WHITEWORLD // Removes albedo multiplication at end of shading function, causing the world to appear white, but still fully shaded.
 #define NIGHT_DESAT // Whether to desaturate colors at night or not.
 #define HEAT_DISTORT // Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.
 
@@ -115,7 +115,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 
 // post processing settings
 #define BLOOM
-#define BLOOM_STRENGTH 0.1 // Strength of bloom [0.025 0.05 0.075 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define BLOOM_STRENGTH 0.1 // Strength of bloom filter. [0.025 0.05 0.075 0.1 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6]
 
 #define LUT // Color lookup table. Adjusts the overall look of colors.
 #define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4 5]
@@ -139,7 +139,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define EMISSIVE_FALLBACK // When emissive maps are on, and this setting is enabled, hardcoded emissives will also be calculated, and blended with emissive maps. Can fix missing emissives in certain resource packs.
 
 #define WIND // Whether to have waving plants and leaves or not.
-#define WIND_STRENGTH 1.0 // Strength of wind. [0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0]
+#define WIND_STRENGTH 1.0 // Strength of wind. [0.25 0.3 0.4 0.5 0.6 0.75 0.8 0.9 1.0 1.1 1.25 1.3 1.4 1.5 1.6 1.75 1.8 1.9 2.0]
 
 #define WAVY_LAVA // Makes lava wavy.
 
@@ -153,5 +153,6 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define BLOCKLIGHT_B 0.1 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_I 1.0 // Intensity of blocklight. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
+// constant water coefficent values
 vec3 waterCoeff = mix(vec3(0.8, 0.2, 0.1), vec3(1.0, 0.3, 0.3), isSwamp);
 const vec3 waterScatterCoeff = vec3(1e-2);

@@ -116,7 +116,9 @@ void main() {
     vec4 worldPos = gbufferModelViewInverse * viewPos;
 
     #ifdef PXL_SHADOWS
-    vec4 shadowPos = shadowProjection * shadowModelView * vec4(ivec3(worldPos.xyz*PXL_SHADOW_RES)/PXL_SHADOW_RES, worldPos.w);
+    vec4 shadowPos = shadowProjection * shadowModelView * vec4(
+        (floor((worldPos.xyz+cameraPosition)*PXL_SHADOW_RES+0.05)+0.3)/PXL_SHADOW_RES-cameraPosition,
+        worldPos.w);
     #else
     vec4 shadowPos = shadowProjection * shadowModelView * worldPos;
     #endif

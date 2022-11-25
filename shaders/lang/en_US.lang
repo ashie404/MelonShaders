@@ -71,6 +71,7 @@ option.DIRECTIONAL_LIGHTMAP=Directional Lightmaps
 option.DIRECTIONAL_LIGHTMAP_STRENGTH=Dir. Lightmap Strength
 
 option.LIGHTMAP_STRENGTH=Lightmap Falloff Strength
+value.LIGHTMAP_STRENGTH.0.5=Vanilla
 
 screen.AO=Ambient Occlusion
 
