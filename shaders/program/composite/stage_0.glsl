@@ -181,6 +181,10 @@ void main() {
                 }
             }
             #endif
+        } else if (info.matMask == 6) { // particle handlinggg 
+            color = texture2D(colortex3, texcoord).rgb; // set color to behind texture
+            info.albedo.rgb *= 4.0; // for some reason, particles albedo are way too dim normally
+            color = mix(color, calculateShading(info, viewPos.xyz, shadowPos.xyz, false), info.albedo.a);
         } else if (info.matMask == 7) { // ice block handling to make them look less bad
             // water fog vars
             float ldepth0 = linearDepth(depth0);
