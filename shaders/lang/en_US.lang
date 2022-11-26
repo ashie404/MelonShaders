@@ -1,12 +1,12 @@
-option.MELONINFO=§aMelon Shaders
+option.MELONINFO=§a§oMelon Shaders
 value.MELONINFO.0=§6by Ashie404!
-value.MELONINFO.1=§cV2.5
-option.MELONINFO.comment=§aMelon Shaders, §6by Ashie404. §fUses code snippets from BSL, Raspberry, and robobo1221 shaders.
+value.MELONINFO.1=§l§5V2.5
+option.MELONINFO.comment=§aMelon Shaders §5V2.5, §6by Ashie404. §fUses code snippets from BSL, Raspberry, and robobo1221 shaders.
 
-screen.POST=Post Processing
-screen.SKY=Sky
-screen.LIGHTING=Lighting
-screen.TWEAKS=Tweaks
+screen.POST=§6§lPost Processing
+screen.SKY=§b§lSky
+screen.LIGHTING=§e§lLight & Shadow
+screen.TWEAKS=§a§lTweaks
 
 option.BLOOM=Bloom
 option.BLOOM_STRENGTH=Bloom Strength
@@ -32,7 +32,7 @@ value.LUTV.3=Fuji F400
 value.LUTV.4=Polaroid 669
 value.LUTV.5=Velvia
 
-screen.CAMERA=Camera Settings
+screen.CAMERA=§6§lCamera Settings
 option.APERTURE=Aperture
 option.APERTURE.comment=How blurry the DOF is.
 
@@ -46,7 +46,7 @@ value.DOF_QUALITY.4=§eHigh
 value.DOF_QUALITY.8=§cUltra
 option.CHROM_ABB=Chromatic Aberration
 
-screen.ACES_SETTINGS=ACES Settings
+screen.ACES_SETTINGS=§6§lACES Settings
 screen.ACES_SETTINGS.comment=Color grading settings.
 
 option.sunPathRotation=Sun Path Rotation
@@ -63,7 +63,7 @@ option.SKYBOX_BRIGHT.comment=Brightness of skybox texture. Only works if sky tex
 option.SKYCLR_BRIGHT=Sky Color Brightness
 option.SKYCLR_BRIGHT.comment=Brightness of minecraft sky color. Only works if sky texture rendering is enabled.
 
-screen.CLOUDS=Clouds
+screen.CLOUDS=§f§lClouds
 option.CUMULUS=Cumulus Clouds
 option.CUMULUS.comment=2D cumulus clouds.
 option.CLOUD_SPEED=Cloud Speed
@@ -71,14 +71,14 @@ option.CLOUD_DENSITY=Cloud Density
 option.CLOUD_LIGHTING=Cloud Lighting
 option.CLOUD_LIGHTING.comment=Turns on cloud lighting. Will look much prettier, at the cost of some performance.
 
-screen.VOLUMETRICS=Volumetrics
+screen.VOLUMETRICS=§e§lVolumetrics & Fog
 option.VL=Volumetric Lighting
 option.VL_DENSITY=VL Density
 option.VL_DENSITY.comment=Density of volumetric fog.
 option.VL_STEPS=VL Steps
 option.VL_STEPS.comment=How many raymarching steps the volumetric lighting loop takes. Higher is laggier, but also more precise.
 
-screen.REFLECTIONS=Specular Settings
+screen.REFLECTIONS=§6§lSpecular Settings
 screen.REFLECTIONS.comment=Specular highlight and reflection settings.
 
 option.REFLECTIONS=Reflections
@@ -112,7 +112,7 @@ option.LIGHTMAP_STRENGTH=Lightmap Falloff Strength
 option.LIGHTMAP_STRENGTH.comment=Strength of lightmap falloff curve. Fixes rooms that appear too dark/moody.
 value.LIGHTMAP_STRENGTH.0.5=Vanilla
 
-screen.AO=Ambient Occlusion
+screen.AO=§6§lAmbient Occlusion
 screen.AO.comment=Ambient lighting settings.
 
 option.RTAO.comment=Ray-traced ambient occlusion.
@@ -132,7 +132,7 @@ option.RTAO_FILTER.comment=Whether to filter the RTAO or not. Helps RTAO be less
 option.HEAT_DISTORT=Heat Distortion
 option.HEAT_DISTORT.comment=Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.
 
-screen.RAIN=Rain Effects
+screen.RAIN=§9§lRain Effects
 option.RAIN_PUDDLES=Rain Puddle
 option.RAIN_PUDDLES.comment=When rainy, objects will appear more wet. Requires specular and reflections to be enabled to work. Can cause storms to be much laggier.
 
@@ -154,7 +154,7 @@ option.SSS_SCATTER.comment=Light scattering radius on subsurface scattering.
 option.SPECULAR=Specular
 option.SPECULAR.comment=GGX Specular Highlights.
 
-screen.SHADOWS=Shadows
+screen.SHADOWS=§6§lShadows
 option.shadowMapResolution=Shadow Resolution
 option.shadowMapResolution.comment=Resolution of shadow map. Values above 4096 not recommended and can potentially crash your game!
 
@@ -170,13 +170,13 @@ option.PXL_SHADOWS.comment=Pixelate shadows to the world grid. Looks cool, but c
 option.PXL_SHADOW_RES=Pixelated Shadow Res
 option.PXL_SHADOW_RES.comment=Resolution of pixelated shadows.
 
-screen.BLOCKLIGHT=Blocklight
+screen.BLOCKLIGHT=§6§lBlocklight
 option.BLOCKLIGHT_R=§4Red
 option.BLOCKLIGHT_G=§2Green
 option.BLOCKLIGHT_B=§1Blue
 option.BLOCKLIGHT_I=Intensity
 
-screen.EMISSIVES=Emissives
+screen.EMISSIVES=§6§lEmissives
 
 option.EMISSIVE_MAP=Emissive Maps
 option.EMISSIVE_MAP.comment=Emissive map setting. Only enable if you have a PBR resource pack that utilizes emissive maps.
@@ -208,7 +208,7 @@ option.HARDCODED_METALS.comment=Enables labPBR format hardcoded metals.
 option.WHITEWORLD=Whiteworld
 option.WHITEWORLD.comment=Removes albedo multiplication at end of shading function, causing the world to appear white, but still fully shaded.
 
-screen.TRANS=Translucents
+screen.TRANS=§b§lTranslucents
 
 option.TRANS_MULT=Translucent Multiply Blending
 option.TRANS_MULT.comment=Uses multiply blending for translucents instead of regular alpha blending. Could make certain mods/blocks behave weirdly.
@@ -217,7 +217,7 @@ option.FAKE_REFRACT.comment=Whether to have (fake) translucent refraction or not
 option.REFRACT_STRENGTH=Refraction Strength
 option.BLUR_REFRACT=Blur Refractions
 
-screen.WATER=Water
+screen.WATER=§3§lWater
 
 option.WAVE_FOAM=Water Foam
 option.WAVE_CAUSTICS=Wave Foam Patterns
@@ -237,7 +237,8 @@ option.WAVE_SCALE.comment=Scale of water normals.
 option.SNELLS_WINDOW=Snell's Window
 option.SNELLS_WINDOW.comment=Renders the Snell's window phenomenon underwater.
 
-screen.VISUAL=Visual
+screen.VISUAL=§9§lVisual Effects
+screen.VISUAL.comment=Contains miscellaneous visual effect settings.
 
 #ACES
 option.SAT_MOD=Saturation
@@ -256,7 +257,7 @@ option.Blue_Correction=Blue Correction
 option.Gamut_Expansion=Gamut Expansion
 option.in_Match=IN Match
 option.Out_Match=OUT Match
-screen.COLOR=Color Adjustments
+screen.COLOR=§6§lColor Adjustments
 option.COLOR_AP1=AP1 Colorspace
 
 profile.Minimal=§bMinimal
