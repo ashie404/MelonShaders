@@ -156,3 +156,5 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 // constant water coefficent values
 vec3 waterCoeff = mix(vec3(0.8, 0.2, 0.1), vec3(1.0, 0.3, 0.3), isSwamp);
 const vec3 waterScatterCoeff = vec3(1e-2);
+
+const vec3 weatherColor = vec3(0.8, 0.7, 0.9);
