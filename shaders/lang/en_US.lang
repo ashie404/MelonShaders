@@ -1,6 +1,7 @@
 option.MELONINFO=§aMelon Shaders
 value.MELONINFO.0=§6by Ashie404!
 value.MELONINFO.1=§cV2.5
+option.MELONINFO.comment=§aMelon Shaders, §6by Ashie404. §fUses code snippets from BSL, Raspberry, and robobo1221 shaders.
 
 screen.POST=Post Processing
 screen.SKY=Sky
@@ -9,12 +10,20 @@ screen.TWEAKS=Tweaks
 
 option.BLOOM=Bloom
 option.BLOOM_STRENGTH=Bloom Strength
+option.BLOOM_STRENGTH.comment=Strength of bloom filter.
 
 option.TAA=Temporal Anti-Aliasing
+option.TAA.comment=Temporal anti-aliasing. Helps smooth out jagged edges and reduce noise in noisy effects. Not recommended to turn off.
+
 option.TAA_NCLAMP=Neighborhood Clamping
+option.TAA_NCLAMP.comment=TAA neighborhood clamping. Prevents ghosting. Not recommended to turn off.
+
 option.TAA_BLEND=TAA Blending
+option.TAA_BLEND.comment=How much to blend between current frame info and TAA history. Higher numbers will make the image smoother, but blurrier in motion.
 
 option.LUT=Color LUT
+option.LUT.comment=Color lookup table. Adjusts the overall look of colors.
+
 option.LUTV=LUT
 value.LUTV.0=Kingdom Come
 value.LUTV.1=Fuji Provia 400X
@@ -25,8 +34,12 @@ value.LUTV.5=Velvia
 
 screen.CAMERA=Camera Settings
 option.APERTURE=Aperture
+option.APERTURE.comment=How blurry the DOF is.
+
 option.DOF=Depth of Field
+
 option.DOF_QUALITY=DOF Quality
+option.DOF_QUALITY.comment=Quality of depth of field. Higher quality is laggier but will produce a cleaner blur. Low quality not recommended for high aperture settings.
 value.DOF_QUALITY.1=§bLow
 value.DOF_QUALITY.2=§aMedium
 value.DOF_QUALITY.4=§eHigh
@@ -34,72 +47,128 @@ value.DOF_QUALITY.8=§cUltra
 option.CHROM_ABB=Chromatic Aberration
 
 screen.ACES_SETTINGS=ACES Settings
+screen.ACES_SETTINGS.comment=Color grading settings.
 
 option.sunPathRotation=Sun Path Rotation
 option.STARS=Stars
 
 option.FOG=Fog
 option.FOG_DENSITY=Fog Density
+option.FOG_DENSITY.comment=Density of fog.
 
 option.SKYTEX=Textured Skybox
+option.SKYTEX.comment=Whether to use the sky texture or atmosphere rendering.
 option.SKYBOX_BRIGHT=Skybox Brightness
+option.SKYBOX_BRIGHT.comment=Brightness of skybox texture. Only works if sky texture rendering is enabled.
 option.SKYCLR_BRIGHT=Sky Color Brightness
+option.SKYCLR_BRIGHT.comment=Brightness of minecraft sky color. Only works if sky texture rendering is enabled.
 
 screen.CLOUDS=Clouds
 option.CUMULUS=Cumulus Clouds
+option.CUMULUS.comment=2D cumulus clouds.
 option.CLOUD_SPEED=Cloud Speed
 option.CLOUD_DENSITY=Cloud Density
 option.CLOUD_LIGHTING=Cloud Lighting
+option.CLOUD_LIGHTING.comment=Turns on cloud lighting. Will look much prettier, at the cost of some performance.
 
 screen.VOLUMETRICS=Volumetrics
 option.VL=Volumetric Lighting
 option.VL_DENSITY=VL Density
+option.VL_DENSITY.comment=Density of volumetric fog.
 option.VL_STEPS=VL Steps
+option.VL_STEPS.comment=How many raymarching steps the volumetric lighting loop takes. Higher is laggier, but also more precise.
 
 screen.REFLECTIONS=Specular Settings
+screen.REFLECTIONS.comment=Specular highlight and reflection settings.
 
 option.REFLECTIONS=Reflections
+option.REFLECTIONS.comment=Enables skybox/atmosphere reflections.
+
 option.CLOUD_REFLECTIONS=Cloud Reflections
+option.CLOUD_REFLECTIONS.comment=Includes cloud reflections in the atmosphere reflections. Can take a decent hit to performance.
+
 option.SSR=Screen Space Reflections
+option.SSR.comment=Screenspace reflections. Has no effect if reflections are disabled.
+
 option.MICROFACET_REFL=Microfacet Reflections
+option.MICROFACET_REFL.comment=Uses microfacet distribution on rough reflections or not. When off, uses LODs for rough reflections. LOD rough reflections will look less noisy, and perform better, but may have more artifacts.
+
 option.SPEC_REFLECTIONS=Specular Reflections
+option.SPEC_REFLECTIONS.comment=Enables reflections on blocks with specular maps. Has no effect if reflections are disabled.
+
 option.ROUGH_REFL_SAMPLES=Rough Reflection Rays
+option.ROUGH_REFL_SAMPLES.comment=When microfacet rough reflections are enabled, this controls how many rays to shoot out per frame. Higher is laggier, but will be less noisy. Values above 4 are not recommended.
+
 option.REFL_FILTER=Reflection Filtering
+option.REFL_FILTER.comment=Filters rough reflections. Helps microfacet reflections appear less noisy, at the cost of some ghosting.
+
 option.REFL_DEBUG=Filter Debug
+option.REFL_DEBUG.comment=Debug view for reflection filtering. Outputs the raw filter buffer to the screen.
 
 option.DIRECTIONAL_LIGHTMAP=Directional Lightmaps
 option.DIRECTIONAL_LIGHTMAP_STRENGTH=Dir. Lightmap Strength
 
 option.LIGHTMAP_STRENGTH=Lightmap Falloff Strength
+option.LIGHTMAP_STRENGTH.comment=Strength of lightmap falloff curve. Fixes rooms that appear too dark/moody.
 value.LIGHTMAP_STRENGTH.0.5=Vanilla
 
 screen.AO=Ambient Occlusion
+screen.AO.comment=Ambient lighting settings.
+
+option.RTAO.comment=Ray-traced ambient occlusion.
 
 option.RTAO_DEBUG=RTAO Debug
+option.RTAO_DEBUG.comment=Outputs the AO buffer directly to the screen.
+
 option.RTAO_RAYS=RTAO Rays
+option.RTAO_RAYS.comment=How many rays to shoot out per frame for RTAO. Higher will be less noisy, but laggier.
+
 option.RTAO_STEPS=RTAO Steps
+option.RTAO_STEPS.comment=How many steps per RTAO ray. 
+
 option.RTAO_FILTER=RTAO Filtering
+option.RTAO_FILTER.comment=Whether to filter the RTAO or not. Helps RTAO be less noisy.
 
 option.HEAT_DISTORT=Heat Distortion
+option.HEAT_DISTORT.comment=Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.
 
 screen.RAIN=Rain Effects
-option.RAIN_PUDDLES=Rain Puddles
+option.RAIN_PUDDLES=Rain Puddle
+option.RAIN_PUDDLES.comment=When rainy, objects will appear more wet. Requires specular and reflections to be enabled to work. Can cause storms to be much laggier.
+
 option.PUDDLE_MULT=Puddles Multiplier
+option.PUDDLE_MULT.comment=How much the puddles should cover terrain.
+
 option.STRETCH_PUDDLES_Y=Stretch Y Puddles
+option.STRETCH_PUDDLES_Y.comment=Whether to stretch puddles on the Y axis or not. Prevents circular puddle patterns from appearing on sides of blocks.
+
 option.POROSITY=LabPBR Porosity
+option.POROSITY.comment=Enables LabPBR porosity for resource packs that support it. Blue channel emissives have to be disabled for this to work. Rain puddles have to be enabled for this to work.
 
 option.NIGHT_DESAT=Night Desaturation
+option.NIGHT_DESAT.comment=Whether to desaturate colors at night or not.
 
 option.SSS=Subsurface Scattering
 option.SSS_SCATTER=SSS Scatter Size
+option.SSS_SCATTER.comment=Light scattering radius on subsurface scattering.
 option.SPECULAR=Specular
+option.SPECULAR.comment=GGX Specular Highlights.
 
 screen.SHADOWS=Shadows
 option.shadowMapResolution=Shadow Resolution
+option.shadowMapResolution.comment=Resolution of shadow map. Values above 4096 not recommended and can potentially crash your game!
+
 option.shadowDistance=Shadow Distance
+option.shadowDistance.comment=The distance at which shadow rendering will stop.
+
 option.SHADOW_SOFTNESS=Shadow Softness
+option.SHADOW_SOFTNESS.comment=Shadow softness. If PCSS is on, it determines how quickly the shadows will soften.
+
 option.PXL_SHADOWS=Pixelated Shadows
+option.PXL_SHADOWS.comment=Pixelate shadows to the world grid. Looks cool, but can cause minor flickering issues.
+
 option.PXL_SHADOW_RES=Pixelated Shadow Res
+option.PXL_SHADOW_RES.comment=Resolution of pixelated shadows.
 
 screen.BLOCKLIGHT=Blocklight
 option.BLOCKLIGHT_R=§4Red
@@ -110,13 +179,16 @@ option.BLOCKLIGHT_I=Intensity
 screen.EMISSIVES=Emissives
 
 option.EMISSIVE_MAP=Emissive Maps
+option.EMISSIVE_MAP.comment=Emissive map setting. Only enable if you have a PBR resource pack that utilizes emissive maps.
 value.EMISSIVE_MAP.0=Off
 value.EMISSIVE_MAP.1=OldPBR/Blue Channel
 value.EMISSIVE_MAP.2=LabPBR/Alpha Channel
 
 option.EMISSIVE_STRENGTH=Emissive Strength
+option.EMISSIVE_STRENGTH.comment=Strength of all emissives (including emissive maps).
 
 option.EMISSIVE_FALLBACK=Emissive Fallback
+option.EMISSIVE_FALLBACK.comment=When emissive maps are on, and this setting is enabled, hardcoded emissives will also be calculated, and blended with emissive maps. Can fix missing emissives in certain resource packs.
 
 option.AMETHYST_BLOCK_GLOW=Glowing Amethyst Blocks
 value.AMETHYST_BLOCK_GLOW.0=Off
@@ -128,14 +200,20 @@ option.WIND_STRENGTH=Wind Strength
 option.WAVY_LAVA=Wavy Lava
 
 option.REBUILD_Z=Rebuild Normal Z
+option.REBUILD_Z.comment=When enabled, the Z coordinate of the normal map will be rebuilt. Used for LabPBR 1.2+ resource packs. Disable if normal maps don't render correctly.
+
 option.HARDCODED_METALS=Hardcoded Metals
+option.HARDCODED_METALS.comment=Enables labPBR format hardcoded metals.
 
 option.WHITEWORLD=Whiteworld
+option.WHITEWORLD.comment=Removes albedo multiplication at end of shading function, causing the world to appear white, but still fully shaded.
 
 screen.TRANS=Translucents
 
 option.TRANS_MULT=Translucent Multiply Blending
+option.TRANS_MULT.comment=Uses multiply blending for translucents instead of regular alpha blending. Could make certain mods/blocks behave weirdly.
 option.FAKE_REFRACT=Fake Refractions
+option.FAKE_REFRACT.comment=Whether to have (fake) translucent refraction or not.
 option.REFRACT_STRENGTH=Refraction Strength
 option.BLUR_REFRACT=Blur Refractions
 
@@ -143,14 +221,21 @@ screen.WATER=Water
 
 option.WAVE_FOAM=Water Foam
 option.WAVE_CAUSTICS=Wave Foam Patterns
+option.WAVE_CAUSTICS.comment=Renders a caustics-like pattern on the surface of the water.
 option.WAVE_CAUSTICS_D=Wave Foam Density
 option.WAVE_PIXEL=Pixelate Wave Foam
 option.WAVE_PIXEL_R=Pixelation Resolution
+option.WAVE_PIXEL_R.comment=Resolution of water pattern pixelization.
 option.WAVE_SPEED=Wave Foam Speed
+option.WAVE_SPEED.comment=Speed of water patterns.
 option.WAVE_BRIGHTNESS=Wave Foam Brightness
+option.WAVE_BRIGHTNESS.comment=Brightness of wave foam and patterns.
 option.WAVE_NORMALS=Water Normals
+option.WAVE_NORMALS=Gives water a wavy normal map based on the water patterns.
 option.WAVE_SCALE=Water Normals Scale
+option.WAVE_SCALE.comment=Scale of water normals.
 option.SNELLS_WINDOW=Snell's Window
+option.SNELLS_WINDOW.comment=Renders the Snell's window phenomenon underwater.
 
 screen.VISUAL=Visual
 
@@ -178,3 +263,4 @@ profile.Minimal=§bMinimal
 profile.Low=§aLow
 profile.Default=§dDefault
 profile.High=§cHigh
+profile.comment=§bMinimal: §flow shadows, basic effects, meant for weak/outdated computers. §aLow: §fmedium shadows, fancier effects, meant for lower-end computers. §dDefault: §fmedium shadows, raytraced rendering effects, meant for midrange computers. §cHigh: §fhigh shadows, all rendering effects, meant for high-end computers.

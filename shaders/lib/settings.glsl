@@ -64,9 +64,9 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define FOG
 #define FOG_DENSITY 0.3 // Density of fog. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
-#define CUMULUS // Whether to have 2D cumulus clouds or not.
-#define CLOUD_SPEED 1.0 // Speed of clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
-#define CLOUD_DENSITY 1.0 // Density of clouds. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define CUMULUS // 2D cumulus clouds
+#define CLOUD_SPEED 1.0 // [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
+#define CLOUD_DENSITY 1.0 // [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 #define CLOUD_LIGHTING
 
 #define VL // Volumetric lighting.
@@ -118,7 +118,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define BLOOM_STRENGTH 0.1 // Strength of bloom filter. [0.025 0.05 0.075 0.1 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6]
 
 #define LUT // Color lookup table. Adjusts the overall look of colors.
-#define LUTV 0 // Which color LUT to use. Certain LUTs might require adjustments to film slope in ACES settings to not be over-contrasty. Night City Punk LUT created by shortnamesalex. [0 1 2 3 4 5]
+#define LUTV 0 // [0 1 2 3 4 5]
 
 // TAA settings
 
@@ -131,7 +131,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define DOF_QUALITY 2 // Quality of depth of field. Higher quality is laggier. [1 2 4 8]  
 #define APERTURE 1.0 // How blurry the DOF is. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0]
 
-#define CHROM_ABB // Chromatic aberration.
+#define CHROM_ABB
 
 // tweaks
 #define EMISSIVE_MAP 0 // Emissive map setting. [0 1 2]
@@ -151,7 +151,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define BLOCKLIGHT_R 1.0 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_G 0.2 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define BLOCKLIGHT_B 0.1 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
-#define BLOCKLIGHT_I 1.0 // Intensity of blocklight. [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
+#define BLOCKLIGHT_I 1.0 // [0.0 0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 
 // constant water coefficent values
 vec3 waterCoeff = mix(vec3(0.8, 0.2, 0.1), vec3(1.0, 0.3, 0.3), isSwamp);
