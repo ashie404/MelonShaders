@@ -133,7 +133,7 @@ option.HEAT_DISTORT=Heat Distortion
 option.HEAT_DISTORT.comment=Whether to have a heat distortion effect in nether or not. Does not work if DOF is enabled.
 
 screen.RAIN=§9§lRain Effects
-option.RAIN_PUDDLES=Rain Puddle
+option.RAIN_PUDDLES=Rain Puddles
 option.RAIN_PUDDLES.comment=When rainy, objects will appear more wet. Requires specular and reflections to be enabled to work. Can cause storms to be much laggier.
 
 option.PUDDLE_MULT=Puddles Multiplier
