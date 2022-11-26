@@ -131,7 +131,7 @@ vec3 getShadowsDiffuse(in FragInfo info, in vec3 viewPos, in vec3 undistortedSha
 
 vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShadowPos, in bool aoMix) {
     // sky light & blocklight
-    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B) * 2.0 * BLOCKLIGHT_I;
+    vec3 blockLightColor = vec3(BLOCKLIGHT_R, BLOCKLIGHT_G, BLOCKLIGHT_B) * 4.0 * BLOCKLIGHT_I;
     vec3 skyLight = mix(fogColor*0.5, vec3(luma(fogColor*0.5)), 0.5);
 
     vec3 ao = texture2D(colortex5, info.coord).rgb;

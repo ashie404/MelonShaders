@@ -11,9 +11,10 @@
 
 #ifdef FSH
 
-/* RENDERTARGETS: 0,1 */
+/* RENDERTARGETS: 0,1,4 */
 out vec4 albedoOut;
 out vec4 dataOut;
+out vec4 normalOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -42,6 +43,7 @@ void main() {
         0.0, // specular green channel
         1.0 // specular red channel
     );
+    normalOut = vec4((mat3(gbufferModelViewInverse) * normal) * 0.5 + 0.5, encodeColor(toSrgb(albedo.rgb)));
 }
 
 #endif
