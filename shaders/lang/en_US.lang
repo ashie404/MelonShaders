@@ -220,6 +220,8 @@ option.BLUR_REFRACT=Blur Refractions
 screen.WATER=§3§lWater
 
 option.WAVE_FOAM=Water Foam
+option.WAVE_FOAM_FADE=Water Foam Fade
+option.WAVE_FOAM_FADE.comment=Makes the wave foam render with a fade effect, rather than just rendering solid foam.
 option.WAVE_CAUSTICS=Wave Foam Patterns
 option.WAVE_CAUSTICS.comment=Renders a caustics-like pattern on the surface of the water.
 option.WAVE_CAUSTICS_D=Wave Foam Density
@@ -231,7 +233,7 @@ option.WAVE_SPEED.comment=Speed of water patterns.
 option.WAVE_BRIGHTNESS=Wave Foam Brightness
 option.WAVE_BRIGHTNESS.comment=Brightness of wave foam and patterns.
 option.WAVE_NORMALS=Water Normals
-option.WAVE_NORMALS=Gives water a wavy normal map based on the water patterns.
+option.WAVE_NORMALS.comment=Gives water a wavy normal map based on the water patterns.
 option.WAVE_SCALE=Water Normals Scale
 option.WAVE_SCALE.comment=Scale of water normals.
 option.SNELLS_WINDOW=Snell's Window

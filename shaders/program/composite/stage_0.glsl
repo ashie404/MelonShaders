@@ -146,7 +146,11 @@ void main() {
                 // water foam
                 #ifdef WAVE_FOAM
                 if (depthcomp <= 0.15) {
-		            color += vec3(0.75) * foamColor;
+                    #ifdef WAVE_FOAM_FADE
+		            color += vec3(0.75) * foamColor * clamp01(1.0 - depthcomp*6.66666666);
+                    #else
+                    color += vec3(0.75) * foamColor;
+                    #endif
 		        } 
                 #endif
 
