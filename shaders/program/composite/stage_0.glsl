@@ -106,6 +106,12 @@ void main() {
 
     vec3 color = info.albedo.rgb;
 
+    // if weather particle, meowmeowmeowmeow!!! :3
+    if (info.matMask == 8) {
+        // certified Kitty Magic
+        color = calculateWeatherParticles(info, viewPos.xyz, shadowPos.xyz);
+    }
+
     // if not sky, check for translucents
     if (depth0 != 1.0) {
         // if just translucent, calculate shading

@@ -130,7 +130,7 @@ void main() {
     vec4 filtered = vec4(0.0);
 
     #ifdef REFLECTIONS
-    if (depth0 != 1.0 && info.matMask != 6) {
+    if (depth0 != 1.0 && info.matMask != 6 && info.matMask != 8) {
         float roughness = pow(1.0 - info.specular.r, 2.0);
         if (info.matMask == 3) {
 

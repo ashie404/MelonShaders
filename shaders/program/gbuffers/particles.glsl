@@ -39,7 +39,11 @@ void main() {
 	albedoOut = albedo;
     dataOut = vec4(
         encodeLightmaps(clamp01(lmcoord-0.03125)), // lightmap
-        encodeLightmaps(vec2(0.6, albedo.a)), // material mask and albedo alpha
+    #ifdef WEATHER
+        encodeLightmaps(vec2(0.8, albedo.a)), // material mask and albedo alpha (weather particle)
+    #else
+        encodeLightmaps(vec2(0.6, albedo.a)), // material mask and albedo alpha (regular particle)
+    #endif
         0.0, // specular green channel
         1.0 // specular red channel
     );
