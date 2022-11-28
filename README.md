@@ -3,5 +3,5 @@
 <p align="center">
 Uses code snippets from <a href="https://bitslablab.com/">BSL Shaders</a>, <a href="https://rutherin.netlify.app">Raspberry Shaders</a>, and <a href="https://github.com/robobo1221/robobo1221Shaders">robobo1221 shaders</a>
 <br>
-Thanks to <a href="https://twitter.com/ZenithNeko">Zenith</a> for helping test and find bugs!
+Thanks to <a href="https://zencorner.xyz/">Zenith</a> for helping test and find bugs!
 </p>
