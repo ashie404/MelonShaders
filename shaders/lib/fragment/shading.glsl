@@ -19,7 +19,7 @@ mat2 getRotationMatrix(in vec2 coord) {
     );
 }
 
-float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos) {
+float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos, in sampler2D texSample) {
     mat2 rotationMatrix = getRotationMatrix(coord);
 
     float blockerDepth = 0.0;
@@ -31,7 +31,7 @@ float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos) {
 
         vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
         
-        float shadowMapSample = texture2D(shadowtex0, shadowPos.xy).r;
+        float shadowMapSample = texture2D(texSample, shadowPos.xy).r;
 
         if (shadowMapSample < shadowPos.z) {
             blockerDepth += shadowPos.z - shadowMapSample;
@@ -51,7 +51,9 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
     float visibilityWT = 0.0; // visibility w/ translucents
 
     #ifdef PCSS
-    float blockerDepth = clamp01(getBlockerDepth(coord, undistortedShadowPos));
+    vec2 offset = vec2(SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
+    vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
+    float blockerDepth = clamp01(getBlockerDepth(coord, undistortedShadowPos, texture2D(shadowcolor1, shadowPos.xy).r > 0.5 ? shadowtex1 : shadowtex0));
     float softness = clamp(blockerDepth*80.0*SHADOW_SOFTNESS, 0.0, 4.0);
     #endif
 
@@ -60,14 +62,14 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
     for (int i = 0; i <= 16; i++) {
         
         #ifdef PCSS
-        vec2 offset = (vogelDiskSample(i, 16, interleavedGradientNoise(gl_FragCoord.xy))*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        offset = (vogelDiskSample(i, 16, interleavedGradientNoise(gl_FragCoord.xy))*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #else
-        vec2 offset = (vogelDiskSample(i, 16, interleavedGradientNoise(gl_FragCoord.xy))*SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        offset = (vogelDiskSample(i, 16, interleavedGradientNoise(gl_FragCoord.xy))*SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #endif
         offset = rotationMatrix * offset;
 
         // sample shadow map
-        vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
+        shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
 
         float shadowtex0Sample = texture2D(shadowtex0, shadowPos.xy).r;
         float shadowtex1Sample = texture2D(shadowtex1, shadowPos.xy).r;
