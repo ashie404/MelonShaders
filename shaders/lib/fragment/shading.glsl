@@ -50,9 +50,11 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
     float visibility = 0.0; // visibility
     float visibilityWT = 0.0; // visibility w/ translucents
 
+    vec2 offset = vec2(0.0);
+    vec3 shadowPos = vec3(0.0);
     #ifdef PCSS
-    vec2 offset = vec2(SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
-    vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
+    offset = vec2(SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
+    shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
     float blockerDepth = clamp01(getBlockerDepth(coord, undistortedShadowPos, texture2D(shadowcolor1, shadowPos.xy).r > 0.5 ? shadowtex1 : shadowtex0));
     float softness = clamp(blockerDepth*80.0*SHADOW_SOFTNESS, 0.0, 4.0);
     #endif
