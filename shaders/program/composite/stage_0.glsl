@@ -80,23 +80,6 @@ uniform int frameCounter;
 #include "/lib/fragment/volumetrics.glsl"
 #include "/lib/util/taaJitter.glsl"
 
-vec3 calculateCaustics(in FragInfo info, in float depth1) {
-    vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;
-    foamColor = mix(vec3(0.025), foamColor, info.lightmap.y);
-
-    vec4 screenPosUW = vec4(texcoord - jitter(2.0) * 0.5, depth1, 1.0) * 2.0 - 1.0;
-    vec4 viewPosUW = gbufferProjectionInverse * screenPosUW;
-    viewPosUW /= viewPosUW.w;
-    vec4 worldPosUW = gbufferModelViewInverse * viewPosUW;
-    vec3 worldPosCamera = worldPosUW.xyz + cameraPosition;
-    
-    #ifdef WAVE_PIXEL
-    worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
-    #endif
-    worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(wetness*1.5));
-    return vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75 * foamColor;
-}
-
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
     float depth1 = texture2D(depthtex1, texcoord).r;
@@ -147,10 +130,6 @@ void main() {
 
             // if eye is not in water, render above-water fog and wave foam
             if (isEyeInWater < 0.5) {
-                // calculate underwater caustics if enabled
-                #ifdef UNDERWATER_WAVE_CAUSTICS
-                //color *= calculateCaustics(info, depth1);
-                #endif
                 // calculate transmittance
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
                 color *= transmittance;
