@@ -78,6 +78,24 @@ uniform int frameCounter;
 #include "/lib/fragment/shading.glsl"
 #include "/lib/util/noise.glsl"
 #include "/lib/fragment/volumetrics.glsl"
+#include "/lib/util/taaJitter.glsl"
+
+vec3 calculateCaustics(in FragInfo info, in float depth1) {
+    vec3 foamColor = ambientColor*WAVE_BRIGHTNESS;
+    foamColor = mix(vec3(0.025), foamColor, info.lightmap.y);
+
+    vec4 screenPosUW = vec4(texcoord - jitter(2.0) * 0.5, depth1, 1.0) * 2.0 - 1.0;
+    vec4 viewPosUW = gbufferProjectionInverse * screenPosUW;
+    viewPosUW /= viewPosUW.w;
+    vec4 worldPosUW = gbufferModelViewInverse * viewPosUW;
+    vec3 worldPosCamera = worldPosUW.xyz + cameraPosition;
+    
+    #ifdef WAVE_PIXEL
+    worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
+    #endif
+    worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(wetness*1.5));
+    return vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75 * foamColor;
+}
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
@@ -129,6 +147,10 @@ void main() {
 
             // if eye is not in water, render above-water fog and wave foam
             if (isEyeInWater < 0.5) {
+                // calculate underwater caustics if enabled
+                #ifdef UNDERWATER_WAVE_CAUSTICS
+                color += calculateCaustics(info, depth1);
+                #endif
                 // calculate transmittance
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
                 color *= transmittance;
@@ -155,8 +177,19 @@ void main() {
                 #endif
 
                 #ifdef WAVE_CAUSTICS
-                vec3 worldPosCamera = worldPos.xyz + cameraPosition;
+                #ifdef TAA
 
+                // calculate positions without taa jitter to fix flickering problems
+                vec4 screenPosNTAA = (vec4(texcoord - jitter(2.0) * 0.5, depth0, 1.0) * 2.0 - 1.0);
+                vec4 viewPosNTAA = gbufferProjectionInverse * screenPosNTAA;
+                viewPosNTAA /= viewPosNTAA.w;
+                vec4 worldPosNTAA = gbufferModelViewInverse * viewPosNTAA;
+                vec3 worldPosCamera = worldPosNTAA.xyz + cameraPosition;
+
+                #else
+                vec3 worldPosCamera = worldPos.xyz + cameraPosition;
+                #endif
+                
                 #ifdef WAVE_PIXEL
                 worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
                 #endif
@@ -208,8 +241,12 @@ void main() {
             }
         }
     }
-
-    calculateFog(color, viewPos.xyz, worldPos.xyz, depth0, false);
+    #ifdef UNDERWATER_WAVE_CAUSTICS
+    if (isEyeInWater > 0.5 && info.matMask != 3) {
+        color += calculateCaustics(info, depth1);
+    }
+    #endif
+    calculateFog(color, viewPos.xyz, worldPos.xyz, depth0, depth1, false);
     
     colorOut = color;
 }

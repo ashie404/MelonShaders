@@ -236,6 +236,8 @@ option.WAVE_NORMALS=Water Normals
 option.WAVE_NORMALS.comment=Gives water a wavy normal map based on the water patterns.
 option.WAVE_SCALE=Water Normals Scale
 option.WAVE_SCALE.comment=Scale of water normals.
+option.UNDERWATER_WAVE_CAUSTICS=Underwater Caustics
+option.UNDERWATER_WAVE_CAUSTICS.comment=Renders caustic patterns under the water.
 option.SNELLS_WINDOW=Snell's Window
 option.SNELLS_WINDOW.comment=Renders the Snell's window phenomenon underwater.
 

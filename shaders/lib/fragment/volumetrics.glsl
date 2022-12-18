@@ -55,7 +55,7 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
 }
 
 
-void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float depth0, in bool lowQVL) {
+void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float depth0, in float depth1, in bool lowQVL) {
     #ifdef FOG 
 
     #if WORLD == 0

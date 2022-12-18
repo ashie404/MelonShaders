@@ -37,6 +37,7 @@ uniform sampler2D colortex5;
 uniform sampler2D colortex8;
 
 uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 
 uniform sampler2D noisetex;
 
@@ -107,6 +108,8 @@ vec3 fresnel_metal(vec3 N, vec3 K, float cosTheta) {
 
 void main() {
     float depth0 = texture2D(depthtex0, texcoord).r;
+    float depth1 = texture2D(depthtex1, texcoord).r;
+
 
     FragInfo info = getFragInfo(texcoord);
 
@@ -292,14 +295,14 @@ void main() {
                     metalReflection += specularColor;
                     #endif
 
-                    calculateFog(metalReflection, viewPos.xyz, worldPos.xyz, depth0, true);
+                    calculateFog(metalReflection, viewPos.xyz, worldPos.xyz, depth0, depth1, true);
                     color = metalReflection;
                 } else {
                     // dielectric
                     #if WORLD == 0
                     reflection += specularColor;
                     #endif
-                    calculateFog(reflection, viewPos.xyz, worldPos.xyz, depth0, true);
+                    calculateFog(reflection, viewPos.xyz, worldPos.xyz, depth0, depth1, true);
                     color = mix(color, reflection, clamp01(fresnel));
                 }
             }
