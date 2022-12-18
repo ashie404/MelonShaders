@@ -53,7 +53,7 @@ void main() {
 	vec4 color = texture2D(texture, texcoord) * glcolor;
     if (water > 0.5) {
         #ifdef UNDERWATER_WAVE_CAUSTICS
-        shadowcolorOut = vec4(max(pow(calculateCaustics(), vec3(0.5)), 0.1), 1.0);
+        shadowcolorOut = vec4(1.0+max(pow(calculateCaustics(), vec3(0.5)), 0.05)*4.0, 0.0);
         shadowdataOut = vec4(1.0, 0.0, 0.0, 1.0);
         #else
         discard;
