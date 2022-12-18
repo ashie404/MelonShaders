@@ -71,6 +71,7 @@ uniform ivec2 eyeBrightnessSmooth;
 
 uniform float eyeAltitude;
 uniform float sunAngle;
+uniform float wetness;
 
 uniform int isEyeInWater;
 uniform int frameCounter;

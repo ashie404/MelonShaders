@@ -18,6 +18,7 @@ out vec4 shadowcolorOut;
 
 in vec2 texcoord;
 in vec4 glcolor;
+in vec4 glposition;
 in float water;
 
 // Uniforms
@@ -26,9 +27,35 @@ uniform int entityId;
 
 uniform sampler2D texture;
 
+uniform vec3 cameraPosition;
+
+uniform mat4 shadowModelViewInverse;
+uniform mat4 shadowProjectionInverse;
+
+uniform float frameTimeCounter;
+uniform float wetness;
+
+#include "/lib/util/noise.glsl"
+
+vec3 calculateCaustics() {
+    vec3 worldPosCamera = (shadowModelViewInverse * shadowProjectionInverse * glposition).xyz + cameraPosition;
+    
+    #ifdef WAVE_PIXEL
+    worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
+    #endif
+    worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(wetness*1.5));
+    return vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75;
+}
+
 void main() {
 	vec4 color = texture2D(texture, texcoord) * glcolor;
-	if (water > 0.5 || entityId == 7 || color.a < 0.1) {
+    if (water > 0.5) {
+        #ifdef UNDERWATER_WAVE_CAUSTICS
+        shadowcolorOut = vec4(max(pow(calculateCaustics(), vec3(0.5)), 0.1), 1.0);
+        #else
+        discard;
+        #endif
+    } else if (entityId == 7 || color.a < 0.1) {
 		discard;
 	} else {
 		shadowcolorOut = color;
@@ -44,6 +71,7 @@ void main() {
 
 // Outputs to fragment shader
 out vec2 texcoord;
+out vec4 glposition;
 out vec4 glcolor;
 out float water;
 
@@ -88,6 +116,7 @@ void main() {
 
 	water = mc_Entity.x == 8.0 ? 1.0 : 0.0;
 
+    glposition = gl_Position;
     gl_Position.xyz = distortShadow(gl_Position.xyz);
 }
 

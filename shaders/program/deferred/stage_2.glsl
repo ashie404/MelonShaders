@@ -66,6 +66,7 @@ uniform float near;
 
 uniform float eyeAltitude;
 uniform float sunAngle;
+uniform float wetness;
 
 uniform int isEyeInWater;
 uniform int frameCounter;
@@ -73,8 +74,8 @@ uniform int frameCounter;
 // Includes
 #include "/lib/fragment/fraginfo.glsl"
 #include "/lib/vertex/distortion.glsl"
-#include "/lib/fragment/shading.glsl"
 #include "/lib/util/noise.glsl"
+#include "/lib/fragment/shading.glsl"
 #include "/lib/fragment/atmosphere.glsl"
 #include "/lib/post/taaUtil.glsl"
 

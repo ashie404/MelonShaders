@@ -149,7 +149,7 @@ void main() {
             if (isEyeInWater < 0.5) {
                 // calculate underwater caustics if enabled
                 #ifdef UNDERWATER_WAVE_CAUSTICS
-                color += calculateCaustics(info, depth1);
+                //color *= calculateCaustics(info, depth1);
                 #endif
                 // calculate transmittance
                 vec3 transmittance = exp(-waterCoeff * depthcomp);
@@ -241,11 +241,6 @@ void main() {
             }
         }
     }
-    #ifdef UNDERWATER_WAVE_CAUSTICS
-    if (isEyeInWater > 0.5 && info.matMask != 3) {
-        color += calculateCaustics(info, depth1);
-    }
-    #endif
     calculateFog(color, viewPos.xyz, worldPos.xyz, depth0, depth1, false);
     
     colorOut = color;
