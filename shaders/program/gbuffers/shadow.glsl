@@ -11,9 +11,8 @@
 
 #ifdef FSH
 
-/* RENDERTARGETS: 0,1 */
+/* RENDERTARGETS: 0 */
 out vec4 shadowcolorOut;
-out vec4 shadowdataOut;
 
 // Inputs from vertex shader
 
@@ -49,12 +48,10 @@ vec3 calculateCaustics() {
 }
 
 void main() {
-    shadowdataOut = vec4(0.0, 0.0, 0.0, 0.0);
 	vec4 color = texture2D(texture, texcoord) * glcolor;
     if (water > 0.5) {
         #ifdef UNDERWATER_WAVE_CAUSTICS
         shadowcolorOut = vec4(1.0+max(pow(calculateCaustics(), vec3(0.5)), 0.05)*4.0, 0.0);
-        shadowdataOut = vec4(1.0, 0.0, 0.0, 1.0);
         #else
         discard;
         #endif

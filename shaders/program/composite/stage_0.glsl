@@ -38,7 +38,6 @@ uniform sampler2D noisetex;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
 uniform sampler2D shadowcolor0;
-uniform sampler2D shadowcolor1;
 
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferProjection;
