@@ -107,9 +107,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float 
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;
         color += scattering;
         #endif
-    } else if (isEyeInWater > 1.5 && isEyeInWater < 2.5) { // lava fog
-        color = mix(color, vec3(1.0, 0.05, 0.01), clamp01(length(viewPos.xyz)/24.0));
-    } else if (isEyeInWater > 2.5) { // powder snow fog
-        color = mix(color, vec3(0.1, 0.3, 1.0)*2.0, clamp01(length(viewPos.xyz)/24.0));
+    } else if (isEyeInWater > 1.5) { // lava or powder snow fog
+        color = mix(color, isEyeInWater > 2.5 ? vec3(0.1, 0.3, 1.0)*2.0 : vec3(1.0, 0.05, 0.01), clamp01(length(viewPos.xyz)/24.0));
     }
 }
