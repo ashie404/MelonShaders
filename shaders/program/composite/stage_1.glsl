@@ -179,7 +179,7 @@ void main() {
 
         } 
         #ifdef SPECULAR
-        else {
+        else if (info.matMask != 4) {
             if (info.matMask == 7 && roughness > 0.95) {
                 roughness = 0.0; // fixed roughness value for ice blocks
                 info.specular.r = 0.995;

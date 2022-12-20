@@ -32,6 +32,7 @@ uniform sampler2D specular;
 uniform sampler2D normals;
 
 uniform int entityId;
+uniform int blockEntityId;
 
 uniform float rainStrength;
 uniform float sunAngle;
@@ -172,6 +173,12 @@ void main() {
         matMask = 1;
     } else if (entityId == 7) {
         albedo.rgb = vec3(15.0*emissionMult);
+    }
+
+    // detect text on signs
+    if (blockEntityId == 145 && all(lessThan(glcolor.rgb, vec3(0.999)))) {
+        normalData=normal;
+        albedo.rgb *= 3.0;
         matMask = 4;
     }
 

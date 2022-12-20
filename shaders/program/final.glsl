@@ -23,8 +23,11 @@ in vec2 texcoord;
 // Uniforms
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
+uniform sampler2D colortex2;
+uniform sampler2D colortex3;
 uniform sampler2D colortex4;
 uniform sampler2D colortex5;
+uniform sampler2D colortex6;
 uniform sampler2D colortex7;
 uniform sampler2D colortex8;
 
@@ -125,6 +128,24 @@ void main() {
     screenOut = vec4(color, 1.0);
     #endif
     #ifdef REFL_DEBUG
+    screenOut = texture2D(colortex8, texcoord);
+    #endif
+
+    #if DEBUG == 1
+    screenOut = texture2D(colortex1, texcoord);
+    #elif DEBUG == 2
+    screenOut = texture2D(colortex2, texcoord);
+    #elif DEBUG == 3
+    screenOut = texture2D(colortex3, texcoord);
+    #elif DEBUG == 4
+    screenOut = texture2D(colortex4, texcoord);
+    #elif DEBUG == 5
+    screenOut = texture2D(colortex5, texcoord);
+    #elif DEBUG == 6
+    screenOut = texture2D(colortex6, texcoord);
+    #elif DEBUG == 7
+    screenOut = texture2D(colortex7, texcoord);
+    #elif DEBUG == 8
     screenOut = texture2D(colortex8, texcoord);
     #endif
 }
