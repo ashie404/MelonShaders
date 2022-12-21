@@ -25,8 +25,8 @@ float getBlockerDepth(in vec2 coord, in vec3 undistortedShadowPos) {
     float blockerDepth = 0.0;
     int blockers = 0;
 
-    for (int i = 0; i <= 8; i++) {
-        vec2 offset = (vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy))*4.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
+    for (int i = 0; i <= 4; i++) {
+        vec2 offset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy))*4.0*(shadowMapResolution/2048.0)) / shadowMapResolution;
         offset = rotationMatrix * offset;
 
         vec3 shadowPos = distortShadow(vec3(undistortedShadowPos.xy + offset, undistortedShadowPos.z)) * 0.5 + 0.5;
@@ -163,8 +163,8 @@ vec3 calculateShading(in FragInfo info, in vec3 viewPos, in vec3 undistortedShad
 
         float shadowBias = getShadowBias(viewPos, sunAngle);
 
-        for (int i = 0; i <= 12; i++) {
-            vec2 offset = (vogelDiskSample(i, 12, interleavedGradientNoise(gl_FragCoord.xy*frameCounter))*(12.0*SSS_SCATTER)*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        for (int i = 0; i <= 8; i++) {
+            vec2 offset = (vogelDiskSample(i, 8, interleavedGradientNoise(gl_FragCoord.xy*frameCounter))*(12.0*SSS_SCATTER)*(shadowMapResolution/2048.0)) / shadowMapResolution;
             offset = rotationMatrix * offset;
 
             // sample shadow map
