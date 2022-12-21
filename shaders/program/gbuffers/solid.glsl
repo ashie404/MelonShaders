@@ -178,7 +178,6 @@ void main() {
     // detect text on signs
     if (blockEntityId == 145 && all(lessThan(glcolor.rgb, vec3(0.999)))) {
         normalData=normal;
-        albedo.rgb *= 3.0;
         matMask = 4;
     }
 

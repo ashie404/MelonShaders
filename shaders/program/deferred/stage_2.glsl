@@ -102,6 +102,8 @@ void main() {
 
     if (depth0 != 1.0 && info.matMask != 4) {
         color = calculateShading(info, viewPos.xyz, shadowPos.xyz, true);
+    } else if (info.matMask == 4) {
+        color = calculateShading(info, viewPos.xyz, shadowPos.xyz, true)*mix(1.0, 10.0, clamp01(1.0-luma(info.albedo.rgb)))*luma(info.albedo.rgb);
     }
     
     colorOut = color;
