@@ -13,8 +13,8 @@ const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1
 const int colortex4Format = RGBA16; // Normals (gbuffers->final)
 const int colortex5Format = RGBA16F; // RTAO Buffer
 const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
-const int colortex8Format = RGBA16F; // Reflection buffer (only used with reflection filter)
-const int shadowcolor0Format = RGBA16F;
+const int colortex8Format = R11F_G11F_B10F; // Reflection buffer (only used with reflection filter)
+const int shadowcolor0Format = R11F_G11F_B10F;
 */
 const bool colortex6Clear = false;
 const bool colortex8Clear = false;
