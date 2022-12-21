@@ -1,7 +1,7 @@
 option.MELONINFO=§a§l§oMelon Shaders
 value.MELONINFO.0=§6by Ashie404!
-value.MELONINFO.1=§l§5V2.5
-option.MELONINFO.comment=§aMelon Shaders §5V2.5, §6by Ashie404. §fUses code snippets from BSL, Raspberry, and robobo1221 shaders.
+value.MELONINFO.1=§l§4V2.5
+option.MELONINFO.comment=§aMelon Shaders §4V2.5, §6by Ashie404. §fUses code snippets from BSL, Raspberry, and robobo1221 shaders.
 
 screen.POST=§6§lPost Processing
 screen.SKY=§b§lSky
