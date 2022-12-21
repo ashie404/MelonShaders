@@ -319,16 +319,10 @@ void main() {
         reflecOut = mix(filtered, reflectionColor, 0.2);
     #endif
 
-    #if DOF == 0
+    
     #ifdef BLOOM
     vec3 bloomSample = color.rgb * clamp01(pow(luma(color.rgb), 4.0));
     bloomOut = bloomSample;
-    #endif
-    #elif HEAT_DISTORT && WORLD == -1
-    #ifdef BLOOM
-    vec3 bloomSample = color.rgb * clamp01(pow(luma(color.rgb), 4.0));
-    bloomOut = bloomSample;
-    #endif
     #endif
 }
 
