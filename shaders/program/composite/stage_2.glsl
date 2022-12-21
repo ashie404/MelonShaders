@@ -78,7 +78,7 @@ void main() {
         int dofQuality = DOF_QUALITY*4;
 
         vec3 blurred = vec3(0.0);
-        float blurSize = clamp((currentDepth >= centerDepthSmooth ? (currentDepth-centerDepthSmooth) : (centerDepthSmooth-currentDepth))*(256.0*APERTURE), 0.0, (12.0*APERTURE));
+        float blurSize = clamp(pow((currentDepth >= centerDepthSmooth ? (currentDepth-centerDepthSmooth) : (centerDepthSmooth-currentDepth))*(196.0*APERTURE), 2.0), 0.0, (12.0*APERTURE));
         for (int i = 0; i <= dofQuality; i++) {
             vec2 offset = vogelDiskSample(i, dofQuality, interleavedGradientNoise(gl_FragCoord.xy))*oneTexel*blurSize;
             #ifdef CHROM_ABB
