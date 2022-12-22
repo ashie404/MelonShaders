@@ -140,7 +140,9 @@ vec3 calculateAtmosphere(vec3 background, vec3 viewVector, vec3 upVector, vec3 s
 
 	transmittance = planetIntersected ? vec3(0.0) : transmittance;
 
-	return background * transmittance + scattering;
+	vec3 final = background * transmittance + scattering;
+
+	return mix(final, vec3(luma(final)), rainStrength);
 }
 
 // end atmosphere code by robobo1221

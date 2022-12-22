@@ -66,7 +66,7 @@ uniform float near;
 
 uniform float eyeAltitude;
 uniform float sunAngle;
-uniform float wetness;
+uniform float rainStrength;
 
 uniform int isEyeInWater;
 uniform int frameCounter;

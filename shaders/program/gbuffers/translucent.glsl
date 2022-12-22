@@ -33,7 +33,7 @@ uniform sampler2D normals;
 uniform vec3 cameraPosition;
 
 uniform float frameTimeCounter;
-uniform float wetness;
+uniform float rainStrength;
 
 uniform mat4 gbufferModelViewInverse;
 
@@ -90,7 +90,7 @@ void main() {
         #ifdef WAVE_PIXEL
         worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
         #endif
-        worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(wetness*1.5));
+        worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(clamp(rainStrength*1.5, 0.0, 4.0)));
 
         normalData = normalize(clamp(waterNormals(worldPosCamera, WAVE_SCALE*0.35), -1.0, 1.0) * tbn);
         #else

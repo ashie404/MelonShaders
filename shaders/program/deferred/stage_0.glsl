@@ -55,6 +55,7 @@ uniform vec3 fogColor;
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float frameTimeCounter;
+uniform float rainStrength;
 
 uniform float eyeAltitude;
 

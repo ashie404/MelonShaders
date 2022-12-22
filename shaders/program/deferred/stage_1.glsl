@@ -63,12 +63,15 @@ uniform float viewHeight;
 uniform float frameTimeCounter;
 uniform float far;
 uniform float near;
+uniform float rainStrength;
+
 
 uniform float eyeAltitude;
 uniform float sunAngle;
 
 uniform int isEyeInWater;
 uniform int frameCounter;
+
 
 // Includes
 #include "/lib/fragment/fraginfo.glsl"
