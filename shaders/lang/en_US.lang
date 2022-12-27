@@ -176,6 +176,12 @@ option.BLOCKLIGHT_G=§2Green
 option.BLOCKLIGHT_B=§1Blue
 option.BLOCKLIGHT_I=Intensity
 
+screen.ENCHANT=§6§lEnchantment Glint
+option.ENCHANT_R=§4Red
+option.ENCHANT_G=§2Green
+option.ENCHANT_B=§1Blue
+option.ENCHANT_I=Intensity
+
 screen.EMISSIVES=§6§lEmissives
 
 option.EMISSIVE_MAP=Emissive Maps
