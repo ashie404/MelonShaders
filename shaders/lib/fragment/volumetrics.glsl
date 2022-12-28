@@ -102,7 +102,11 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float 
         color *= transmittance;
         #ifdef VL
         float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
-        vec3 scattering = calculateVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie), lowQVL);
+        #ifdef UNDERWATER_WAVE_CAUSTICS
+        vec3 scattering = pow(calculateColoredVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie), lowQVL), vec3(2.0))*0.25;
+        #else
+        vec3 scattering = calculateVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie), lowQVL)*1.3;
+        #endif
         scattering *= waterScatterCoeff; // scattering coefficent
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;
         color += scattering;
