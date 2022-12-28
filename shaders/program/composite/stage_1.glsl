@@ -313,9 +313,10 @@ void main() {
         
     }
     #endif
-
-    vec3 enchantc = decodeColor(texture2D(colortex4, texcoord).w);
-    color = mix(color, mix(enchantc * enchantc, enchantc * color * 64.0, 0.5), luma(enchantc));
+    if (info.matMask == 9) {
+        vec3 enchantc = decodeColor(texture2D(colortex4, texcoord).w);
+        color = mix(color, mix(enchantc * enchantc, enchantc * color * 64.0, 0.5), luma(enchantc));
+    }
     colorOut = color;
     #ifdef REFL_FILTER
         reflecOut = mix(filtered, reflectionColor, 0.2);

@@ -11,8 +11,9 @@
 
 #ifdef FSH
 
-/* RENDERTARGETS: 0,4,5 */
+/* RENDERTARGETS: 0,1,4,5 */
 out vec3 colorOut;
+out vec4 dataOut;
 out vec4 normalOut;
 out vec3 rtaoOut;
 
@@ -158,6 +159,13 @@ void main() {
         calculateCelestialBodiesNoStars(viewPos.xyz, worldPos.xyz, color);
         #endif
     }
+    dataOut = vec4(
+            encodeLightmaps(info.lightmap), // lightmap
+            encodeLightmaps(vec2(info.matMask/10.0, info.albedo.a)), // material mask and albedo alpha
+            info.specular.g, // specular green channel
+            info.specular.r // specular red channel
+        );
+
     vec3 enchantc = vec3(0.0);
      if (texture2D(colortex3, texcoord).r > 0.5) {
         enchantc = 
@@ -166,6 +174,12 @@ void main() {
         enchantc.g *= ENCHANT_G;
         enchantc.b *= ENCHANT_B;
         enchantc.rgb *= ENCHANT_I*0.7;
+        dataOut = vec4(
+            encodeLightmaps(info.lightmap), // lightmap
+            encodeLightmaps(vec2(0.9, info.albedo.a)), // material mask and albedo alpha
+            info.specular.g, // specular green channel
+            info.specular.r // specular red channel
+        );
     }
     
     colorOut = color;
