@@ -11,8 +11,9 @@
 
 #ifdef FSH
 
-/* RENDERTARGETS: 0,5 */
+/* RENDERTARGETS: 0,4,5 */
 out vec3 colorOut;
+out vec4 normalOut;
 out vec3 rtaoOut;
 
 // Inputs from vertex shader
@@ -157,8 +158,18 @@ void main() {
         calculateCelestialBodiesNoStars(viewPos.xyz, worldPos.xyz, color);
         #endif
     }
+    vec3 enchantc = vec3(0.0);
+     if (texture2D(colortex3, texcoord).r > 0.5) {
+        enchantc = 
+        vec3(pow(cellular(((worldPos.xyz)*8.0+vec3(vogelDiskSample(1, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)), 0.0))+frameTimeCounter*0.5), 4.0)*8.0);
+        enchantc.r *= ENCHANT_R;
+        enchantc.g *= ENCHANT_G;
+        enchantc.b *= ENCHANT_B;
+        enchantc.rgb *= ENCHANT_I*0.7;
+    }
     
     colorOut = color;
+    normalOut = vec4(texture2D(colortex4, texcoord).rgb, encodeColor(enchantc));
 }
 
 #endif

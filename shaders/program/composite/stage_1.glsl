@@ -314,16 +314,8 @@ void main() {
     }
     #endif
 
-    if (info.matMask == 9) {
-        vec3 enchantc = 
-        vec3(pow(cellular(((viewPos.xyz)*8.0+vec3(vogelDiskSample(1, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)), 0.0))+frameTimeCounter*0.5), 4.0)*8.0);
-        enchantc.r *= ENCHANT_R;
-        enchantc.g *= ENCHANT_G;
-        enchantc.b *= ENCHANT_B;
-        enchantc.rgb *= ENCHANT_I*0.7;
-        color = mix(color, mix(enchantc * enchantc, enchantc * color * 64.0, 0.5), luma(enchantc));
-    }
-
+    vec3 enchantc = decodeColor(texture2D(colortex4, texcoord).w);
+    color = mix(color, mix(enchantc * enchantc, enchantc * color * 64.0, 0.5), luma(enchantc));
     colorOut = color;
     #ifdef REFL_FILTER
         reflecOut = mix(filtered, reflectionColor, 0.2);

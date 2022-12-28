@@ -11,7 +11,7 @@
 
 #ifdef FSH
 
-/* RENDERTARGETS: 1 */
+/* RENDERTARGETS: 3 */
 out vec4 dataOut;
 
 // Inputs from vertex shader
@@ -27,12 +27,11 @@ uniform sampler2D colortex4;
 
 void main() {
     // output everything
-    vec4 dataPrevious = texture2D(colortex1, texcoord);
     dataOut = vec4(
-        encodeLightmaps(vec2(0.5, 1.0)), // lightmap
-        encodeLightmaps(vec2(0.9, 1.0)), // material mask and albedo alpha
-        dataPrevious.z, // specular green channel
-        dataPrevious.w // specular red channel
+        1.0,
+        0.0,
+        0.0,
+        0.0
     );
 }
 
