@@ -166,6 +166,7 @@ void main() {
             info.specular.r // specular red channel
         );
 
+    normalOut = vec4(texture2D(colortex4, texcoord));
     vec3 enchantc = vec3(0.0);
      if (texture2D(colortex3, texcoord).r > 0.5) {
         enchantc = 
@@ -180,10 +181,11 @@ void main() {
             info.specular.g, // specular green channel
             info.specular.r // specular red channel
         );
+        normalOut = vec4(texture2D(colortex4, texcoord).rgb, encodeColor(enchantc));
     }
     
     colorOut = color;
-    normalOut = vec4(texture2D(colortex4, texcoord).rgb, encodeColor(enchantc));
+   
 }
 
 #endif
