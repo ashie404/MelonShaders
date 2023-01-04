@@ -72,7 +72,7 @@ void main() {
     vec4 worldPos = gbufferModelViewInverse * viewPos;
     
     #if WORLD == 0
-    
+        
     #ifndef SKYTEX
     vec3 color = getSkyColor(viewPos.xyz, 15);
     atmosphereOut = color;
