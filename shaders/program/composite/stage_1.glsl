@@ -119,6 +119,10 @@ void main() {
     viewPos /= viewPos.w;
     vec4 worldPos = gbufferModelViewInverse * viewPos;
 
+    vec4 screenPosNT = vec4(texcoord, depth1, 1.0) * 2.0 - 1.0;
+    vec4 viewPosNT = gbufferProjectionInverse * screenPosNT;
+    viewPosNT /= viewPosNT.w;
+
     #ifdef PXL_SHADOWS
     vec4 shadowPos = shadowProjection * shadowModelView * vec4(
         (floor((worldPos.xyz+cameraPosition)*PXL_SHADOW_RES+0.05)+0.3)/PXL_SHADOW_RES-cameraPosition,
@@ -296,14 +300,14 @@ void main() {
                     metalReflection += specularColor;
                     #endif
 
-                    calculateFog(metalReflection, viewPos.xyz, worldPos.xyz, depth0, depth1, true);
+                    calculateFog(metalReflection, viewPos.xyz, viewPosNT.xyz, worldPos.xyz, depth0, depth1, true);
                     color = metalReflection;
                 } else {
                     // dielectric
                     #if WORLD == 0
                     reflection += specularColor;
                     #endif
-                    calculateFog(reflection, viewPos.xyz, worldPos.xyz, depth0, depth1, true);
+                    calculateFog(reflection, viewPos.xyz, viewPosNT.xyz, worldPos.xyz, depth0, depth1, true);
                     color = mix(color, reflection, clamp01(fresnel));
                 }
             }

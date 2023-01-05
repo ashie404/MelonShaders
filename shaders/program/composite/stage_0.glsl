@@ -220,7 +220,7 @@ void main() {
             }
         }
     }
-    calculateFog(color, viewPos.xyz, worldPos.xyz, depth0, depth1, false);
+    calculateFog(color, viewPos.xyz, viewPosNT.xyz, worldPos.xyz, depth0, depth1, false);
     
     colorOut = color;
 }

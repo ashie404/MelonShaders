@@ -55,7 +55,7 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
 }
 
 
-void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float depth0, in float depth1, in bool lowQVL) {
+void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 viewPosNT, in vec3 worldPos, in float depth0, in float depth1, in bool lowQVL) {
     #ifdef FOG 
 
     #if WORLD == 0
@@ -101,8 +101,8 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float 
         vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL
-        float mie = min(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5), 3.0);
-        vec3 scattering = pow(calculateColoredVL(viewPos.xyz, mix(vec3(0.0), lightColor*2.0, mie), lowQVL), mix(vec3(2.0), vec3(0.5), times.w));
+        float mie = pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5);
+        vec3 scattering = pow(calculateColoredVL(viewPos.xyz, lightColor*mix(1.0, 3.0, times.y), lowQVL), vec3(0.5))*mie*mix(2.0, 5.0, times.w);
 
         scattering *= waterScatterCoeff; // scattering coefficent
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;
