@@ -205,7 +205,7 @@ float getShadowBias(vec3 viewPos, float angle) {
   float sunrise  = ((clamp(angle, 0.96, 1.00)-0.96) / 0.04 + 1-(clamp(angle, 0.02, 0.15)-0.02) / 0.13);
   float sunset   = ((clamp(angle, 0.35, 0.48)-0.35) / 0.13   - (clamp(angle, 0.50, 0.53)-0.50) / 0.03);
   #ifdef PXL_SHADOWS
-  return mix(0.0005, 0.005, clamp01((length(viewPos)/256.0)+clamp01(sunrise/6.0+sunset/6.0)));
+  return mix(0.0001, 0.005, clamp01((length(viewPos)/256.0)+clamp01(sunrise/6.0+sunset/6.0)));
   #else
   return mix(0.00005, 0.005, clamp01((length(viewPos)/256.0)+clamp01(sunrise/6.0+sunset/6.0)));
   #endif
