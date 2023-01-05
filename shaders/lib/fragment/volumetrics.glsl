@@ -5,7 +5,7 @@ vec3 calculateColoredVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + interleavedGradientNoise(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
@@ -37,7 +37,7 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + interleavedGradientNoise(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
