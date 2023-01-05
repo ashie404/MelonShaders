@@ -5,7 +5,7 @@ vec3 calculateColoredVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + interleavedGradientNoise(gl_FragCoord.xy));
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
@@ -37,7 +37,7 @@ vec3 calculateVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
     vec4 startPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(0.0, 0.0, 0.0, 1.0);
     vec4 endPos = shadowProjection * shadowModelView * gbufferModelViewInverse * vec4(viewPos, 1.0);
 
-    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + bayer64(gl_FragCoord.xy));
+    vec4 increment = normalize(endPos - startPos) * distance(endPos, startPos) / steps * fract(frameTimeCounter * 4.0 + interleavedGradientNoise(gl_FragCoord.xy));
     vec4 currentPos = startPos;
 
     float visibility = 0.0;
@@ -76,8 +76,8 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float 
             : mix(color, fogCol2, 1.0 - clamp01(worldPos.y/640.0));
 
         #ifdef VL
-        float mie = clamp01(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025));
-        color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/8.0*mix(1.0, 0.25, clamp01(times.y)), lowQVL);
+        float mie = pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5);
+        color += calculateColoredVL(viewPos, mix(fogCol, lightColor, mie)/4.0, lowQVL);
         #endif
     }
     #elif WORLD == -1
@@ -101,12 +101,9 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 worldPos, in float 
         vec3 transmittance = exp(-waterCoeff * length(viewPos.xyz));
         color *= transmittance;
         #ifdef VL
-        float mie = clamp01(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5));
-        #ifdef UNDERWATER_WAVE_CAUSTICS
-        vec3 scattering = pow(calculateColoredVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie), lowQVL), vec3(2.0))*0.25;
-        #else
-        vec3 scattering = calculateVL(viewPos.xyz, mix(vec3(0.0), lightColor*4.0, mie), lowQVL)*1.3;
-        #endif
+        float mie = min(pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5), 3.0);
+        vec3 scattering = pow(calculateColoredVL(viewPos.xyz, mix(vec3(0.0), lightColor*2.0, mie), lowQVL), mix(vec3(2.0), vec3(0.5), times.w));
+
         scattering *= waterScatterCoeff; // scattering coefficent
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;
         color += scattering;
