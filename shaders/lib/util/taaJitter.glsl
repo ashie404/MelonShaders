@@ -12,7 +12,7 @@ float haltonSeq(float index, float base) {
 }
 
 vec2 jitter(float w) {
-    vec2 scale = w / vec2(viewWidth, viewHeight);
+    vec2 scale = w / vec2(viewWidth, viewHeight) * 0.25;
     float time = frameCounter % 16;
     return vec2(haltonSeq(time, 2.0), haltonSeq(time, 4.0)) * scale + (-0.5 * scale);
 }
