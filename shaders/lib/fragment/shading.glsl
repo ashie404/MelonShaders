@@ -198,9 +198,9 @@ vec3 calculateTranslucentShading(in FragInfo info, in vec3 viewPos, in vec3 undi
     #ifdef BLUR_REFRACT
 
         for (int i = 0; i < 4; i++) {
-            vec2 poffset = vec2(7.0*REFRACT_STRENGTH) * (1.0-info.albedo.a);
-            vec2 gboffset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)) + poffset) * oneTexel * (4.0*REFRACT_STRENGTH);
-            vec2 roffset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)) + poffset) * oneTexel * (5.0*REFRACT_STRENGTH);
+            vec2 poffset = vec2(4.0*REFRACT_STRENGTH) * (1.0-info.albedo.a);
+            vec2 gboffset = (vogelDiskSample(i, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)) + poffset) * oneTexel * (2.0*REFRACT_STRENGTH);
+            vec2 roffset = (vogelDiskSample(i+14, 18, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)) + poffset) * oneTexel * (3.0*REFRACT_STRENGTH);
             vec3 temp = vec3(0.0, texture2D(colortex3, info.coord + gboffset).gb);
             temp.r = texture2D(colortex3, info.coord + roffset).r;
             behind += temp;
