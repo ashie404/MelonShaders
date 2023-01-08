@@ -102,7 +102,7 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 viewPosNT, in vec3 
         color *= transmittance;
         #ifdef VL
         float mie = pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5);
-        vec3 scattering = pow(calculateColoredVL(viewPos.xyz, lightColor*mix(1.0, 3.0, times.y), lowQVL), vec3(0.5))*mie*mix(2.0, 5.0, times.w);
+        vec3 scattering = pow(calculateColoredVL(viewPos.xyz, lightColor*mix(1.0, 4.0, times.y), lowQVL), vec3(0.5))*mie*mix(2.0, 5.0, times.w);
 
         scattering *= waterScatterCoeff; // scattering coefficent
         scattering *= (vec3(1.0) - transmittance) / waterCoeff;
