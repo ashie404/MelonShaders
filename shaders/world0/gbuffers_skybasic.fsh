@@ -3,4 +3,4 @@
 #define FSH
 #define WORLD 0
 #define BASIC
-#include "/program/gbuffers/skytex.glsl"
+#include "/program/gbuffers/discard.glsl"

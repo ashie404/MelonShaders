@@ -11,8 +11,8 @@
 
 #ifdef FSH
 
-/* RENDERTARGETS: 3 */
-out vec4 dataOut;
+/* RENDERTARGETS: 0 */
+out vec4 albedoOut;
 
 // Inputs from vertex shader
 in vec2 texcoord;
@@ -20,19 +20,16 @@ in vec3 normal;
 in vec4 glcolor;
 
 // Uniforms
-uniform mat4 gbufferModelViewInverse;
 uniform sampler2D texture;
-uniform sampler2D colortex1;
-uniform sampler2D colortex4;
+
+// Includes
 
 void main() {
+    // get albedo
+    vec4 albedo = texture2D(texture, texcoord) * glcolor;
+
     // output everything
-    dataOut = vec4(
-        1.0,
-        0.0,
-        0.0,
-        0.0
-    );
+	albedoOut = albedo;
 }
 
 #endif
@@ -47,13 +44,8 @@ out vec3 normal;
 out vec4 glcolor;
 
 // Uniforms
-uniform float viewWidth;
-uniform float viewHeight;
-
-uniform int frameCounter;
 
 // Includes
-#include "/lib/util/taaJitter.glsl"
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
@@ -63,10 +55,6 @@ void main() {
     glcolor = gl_Color;
 
     gl_Position = ftransform();
-
-    #ifdef TAA
-    gl_Position.xy += jitter(2.0)*gl_Position.w;
-    #endif
 }
 
 #endif

@@ -1,7 +1,9 @@
 ![Melon](https://raw.githubusercontent.com/juniebyte/MelonShaders/master/melonpromo.png)
 
 <p align="center">
-Uses code snippets from <a href="https://bitslablab.com/">BSL Shaders</a>, <a href="https://rutherin.netlify.app">Raspberry Shaders</a>, and <a href="https://github.com/robobo1221/robobo1221Shaders">robobo1221 shaders</a>
+⚠️ MELON 3.0 is still in early development! There will likely be lots of compile errors and bugs ⚠️
+<br>
+Uses ACES color grading code from <a href="https://rutherin.netlify.app">Raspberry Shaders</a>.
 <br>
 Thanks to <a href="https://zencorner.xyz/">Zenith</a> for helping test and find bugs!
 </p>
