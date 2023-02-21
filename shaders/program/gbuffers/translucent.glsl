@@ -134,12 +134,18 @@ attribute vec4 at_tangent;
 
 uniform float viewWidth;
 uniform float viewHeight;
+uniform float frameTimeCounter;
+uniform float rainStrength;
 
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferModelView;
+
+uniform vec3 cameraPosition;
 
 uniform int frameCounter;
 
 // Includes
+#include "/lib/util/noise.glsl"
 #include "/lib/util/taaJitter.glsl"
 
 void main() {
@@ -156,6 +162,12 @@ void main() {
 
     gl_Position = ftransform();
     worldSpace = gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex;
+
+    if (mc_Entity.x == 8.0) {
+        vec4 position = worldSpace;
+        position.y += (sin(frameTimeCounter*clamp(rainStrength+1.0, 1.0, 2.0)*2.0+cellular(position.xyz+cameraPosition+(frameTimeCounter/16.0))*4.0)/24.0);
+        gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
+    }
 
     #ifdef TAA
     gl_Position.xy += jitter(2.0)*gl_Position.w;
