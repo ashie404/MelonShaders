@@ -43,7 +43,7 @@ vec3 calculateCaustics() {
     #ifdef WAVE_PIXEL
     worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
     #endif
-    worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(clamp(rainStrength*1.5, 0.0, 2.0)));
+    worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(rainStrength > 0.5 ? 2.0 : 0.0));
     return vec3(pow(cellular(worldPosCamera), 8.0/WAVE_CAUSTICS_D)) * 0.75;
 }
 

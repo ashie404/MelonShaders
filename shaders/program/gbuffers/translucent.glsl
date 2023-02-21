@@ -90,7 +90,7 @@ void main() {
         #ifdef WAVE_PIXEL
         worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
         #endif
-        worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(clamp(rainStrength*1.5, 0.0, 2.0)));
+        worldPosCamera.y += frameTimeCounter*(WAVE_SPEED+(rainStrength > 0.5 ? 2.0 : 0.0));
 
         normalData = normalize(clamp(waterNormals(worldPosCamera, WAVE_SCALE*0.35), -1.0, 1.0) * tbn);
         #else
@@ -165,7 +165,7 @@ void main() {
 
     if (mc_Entity.x == 8.0) {
         vec4 position = worldSpace;
-        position.y += (sin(frameTimeCounter*clamp(rainStrength+1.0, 1.0, 2.0)*2.0+cellular(position.xyz+cameraPosition+(frameTimeCounter/16.0))*4.0)/24.0);
+        position.y += (sin(frameTimeCounter*(rainStrength > 0.5 ? 4.0 : 1.0)+cellular(position.xyz+cameraPosition+(frameTimeCounter/16.0))*4.0)/24.0);
         gl_Position = gl_ProjectionMatrix * gbufferModelView * position;
     }
 
