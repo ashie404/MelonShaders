@@ -181,6 +181,10 @@ void main() {
         matMask = 4;
     }
 
+    #ifdef HAND
+    matMask = 9;
+    #endif
+
     // output everything
 	albedoOut = albedo;
     dataOut = vec4(

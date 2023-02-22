@@ -190,7 +190,7 @@ void main() {
             }
             
             #ifdef REFL_FILTER
-                vec2 reprojCoord = reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
+                vec2 reprojCoord = info.matMask == 9 ? texcoord : reprojectCoords(vec3(texcoord, texture2D(depthtex0, texcoord).r));
                 vec4 previousReflection = texture2D(colortex8, reprojCoord);
                 vec3 currentNormal = mat3(gbufferModelView) * (texture2D(colortex4, reprojCoord).xyz * 2.0 - 1.0);
                 vec2 oneTexel = 1.0 / vec2(viewWidth, viewHeight);

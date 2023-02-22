@@ -102,7 +102,7 @@ void main() {
     if (depth0 != 1.0) {
         #ifdef RTAO
         // RTAO accumulation stuff
-        vec2 reprojCoord = reprojectCoords(screenPos.xyz * 0.5 + 0.5);
+        vec2 reprojCoord = info.matMask == 9 ? texcoord : reprojectCoords(screenPos.xyz * 0.5 + 0.5);
 
         vec3 current = clamp01(calcRTAO(viewPos.xyz, normalize(info.normal)));
         vec3 history = texture2D(colortex5, reprojCoord).rgb;
