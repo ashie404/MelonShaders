@@ -81,6 +81,11 @@ void main() {
     // get specular
     vec4 specularData = texture2DLod(specular, texcoord, 0.0);
 
+    // if lava make shiny
+    if (idCorrected == 11) {
+        specularData.r = 0.9;
+    }
+
     #ifndef NO_PUDDLES
     #ifdef RAIN_PUDDLES
     if (rainStrength > 0.0 && lmcoord.y > 0.25) {
