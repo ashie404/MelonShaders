@@ -54,6 +54,8 @@ uniform mat4 gbufferPreviousProjection;
 
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
+uniform mat4 shadowModelViewInverse;
+uniform mat4 shadowProjectionInverse;
 
 uniform vec3 shadowLightPosition;
 uniform vec3 sunPosition;
@@ -317,7 +319,6 @@ void main() {
         
     }
     #endif
-
     colorOut = color;
     #ifdef REFL_FILTER
         reflecOut = mix(filtered, reflectionColor, 0.2);

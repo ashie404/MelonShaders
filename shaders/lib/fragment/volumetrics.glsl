@@ -19,8 +19,15 @@ vec3 calculateColoredVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
 
         if (!(shadow1 < currentPosShadow.z)) {
             visibility += 1.0;
+            #ifdef PATCHY_VL_FOG
+            vec3 pos = ((shadowModelViewInverse * shadowProjectionInverse * currentPos).xyz+cameraPosition)*2.5;
+            float fognoise = clamp01(cellular(pos))*1.5;
+            if (shadow0 < currentPosShadow.z) vlColor += texture2D(shadowcolor0, currentPosShadow.xy).rgb*2.0*fognoise;
+            else vlColor += vec3(fognoise);
+            #else
             if (shadow0 < currentPosShadow.z) vlColor += texture2D(shadowcolor0, currentPosShadow.xy).rgb*2.0;
             else vlColor += vec3(1.0);
+            #endif
         }
     }
 
