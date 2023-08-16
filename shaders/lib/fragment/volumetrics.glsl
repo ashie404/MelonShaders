@@ -21,7 +21,7 @@ vec3 calculateColoredVL(in vec3 viewPos, in vec3 color, in bool lowQ) {
             visibility += 1.0;
             #ifdef PATCHY_VL_FOG
             vec3 pos = ((shadowModelViewInverse * shadowProjectionInverse * currentPos).xyz+cameraPosition)*2.5;
-            float fognoise = clamp01(cellular(pos))*1.5;
+            float fognoise = clamp01(pow(cellular(pos), 3.0))*2.0;
             if (shadow0 < currentPosShadow.z) vlColor += texture2D(shadowcolor0, currentPosShadow.xy).rgb*2.0*fognoise;
             else vlColor += vec3(fognoise);
             #else
@@ -83,8 +83,8 @@ void calculateFog(inout vec3 color, in vec3 viewPos, in vec3 viewPosNT, in vec3 
             : mix(color, fogCol2, 1.0 - clamp01(worldPos.y/640.0));
 
         #ifdef VL
-        float mie = pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.5);
-        color += calculateColoredVL(viewPos, mix(fogCol, lightColor*mix(1.0, mix(4.0, 16.0, 1.0-times.y), rainStrength), mie)/4.0, lowQVL);
+        float mie = pow(miePhase(dot(normalize(viewPos.xyz), normalize(shadowLightPosition)), depth0, 0.025), 0.2);
+        color += calculateColoredVL(viewPos, mix(pow(fogCol, vec3(0.5)), lightColor*mix(1.0, mix(4.0, 16.0, 1.0-times.y), rainStrength), mie)/4.0, lowQVL);
         #endif
     }
     #elif WORLD == -1
