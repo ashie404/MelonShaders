@@ -260,11 +260,11 @@ void calculateClouds(in bool refl, in vec3 worldPos, inout vec3 color) {
     	}
     	#endif
 
-    	cloudColor += mix(0.015, 0.0015, clamp01(times.w)); // cloud ambient brightness
+    	cloudColor += mix(0.01, 0.0005, clamp01(times.w)); // cloud ambient brightness
 
     	// beer's law + powder sugar
     	cloudColor = mix(
-			exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.0, // day
+			exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 4.5, // day
 			exp(-cloudColor) * (1.0 - exp(-cloudColor*2.0)) * 1.5, // night
 			clamp01(times.w)
 		);
@@ -274,7 +274,7 @@ void calculateClouds(in bool refl, in vec3 worldPos, inout vec3 color) {
 			color, 
 			mix(
         		color, 
-                vec3(cloudColor)*max(lightColor, 0.1)*mix(
+                vec3(cloudColor)*max(lightColor, 0.05)*mix(
                     mix(color, vec3(1.0), clamp01(cloudColor)), 
                     vec3(1.0), 
                     clamp01(times.w)
