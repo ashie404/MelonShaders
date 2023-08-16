@@ -11,9 +11,9 @@ const int colortex1Format = RGBA16; // Lightmaps, material mask, albedo alpha, s
 const int colortex2Format = R11F_G11F_B10F; // Atmosphere (deferred->composite1), bloom (composite2->final)
 const int colortex3Format = R11F_G11F_B10F; // No translucents buffer (deferred1->final)
 const int colortex4Format = RGBA16; // Normals (gbuffers->final)
-const int colortex5Format = RGBA16F; // RTAO Buffer
-const int colortex6Format = R11F_G11F_B10F; // TAA Buffer
-const int colortex8Format = RGBA16F; // Reflection buffer (only used with reflection filter)
+const int colortex5Format = RGBA16F; // AO Buffer [persistent if RTAO enabled]
+const int colortex6Format = R11F_G11F_B10F; // TAA Buffer [persistent]
+const int colortex8Format = RGBA16F; // Reflection buffer (only used with reflection filter) [persistent]
 const int shadowcolor0Format = R11F_G11F_B10F;
 */
 const bool colortex6Clear = false;

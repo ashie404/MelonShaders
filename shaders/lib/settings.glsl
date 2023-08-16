@@ -74,7 +74,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define VL_STEPS 4 // How many raymarching steps to take when calculating volumetric lighting. Higher is laggier, but will most likely look better. [4 6 8 12 16 24 32]
 #define PATCHY_VL_FOG // adds noise to volumetric fog. wip
 
-//#define SKYTEX // Whether to use the sky texture or atmosphere render.
+//#define SKYTEX // Whether to use the sky texture or atmosphere render. Requires Fabric Skyboxes mod if not using OptiFine.
 #define SKYBOX_BRIGHT 2.0 // Brightness of skybox texture. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0]
 #define SKYCLR_BRIGHT 0.5 // Brightness of minecraft sky color. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0]
 
@@ -113,7 +113,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 #define WAVE_BRIGHTNESS 1.0 // Brightness of wave foam and patterns. [0.1 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.75 0.8 0.9 1.0]
 #define WAVE_NORMALS // Whether to have water normals or not.
 #define WAVE_SCALE 0.1 // Scale of water normals. [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0]
-//#define SNELLS_WINDOW // Whether to have the Snell's window phenomenon or not.
+//#define SNELLS_WINDOW // Whether to have the Snell's window phenomenon or not. Slightly broken, disabled by default.
 #define UNDERWATER_WAVE_CAUSTICS // Renders caustic patterns under the water.
 
 // post processing settings
@@ -132,7 +132,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 // camera settings
 //#define DOF
 #define DOF_QUALITY 2 // Quality of depth of field. Higher quality is laggier. [1 2 4 8]  
-#define APERTURE 1.0 // How blurry the DOF is. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0]
+#define APERTURE 1.0 // "Strength" of depth of field. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0]
 
 #define CHROM_ABB
 
