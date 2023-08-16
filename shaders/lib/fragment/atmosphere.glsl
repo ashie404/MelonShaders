@@ -142,7 +142,7 @@ vec3 calculateAtmosphere(vec3 background, vec3 viewVector, vec3 upVector, vec3 s
 
 	vec3 final = background * transmittance + scattering;
 
-	return mix(final, vec3(luma(final)), rainStrength);
+	return mix(final, vec3(luma(final)), clamp(rainStrength, 0.0, 0.5));
 }
 
 // end atmosphere code by robobo1221
@@ -226,8 +226,12 @@ void calculateCelestialBodiesNoStars(in vec3 viewPos, in vec3 worldPos, inout ve
 
 float cloudNoise(in vec2 coord, in float time) {
 	float cloud = clamp01(pow(texture2D(noisetex, coord+time).a, 2.0));
+	if (rainStrength > 0.0) {
+		cloud += clamp01(pow(texture2D(noisetex, coord/4.0+time).a, 0.05))*rainStrength;
+		cloud += clamp01(pow(texture2D(noisetex, coord*4.0+time).a, 0.5))*rainStrength;
+	}
 	cloud = remap(cloud, 0.0, 1.0, 0.0, clamp01(pow(texture2D(noisetex, (coord/2.0)+time).a, mix(0.25, 1.0, clamp01(pow(times.y, 4.0))))));
-	return clamp01(cloud*CLOUD_DENSITY);
+	return clamp01(cloud*0.8*CLOUD_DENSITY*mix(1.0, 0.5, rainStrength));
 }
 
 void calculateClouds(in bool refl, in vec3 worldPos, inout vec3 color) {
@@ -274,7 +278,7 @@ void calculateClouds(in bool refl, in vec3 worldPos, inout vec3 color) {
 			color, 
 			mix(
         		color, 
-                vec3(cloudColor)*max(lightColor, 0.05)*mix(
+                vec3(cloudColor)*max(lightColor*mix(vec3(1.0), vec3(4.0), rainStrength), 0.05)*mix(
                     mix(color, vec3(1.0), clamp01(cloudColor)), 
                     vec3(1.0), 
                     clamp01(times.w)
