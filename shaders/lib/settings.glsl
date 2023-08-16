@@ -51,6 +51,7 @@ const float sunPathRotation = -40.0; // [-40.0 -35.0 -30.0 -25.0 -20.0 -15.0 -10
 #define RTAO_FILTER // Whether to filter the RTAO or not. Helps RTAO be less noisy.
 
 // shadow settings
+#define RAIN_SOFTEN // Whether to soften shadows when raining or not.
 #define PCSS // Percentage-closer soft shadowing. Makes shadows hard at the contact point, and softer farther away.
 #define SHADOW_SOFTNESS 1.0 // Shadow softness. If PCSS is on, affects how quickly the shadows get soft. [0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.25 2.5 2.75 3.0]
 const int shadowMapResolution = 2048; // [1024 2048 4096 8192]

@@ -190,14 +190,41 @@ vec3 getSkyColor(vec3 viewPos, int atmosSteps) {
     return skyColor;
 }
 
+#define tile   0.850
+
+#define brightness 0.0015
+#define darkmatter 0.300
+#define distfading 0.730
+
 void calculateCelestialBodies(in bool sunMoon, in vec3 viewPos, in vec3 worldPos, inout vec3 color) {
 	#if WORLD == 0
 
     #ifdef STARS
-    float starNoise = cellular(normalize(worldPos.xyz)*32.0);
-    if (starNoise <= 0.05) {
-        color += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos.xyz)*16.0)), clamp01(1.0-starNoise)), clamp01(times.w))*4.0;
-    }
+    //float starNoise = cellular(normalize(worldPos.xyz)*32.0);
+    //if (starNoise <= 0.05) {
+    //    color += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos.xyz)*16.0)), clamp01(1.0-starNoise)), clamp01(times.w))*4.0;
+    //}
+	float s=0.1,fade=1.;
+	vec3 v=vec3(0.);
+	for (int r=0; r<20; r++) {
+		vec3 p=vec3(1.0,0.5,0.5)+s*(normalize(worldPos)+vec3(0.0, frameTimeCounter*0.0005, frameTimeCounter*0.005))*.5;
+		p = abs(vec3(tile)-mod(p,vec3(tile*2.))); // tiling fold
+		float pa,a=pa=0.;
+		for (int i=0; i<17; i++) { 
+			p=abs(p)/dot(p,p)-0.53; // the magic formula
+			a+=abs(length(p)-pa); // absolute sum of average change
+			pa=length(p);
+		}
+		float dm=max(0.,0.300-a*a*.001); //dark matter
+		a*=a*a; // add contrast
+		if (r>6) fade*=1.-dm; // dark matter, don't render near
+		//v+=vec3(dm,dm*.5,0.);
+		v+=fade;
+		v+=vec3(s,s*s,s*s*s*s)*a*brightness*fade; // coloring based on distance
+		fade*=distfading; // distance fading
+		s+=0.1;
+	}
+	color += (vec3(1.0) - exp(-v * 0.0002 ))*1.5;
     #endif
 
 	if (sunMoon) {

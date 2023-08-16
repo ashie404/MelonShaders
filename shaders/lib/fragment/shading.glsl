@@ -53,6 +53,9 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
     #ifdef PCSS
     float blockerDepth = clamp01(getBlockerDepth(coord, undistortedShadowPos));
     float softness = clamp(blockerDepth*80.0*SHADOW_SOFTNESS, 0.0, 4.0);
+    #ifdef RAIN_SOFTEN
+    softness += rainStrength*2.0;
+    #endif
     #endif
 
     float shadowBias = getShadowBias(viewPos, sunAngle);
@@ -62,7 +65,11 @@ vec4 getShadows(in vec2 coord, in vec3 viewPos, in vec3 undistortedShadowPos)
         #ifdef PCSS
         vec2 offset = (vogelDiskSample(i, 16, interleavedGradientNoise(gl_FragCoord.xy))*softness*(shadowMapResolution/2048.0)) / shadowMapResolution;
         #else
+        #ifdef RAIN_SOFTEN
+        vec2 offset = (vogelDiskSample(i, 16, interleavedGradientNoise(gl_FragCoord.xy))*(SHADOW_SOFTNESS+(rainStrength*2.0))*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        #else
         vec2 offset = (vogelDiskSample(i, 16, interleavedGradientNoise(gl_FragCoord.xy))*SHADOW_SOFTNESS*0.5*(shadowMapResolution/2048.0)) / shadowMapResolution;
+        #endif
         #endif
         offset = rotationMatrix * offset;
 

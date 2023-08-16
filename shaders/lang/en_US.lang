@@ -77,6 +77,8 @@ option.VL_DENSITY=VL Density
 option.VL_DENSITY.comment=Density of volumetric fog.
 option.VL_STEPS=VL Steps
 option.VL_STEPS.comment=How many raymarching steps the volumetric lighting loop takes. Higher is laggier, but also more precise.
+option.PATCHY_VL_FOG=Patchy Fog
+option.PATCHY_VL_FOG.comment=Adds noise to the volumetric lighting loop to create the appearance of patchy fog.
 
 screen.REFLECTIONS=§6§lSpecular Settings
 screen.REFLECTIONS.comment=Specular highlight and reflection settings.
@@ -163,6 +165,9 @@ option.shadowDistance.comment=The distance at which shadow rendering will stop.
 
 option.SHADOW_SOFTNESS=Shadow Softness
 option.SHADOW_SOFTNESS.comment=Shadow softness. If PCSS is on, it determines how quickly the shadows will soften.
+
+option.RAIN_SOFTEN=Soft shadows in rain
+option.RAIN_SOFTEN.comment=Softens shadows whenever raining.
 
 option.PXL_SHADOWS=Pixelated Shadows
 option.PXL_SHADOWS.comment=Pixelate shadows to the world grid. Looks cool, but can cause minor flickering issues.
