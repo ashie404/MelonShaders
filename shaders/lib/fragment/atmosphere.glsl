@@ -200,14 +200,11 @@ void calculateCelestialBodies(in bool sunMoon, in vec3 viewPos, in vec3 worldPos
 	#if WORLD == 0
 
     #ifdef STARS
-    //float starNoise = cellular(normalize(worldPos.xyz)*32.0);
-    //if (starNoise <= 0.05) {
-    //    color += mix(vec3(0.0), mix(vec3(0.0), vec3(cellular(normalize(worldPos.xyz)*16.0)), clamp01(1.0-starNoise)), clamp01(times.w))*4.0;
-    //}
+    // code adapted from shadertoy "Star Nest" https://www.shadertoy.com/view/XlfGRj
 	float s=0.1,fade=1.;
 	vec3 v=vec3(0.);
 	for (int r=0; r<20; r++) {
-		vec3 p=vec3(1.0,0.5,0.5)+s*(normalize(worldPos)+vec3(0.0, frameTimeCounter*0.0005, frameTimeCounter*0.005))*.5;
+		vec3 p=vec3(1.0,0.5,0.5)+s*(normalize(worldPos))*.5;
 		p = abs(vec3(tile)-mod(p,vec3(tile*2.))); // tiling fold
 		float pa,a=pa=0.;
 		for (int i=0; i<17; i++) { 
@@ -224,7 +221,10 @@ void calculateCelestialBodies(in bool sunMoon, in vec3 viewPos, in vec3 worldPos
 		fade*=distfading; // distance fading
 		s+=0.1;
 	}
-	color += (vec3(1.0) - exp(-v * 0.0002 ))*1.5;
+	v = (vec3(1.0) - exp(-v * 0.01 ));
+	v *= v*v*v;
+	v = vec3(1.0) - exp(-v * 2.5);
+	color += mix(v*v*0.1, v, clamp01(times.w));
     #endif
 
 	if (sunMoon) {
