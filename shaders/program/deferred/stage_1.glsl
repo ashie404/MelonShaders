@@ -163,7 +163,7 @@ void main() {
     vec3 enchantc = vec3(0.0);
      if (texture2D(colortex3, texcoord).r > 0.5) {
         enchantc = 
-        vec3(pow(cellular(((worldPos.xyz)*8.0+vec3(vogelDiskSample(1, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)), 0.0))+frameTimeCounter*0.5), 4.0)*8.0);
+        vec3(pow(cellular(((worldPos.xyz+cameraPosition)*6.0+vec3(vogelDiskSample(1, 4, interleavedGradientNoise(gl_FragCoord.xy+frameTimeCounter)), 0.0))+frameTimeCounter*0.5), 4.0)*8.0);
         enchantc.r *= ENCHANT_R;
         enchantc.g *= ENCHANT_G;
         enchantc.b *= ENCHANT_B;
