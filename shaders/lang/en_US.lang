@@ -1,7 +1,7 @@
-option.MELONINFO=§a§l§oMelon Shaders
-value.MELONINFO.0=§6by Ashie404!
-value.MELONINFO.1=§l§dV3.0
-option.MELONINFO.comment=§aMelon Shaders §dV3.0, §6by Ashie404. §fUses ACES color grading code from Raspberry Shaders.
+option.MELONINFO=§a§n§om §b§n§oe §c§n§ol §d§n§oo §e§n§on §f§n§os h §e§n§oa §d§n§od §c§n§oe §b§n§or §a§n§os
+value.MELONINFO.0=§6§oby ashie404
+value.MELONINFO.1=§a§lv 3.0.0
+option.MELONINFO.comment=§amelon shaders §dv3.0.0, §6by ashie404.
 
 #ACES
 option.SAT_MOD=Saturation
