@@ -189,8 +189,8 @@ vec2 PlanckianIsothermal( float Temp, float Tint ) {
 	return vec2(x,y);
 }
 
-vec3 WhiteBalance(vec3 LinearColor) {
-	const float WhiteTemp = float(WHITE_BALANCE);
+vec3 WhiteBalance(vec3 LinearColor, float offset) {
+	const float WhiteTemp = float(WHITE_BALANCE)+offset;
 	const float WhiteTint = 0.0;
 	vec2 SrcWhiteDaylight = D_IlluminantChromaticity( WhiteTemp );
 	vec2 SrcWhitePlankian = PlanckianLocusChromaticity( WhiteTemp );

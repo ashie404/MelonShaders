@@ -35,6 +35,7 @@ uniform float sunAngle;
 
 // Includes
 #include "/lib/post/aces/ACES.glsl"
+#include "/lib/post/aces/ACESFitted.glsl"
 
 // other stuff
 vec3 lookup(in vec3 textureColor) {
@@ -79,7 +80,7 @@ vec3 lookup(in vec3 textureColor) {
 void main() {
     vec3 color = texture2D(colortex0, texcoord).rgb;
     
-    // ACES color grading (from Raspberry Shaders https://rutherin.netlify.app)
+    // compute color correction values
     ColorCorrection m;
 	m.lum = vec3(0.2125, 0.7154, 0.0721);
     #if WORLD == 0
@@ -103,19 +104,39 @@ void main() {
 	m.gain = vec3(1.0, 1.0, 1.0) + GAIN_MOD; //Tint Adjustment
 	m.lift = vec3(0.0, 0.0, 0.0) + LIFT_MOD * 0.01; //Tint Adjustment
 	m.InvGamma = vec3(1.0, 1.0, 1.0);
+    
+    #ifndef ACES_FAST
 
+    // ACES color grading (from Raspberry Shaders https://rutherin.netlify.app)
     color = FilmToneMap(color);
-    color = WhiteBalance(color);
+    color = WhiteBalance(color, 0.0);
 	color = Vibrance(color, m);
     color = Saturation(color, m);
     color = Contrast(color, m);
     color = LiftGammaGain(color, m);
 
     // convert back to srgb space
-    color = linearToSrgb(color);
+    color = linearToSrgb(color);    
 
     #ifdef COLOR_AP1
     color = color * sRGB_2_AP1;
+    #endif
+    
+    #else
+    
+    // convert back to srgb space because aces curve fit expects srgb in
+    color = linearToSrgb(color); 
+
+    m.gain += 0.5;
+    m.contrast += 0.1;
+    
+    color = ACESFitted(color);
+    color = WhiteBalance(color, -3.0);
+	color = Vibrance(color, m);
+    color = Saturation(color, m);
+    color = Contrast(color, m);
+    color = LiftGammaGain(color, m);
+
     #endif
 
     #ifdef LUT
