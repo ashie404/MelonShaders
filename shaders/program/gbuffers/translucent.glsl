@@ -100,6 +100,14 @@ void main() {
         matMask = 5;
     } else if (idCorrected == 15) {
         matMask = 7;
+        #ifdef ICE_NORMALS
+        vec3 worldPosCamera = (worldSpace.xyz + cameraPosition);
+         #ifdef WAVE_PIXEL
+        worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
+        #endif
+        worldPosCamera.xz *= 64.0;
+        normalData = normalize(clamp(waterNormals(worldPosCamera, 0.05), -1.0, 1.0) * tbn);
+        #endif
     }
 
     // output everything

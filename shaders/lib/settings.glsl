@@ -105,6 +105,7 @@ const int shadowDistance = 128; // [128 256 512 1024 2048 4096]
 //#define POROSITY // Enables LabPBR porosity for resource packs that support it. Blue channel emissives have to be disabled for this to work. Rain puddles have to be enabled for this to work.
 
 // water settings
+#define ICE_NORMALS
 #define WAVE_FOAM
 #define WAVE_FOAM_FADE
 #define WAVE_CAUSTICS // Renders a caustics-like pattern on the surface of the water.

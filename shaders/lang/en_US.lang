@@ -229,7 +229,7 @@ option.REFRACT_STRENGTH=Refraction Strength
 option.BLUR_REFRACT=Blur Refractions
 
 screen.WATER=§3§lWater
-
+option.ICE_NORMALS=Ice Normals
 option.WAVE_FOAM=Water Foam
 option.WAVE_FOAM_FADE=Water Foam Fade
 option.WAVE_FOAM_FADE.comment=Makes the wave foam render with a fade effect, rather than just rendering solid foam.
