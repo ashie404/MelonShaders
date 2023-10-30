@@ -58,7 +58,7 @@ void calculateHardcodedEmissives(in int id, in float luminance, in float emissio
     case 110: albedo *= max(clamp01(pow(luminance, 8))* 50.0*emissionMult, 1.0); break;
     case 120: albedo *= max(25.0*emissionMult, 1.0); break;
     case 122: albedo *= max(12.5*emissionMult, 1.0); break;
-    case 132: albedo *= max(luminance*(1000.0*clamp(1.0-lmcoord.y, 0.05, 0.6))*emissionMult, 1.0); break;
+    case 132: albedo *= max(luminance*(100.0*clamp(1.0-lmcoord.y, 0.05, 0.6))*emissionMult, 1.0); break;
     }
 }
 
