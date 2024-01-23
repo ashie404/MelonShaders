@@ -28,6 +28,11 @@ void main() {
     // get albedo
     vec4 albedo = texture2D(texture, texcoord) * glcolor;
 
+    // if alpha is below a reasonable threshold discard entire fragment
+    if (albedo.a < 0.05) {
+        discard;
+    }
+
     // output everything
 	albedoOut = albedo;
 }
