@@ -108,6 +108,9 @@ void main() {
         worldPosCamera.xz *= 64.0;
         normalData = normalize(clamp(waterNormals(worldPosCamera, 0.05), -1.0, 1.0) * tbn);
         #endif
+    } else if (idCorrected == 42 && albedo.a > 0.8) {
+        matMask = 1;
+        albedo *= pow(luma(albedo), 2.0)*18.0;
     }
 
     // output everything
