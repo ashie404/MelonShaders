@@ -31,7 +31,11 @@ void main() {
     // get albedo
     vec4 albedo = texture2D(texture, texcoord) * glcolor;
 
-    if (albedo.a < 0.1) discard;
+    #ifdef WEATHER
+        if (albedo.a < 0.6) discard;
+    #else
+        if (albedo.a < 0.1) discard;
+    #endif
 
     albedo.rgb = toLinear(albedo.rgb);
 
