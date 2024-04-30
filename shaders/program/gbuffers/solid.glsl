@@ -62,6 +62,20 @@ void calculateHardcodedEmissives(in int id, in float luminance, in float emissio
     }
 }
 
+// borrowed from translucent for JavaDungeons ice normals 
+vec3 waterNormals(vec3 pos, float scale) {
+    
+  float height = cellular(pos);
+    
+  vec2 dxy = height - vec2(
+      cellular(pos + vec3(1.0, 0.0, 0.0)), 
+      cellular(pos + vec3(0.0, 0.0, 1.0))
+  );
+    
+  return normalize(vec3(dxy * scale, 1.0));
+}
+//
+
 void main() {
 
     int idCorrected = int(id + 0.5);
@@ -178,6 +192,17 @@ void main() {
         matMask = 1;
     } else if (entityId == 7) {
         albedo.rgb = vec3(15.0*emissionMult);
+    } else if (idCorrected == 15) { // if ice but for solid blocks
+    // (for javadungeons ice functionality. this is jank af but im rewriting this whole shader soon anyway)
+        matMask = 7;
+        #ifdef ICE_NORMALS
+        vec3 worldPosCamera = (worldSpace.xyz + cameraPosition);
+         #ifdef WAVE_PIXEL
+        worldPosCamera = vec3(ivec3(worldPosCamera*WAVE_PIXEL_R)/WAVE_PIXEL_R);
+        #endif
+        worldPosCamera.xz *= 64.0;
+        normalData = normalize(clamp(waterNormals(worldPosCamera, 0.05), -1.0, 1.0) * tbn);
+        #endif
     }
 
     // detect text on signs
